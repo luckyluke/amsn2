@@ -46,6 +46,8 @@ class aMSNThemeManager:
         self._statusicons = aMSNStatusIconLoader().load('default')
         self._displaypic = aMSNDisplayPicLoader().load('default')
         self._emblems = aMSNEmblemLoader().load('default')
+        self._loginimages = aMSNLoginImagesLoader().load('default')
+        self._contactlistimages = aMSNContactListImagesLoader().load('default')
 
     def get_value(self, key):
         if (key.startswith('button_')):
@@ -56,6 +58,10 @@ class aMSNThemeManager:
             return self.get_dp(key)
         elif (key.startswith('emblem_')):
             return self.get_emblem(key)
+        elif key.startswith('login_'):
+            return self.get_loginimage(key)
+        elif key.startswith('contactlist_'):
+            return self.get_contactlistimage(key)
         else:
             # TODO: This should raise a exception
             return (None, None)
@@ -71,6 +77,12 @@ class aMSNThemeManager:
 
     def get_emblem(self, key):
         return self.__get(self._emblems, key)
+
+    def get_loginimage(self, key):
+        return self.__get(self._loginimages, key)
+
+    def get_contactlistimage(self, key):
+        return self.__get(self._contactlistimages, key)
 
 class aMSNGenericLoader:
     def __init__(self, basedir):
@@ -149,4 +161,21 @@ class aMSNEmblemLoader(aMSNGenericLoader):
             'emblem_offline': 'offline_emblem.png',
             'emblem_hidden': 'offline_emblem.png',
             'emblem_blocked': 'blocked_emblem.png',
+        }
+
+class aMSNLoginImagesLoader(aMSNGenericLoader):
+    def __init__(self):
+        aMSNGenericLoader.__init__(self, 'login_images')
+        self._keys = {
+            'login_dp_border': 'dp_border.png',
+            'login_background': 'login_bg.png',
+            'login_language_icon': 'language_icon.png',
+            'login_arrow': 'arrow.png',
+        }
+
+class aMSNContactListImagesLoader(aMSNGenericLoader):
+    def __init__(self):
+        aMSNGenericLoader.__init__(self, 'contactlist_images')
+        self._keys = {
+            'contactlist_background': 'background.png'
         }

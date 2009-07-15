@@ -50,8 +50,7 @@ class aMSNLoginWindow(gtk.VBox, base.aMSNLoginWindow):
         pgAlign.add(self.pgbar)
 
         # language selector
-        path = os.path.join("amsn2", "themes", "default", "images",
-        "login_screen", "language_icon.png")
+        _, path = self._theme_manager.get_loginimage('login_language_icon')
         langImg = gtk.Image()
         langImg.set_from_file(path)
 
