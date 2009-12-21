@@ -31,6 +31,15 @@ class aMSNContactListManager:
         self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
 
         #TODO: update the group view
+        groups = self.getGroups(c.uid)
+        for g in groups:
+            g.fill()
+            self.onGroupChanged(g)
+
+
+    def onGroupChanged(self, amsn_group):
+        gv = GroupView(self._core, amsn_group)
+        self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
 
     def onContactDPChanged(self, papyon_contact):
         """ Called when a contact changes its Display Picture. """
@@ -126,20 +135,22 @@ class aMSNContactListManager:
         groups = self.getGroups(cid)
         for g in groups:
             g.contacts.remove(cid)
-            gv = GroupView(self._core, g.id, g.name, g.contacts)
+            gv = GroupView(self._core, g)
             self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
 
     def _addContactToGroups(self, cid, gids):
         for gid in gids:
             g = self.getGroup(gid)
             g.contacts.add(cid)
-            gv = GroupView(self._core, g.id, g.name, g.contacts)
+            gv = GroupView(self._core, g)
             self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
 
         c = self.getContact(cid)
         cv = ContactView(self._core, c)
         self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
 
+    # can this be reused to rebuild the contactlist when we want to group the contacts in another way?
+    # maybe adding a createGroups method?
     def onCLDownloaded(self, address_book):
         self._papyon_addressbook = address_book
         grpviews = []
@@ -147,34 +158,24 @@ class aMSNContactListManager:
         clv = ContactListView()
 
         for group in address_book.groups:
-            contacts = address_book.contacts.search_by_groups(group)
-
-            for contact in contacts:
-                c = self.getContact(contact.id, contact)
-                cv = ContactView(self._core, c)
-                cviews.append(cv)
-
-            cids = [c.id for c in contacts]
-            gv = GroupView(self._core, group.id, group.name, cids)
+            g = self.getGroup(group.id, group)
+            gv = GroupView(self._core, g)
             grpviews.append(gv)
             clv.group_ids.append(group.id)
 
-            self.getGroup(group.id, group)
-
-        contacts = address_book.contacts.search_by_memberships(papyon.Membership.FORWARD)
-        no_group_ids= []
-        for contact in contacts:
+        no_group = False
+        for contact in address_book.contacts:
+            c = self.getContact(contact.id, contact)
+            cv = ContactView(self._core, c)
+            cviews.append(cv)
             if len(contact.groups) == 0:
-                c = self.getContact(contact.id, contact)
-                cv = ContactView(self._core, c)
-                cviews.append(cv)
-                no_group_ids.append(contact.id)
+                no_group =True
 
-        if len(no_group_ids) > 0:
-            gv = GroupView(self._core, 0, "NoGroup", no_group_ids)
+        if no_group:
+            g = self.getGroup(0, None)
+            gv = GroupView(self._core, g)
             grpviews.append(gv)
             clv.group_ids.append(0)
-            self.getGroup(0, None, no_group_ids)
 
         #Emit the events
         self._em.emit(self._em.events.CLVIEW_UPDATED, clv)
@@ -217,15 +218,15 @@ class aMSNContactListManager:
             return self._groups[gid]
         except KeyError:
             if papyon_group:
-                contacts = self._papyon_addressbook.contacts.search_by_groups(papyon_group)
-                g = aMSNGroup([c.id for c in contacts], papyon_group)
-                self._groups[gid] = g
+                g = aMSNGroup(self._core, papyon_group)
                 # is AMSNGROUP_UPDATED necessary?
             elif gid == 0:
-                g = aMSNGroup(cids)
-                self._groups[0] = g
+                g = aMSNGroup(self._core)
             else:
                 raise ValueError
+
+            self._groups[gid] = g
+            return g
 
     def getGroups(self, uid):
         # propagate a ValueError
@@ -313,12 +314,28 @@ class aMSNContact():
         self._papyon_contact = papyon_contact
 
 class aMSNGroup():
-    def __init__(self, cids, papyon_group=None):
-        self.contacts = set(cids)
+    def __init__(self, core, papyon_group=None):
+        self._contacts_storage = core._contactlist_manager._papyon_addressbook.contacts
+        self.contacts = set()
+        self.contacts_online = set()
+        self.papyon_group = papyon_group
+        self.fill(papyon_group)
+
+    def fill(self, papyon_group=None):
+        if self.papyon_group:
+            papyon_group = self.papyon_group
+
+        # obtain all the contacts in the group
         if papyon_group:
             self.name = papyon_group.name
             self.id = papyon_group.id
+            contacts = self._contacts_storage.search_by_groups(papyon_group)
         else:
             self.name = 'NoGroup'
             self.id = 0
+            contacts = self._contacts_storage.search_by_memberships(papyon.Membership.FORWARD)
+            contacts = [c for c in contacts if len(c.groups) == 0]
+
+        self.contacts = set([ c.id for c in contacts])
+        self.contacts_online = set([c.id for c in contacts if c.presence != papyon.Presence.OFFLINE])
 

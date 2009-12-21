@@ -9,13 +9,13 @@ class ContactListView:
 
 
 class GroupView:
-    def __init__(self, core, uid, name, contact_ids=[], active=0):
-        self.uid = uid
-        self.contact_ids = set(contact_ids)
+    def __init__(self, core, amsn_group):
+        self.uid = amsn_group.id
+        self.contact_ids = set(amsn_group.contacts)
         self.icon = ImageView() # TODO: expanded/collapsed icon
         self.name = StringView() # TODO: default color from skin/settings
-        self.name.appendText(name) #TODO: parse for smileys
-        active = 0 #TODO
+        self.name.appendText(amsn_group.name) #TODO: parse for smileys
+        active = len(amsn_group.contacts_online)
         total = len(self.contact_ids)
         self.name.appendText("(" + str(active) + "/" + str(total) + ")")
 
