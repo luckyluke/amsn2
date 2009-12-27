@@ -34,10 +34,14 @@ class aMSNContactListManager:
         groups = self.getGroups(c.uid)
         for g in groups:
             g.fill()
-            self.onGroupChanged(g)
+            self.onAmsnGroupChanged(g)
 
+    def onGroupChanged(self, papyon_group):
+        g = self.getGroup(papyon_group.id)
+        g.fill(papyon_group)
+        self.onAmsnGroupChanged(g)
 
-    def onGroupChanged(self, amsn_group):
+    def onAmsnGroupChanged(self, amsn_group):
         gv = GroupView(self._core, amsn_group)
         self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
 
@@ -85,20 +89,12 @@ class aMSNContactListManager:
 
     ''' changes to the address book '''
 
-# actions from user: accept/decline contact invitation - block/unblock contact - add/remove/rename group - add/remove contact to/from group
-
     def addContact(self):
         def cb(email, invite_msg):
             if email:
                 self._papyon_addressbook.add_messenger_contact(email, self._core._account.view.email,
                                                                invite_msg)
         self._core._ui_manager.loadContactInputWindow(cb)
-
-    def onContactAdded(self, contact):
-        c = self.getContact(contact.id, contact)
-        gids = [ g.id for g in self.getGroups(contact.id)]
-        self._addContactToGroups(contact.id, gids)
-        self._core._ui_manager.showNotification("Contact %s added!" % contact.account)
 
     def removeContact(self):
         def contactCB(account):
@@ -123,10 +119,83 @@ class aMSNContactListManager:
                                           % papyon_contact.account,
                                           (('OK', cb_ok), ('Cancel', lambda : '')))
 
+    def blockContact(self, cid):
+        pass
+
+    def unblockContact(self, cid):
+        pass
+
+    def allowContact(self, cid):
+        pass
+
+    def disallowContact(self, cid):
+        pass
+
+    def acceptContactInvitation(self):
+        pass
+
+    def declineContactInvitation(self):
+        pass
+
+    def addGroup(self, name, contacts_ids):
+        def failed(group):
+            self._core._ui_manager.showError('Failed to add the group %s', group)
+
+        self._papyon_addressbook.add_group(self, name, failed_cb=failed):
+
+    def removeGroup(self, gid):
+        group = self.getGroup(gid)
+        def failed(group):
+            self._core._ui_manager.showError('Failed to remove the group %s', group.name)
+
+        self._papyon_addressbook.delete_group(self, group, failed_cb=failed)
+
+    def renameGroup(self, gid, new_name):
+        group = self.getGroup(gid)
+        def failed(group):
+            self._core._ui_manager.showError('Failed to rename the group %s', group.name)
+
+        self._papyon_addressbook.rename_group(self, group, new_name, failed_cb=failed)
+
+    def addContactToGroups(self, cid, gids):
+        pass
+
+    def removeContactFromGroups(self, cid, gids):
+        pass
+
+    ''' callbacks for the user's actions '''
+
+    def onContactAdded(self, contact):
+        c = self.getContact(contact.id, contact)
+        gids = [ g.id for g in self.getGroups(contact.id)]
+        self._addContactToGroups(contact.id, gids)
+        self._core._ui_manager.showNotification("Contact %s added!" % contact.account)
+
     def onContactRemoved(self, contact):
         self._removeContactFromGroups(contact.id)
         del self._contacts[contact.id]
         self._core._ui_manager.showNotification("Contact %s removed!" % contact.account)
+
+    def onContactBlocked(self, papyon_contact):
+        pass
+
+    def onContactUnblocked(self, papyon_contact):
+        pass
+
+    def onGroupAdded(self, papyon_group):
+        pass
+
+    def onGroupDeleted(self, papyon_group):
+        pass
+
+    def onGroupRenamed(self, papyon_group):
+        pass
+
+    def onGroupContactAdded(self, papyon_group, papyon_contact):
+        pass
+
+    def onGroupContactDeleted(self, papyon_group, papyon_contact):
+        pass
 
     ''' additional methods '''
 

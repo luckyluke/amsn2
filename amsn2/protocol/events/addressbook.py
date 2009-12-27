@@ -34,23 +34,23 @@ class AddressBookEvents(papyon.event.AddressBookEventInterface):
         self._contactlist_manager.onContactRemoved(contact)
 
     def on_addressbook_contact_blocked(self, contact):
-        pass
+        self._contactlist_manager.onContactBlocked(contact)
 
     def on_addressbook_contact_unblocked(self, contact):
-        pass
+        self._contactlist_manager.onContactUnblocked(contact)
 
     def on_addressbook_group_added(self, group):
-        pass
+        self._contactlist_manager.onGroupAdded(group)
 
     def on_addressbook_group_deleted(self, group):
-        pass
+        self._contactlist_manager.onGroupDeleted(group)
 
     def on_addressbook_group_renamed(self, group):
-        pass
+        self._contact_manager.onGroupChanged(group)
 
     def on_addressbook_group_contact_added(self, group, contact):
-        pass
+        self._contact_manager.onGroupContactAdded(group, contact)
 
     def on_addressbook_group_contact_deleted(self, group, contact):
-        pass
+        self._contact_manager.onGroupContactDeleted(group, contact)
 
