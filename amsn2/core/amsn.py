@@ -211,12 +211,18 @@ class aMSNCore(object):
 
         addContactItem = MenuItemView(MenuItemView.COMMAND, label="Add Contact",
                                       command=self._contactlist_manager.addContact)
-        removeContact = MenuItemView(MenuItemView.COMMAND, label='Remove contact',
+        removeContactItem = MenuItemView(MenuItemView.COMMAND, label='Remove contact',
                                      command=self._contactlist_manager.removeContact)
+        addGroupItem = MenuItemView(MenuItemView.COMMAND, label='Add Group',
+                                     command=self._contactlist_manager.addGroup)
+        removeGroupItem = MenuItemView(MenuItemView.COMMAND, label='Remove Group',
+                                     command=self._contactlist_manager.removeGroup)
 
         contactsMenu = MenuItemView(MenuItemView.CASCADE_MENU, label="Contacts")
         contactsMenu.addItem(addContactItem)
-        contactsMenu.addItem(removeContact)
+        contactsMenu.addItem(removeContactItem)
+        contactsMenu.addItem(addGroupItem)
+        contactsMenu.addItem(removeGroupItem)
 
         menu.addItem(mainMenu)
         menu.addItem(contactsMenu)

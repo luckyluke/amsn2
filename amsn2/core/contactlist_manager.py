@@ -88,13 +88,21 @@ class aMSNContactListManager:
         self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
 
     ''' changes to the address book '''
+    # TODO:is it better to send the groupviews/contactviews
+    # to the ui instead of only the contacts/groups names?
+    # (in removeGroups we have to access self._groups directly)
 
     def addContact(self):
         def cb(email, invite_msg):
             if email:
+                def failed(papyon_contact):
+                    self._core._ui_manager.showError('Failed to remove the contact %s',
+                                                      papyon_contact.account)
                 self._papyon_addressbook.add_messenger_contact(email, self._core._account.view.email,
-                                                               invite_msg)
-        self._core._ui_manager.loadContactInputWindow(cb)
+                                                               invite_msg, failed_cb=failed)
+
+        groups = ()
+        self._core._ui_manager.loadContactInputWindow(cb, groups)
 
     def removeContact(self):
         def contactCB(account):
@@ -108,12 +116,16 @@ class aMSNContactListManager:
 
                 self.removeContactUid(papyon_contact.id)
 
-        self._core._ui_manager.loadContactDeleteWindow(contactCB)
+        contacts = ()
+        self._core._ui_manager.loadContactDeleteWindow(contactCB, contacts)
 
     def removeContactUid(self, uid):
         papyon_contact = self._papyon_addressbook.contacts.search_by('id', uid)[0]
         def cb_ok():
-            self._papyon_addressbook.delete_contact(papyon_contact)
+            def failed(papyon_contact):
+                self._core._ui_manager.showError('Failed to remove the contact %s',
+                                                  papyon_contact.account)
+            self._papyon_addressbook.delete_contact(papyon_contact, failed_cb=failed)
 
         self._core._ui_manager.showDialog('Are you sure you want to remove the contact %s?'
                                           % papyon_contact.account,
@@ -137,25 +149,38 @@ class aMSNContactListManager:
     def declineContactInvitation(self):
         pass
 
-    def addGroup(self, name, contacts_ids):
-        def failed(group):
-            self._core._ui_manager.showError('Failed to add the group %s', group)
+    def addGroup(self):
+        def cb(name):
+            def failed(papyon_group):
+                self._core._ui_manager.showError('Failed to add the group %s', papyon_group)
 
-        self._papyon_addressbook.add_group(self, name, failed_cb=failed):
+            self._papyon_addressbook.add_group(name, failed_cb=failed)
 
-    def removeGroup(self, gid):
+        contacts = ()
+        self._core._ui_manager.loadGroupInputWindow(cb, contacts)
+
+    def removeGroup(self):
+        def cb(group_name):
+            if group_name:
+                group = [g for g in self._groups.values() if g.name==group_name]
+                self.removeGroupGid(group.id)
+
+        groups = ()
+        self._core._ui_manager.loadGroupDeleteWindow(cb, groups)
+
+    def removeGroupGid(self, gid):
         group = self.getGroup(gid)
-        def failed(group):
-            self._core._ui_manager.showError('Failed to remove the group %s', group.name)
+        def failed(papyon_group):
+            self._core._ui_manager.showError('Failed to remove the group %s', papyon_group.name)
 
-        self._papyon_addressbook.delete_group(self, group, failed_cb=failed)
+        self._papyon_addressbook.delete_group(group, failed_cb=failed)
 
     def renameGroup(self, gid, new_name):
         group = self.getGroup(gid)
-        def failed(group):
-            self._core._ui_manager.showError('Failed to rename the group %s', group.name)
+        def failed(papyon_group):
+            self._core._ui_manager.showError('Failed to rename the group %s', papyon_group.name)
 
-        self._papyon_addressbook.rename_group(self, group, new_name, failed_cb=failed)
+        self._papyon_addressbook.rename_group(group, new_name, failed_cb=failed)
 
     def addContactToGroups(self, cid, gids):
         pass
