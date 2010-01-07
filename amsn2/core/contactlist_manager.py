@@ -31,7 +31,8 @@ class aMSNContactListManager:
         cv = ContactView(self._core, c)
         self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
 
-        #TODO: update the group view
+        #TODO: if contacts are sorted by presence, remove contact
+        # from the offline/online group depending on the change
         groups = self.getGroups(c.uid)
         for g in groups:
             g.fill()
