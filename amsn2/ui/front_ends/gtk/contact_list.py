@@ -394,8 +394,8 @@ class aMSNContactListWidget(base.aMSNContactListWidget, gtk.TreeView):
         # New groups
         for gid in clview.group_ids:
             if (gid == 0): gid = '0'
+            self.groups.append(gid)
             if gid not in guids:
-                self.groups.append(gid)
                 self._model.append(None, [None, None, gid, gid, False])
 
         # Remove unused groups
@@ -403,7 +403,6 @@ class aMSNContactListWidget(base.aMSNContactListWidget, gtk.TreeView):
             if gid not in self.groups:
                 giter = self.__search_by_id(gid)
                 self._model.remove(giter)
-                self.groups.remove(gid)
 
     def groupUpdated(self, groupview):
         if (groupview.uid == 0): groupview.uid = '0'
