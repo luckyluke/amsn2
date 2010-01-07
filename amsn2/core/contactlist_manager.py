@@ -14,6 +14,7 @@ class aMSNContactListManager:
         self._em = core._event_manager
         self._contacts = {} #Dictionary where every contact_uid has an associated aMSNContact
         self._groups = {}
+        self._clv = None
         self._papyon_addressbook = None
 
     #TODO: sorting contacts & groups
@@ -163,7 +164,7 @@ class aMSNContactListManager:
         def cb(group_name):
             if group_name:
                 group = [g for g in self._groups.values() if g.name==group_name]
-                self.removeGroupGid(group.id)
+                self.removeGroupGid(group[0].id)
 
         groups = ()
         self._core._ui_manager.loadGroupDeleteWindow(cb, groups)
@@ -208,10 +209,18 @@ class aMSNContactListManager:
         pass
 
     def onGroupAdded(self, papyon_group):
-        pass
+        nogroup_id = self._clv.group_ids.pop()
+        self._clv.group_ids.append(papyon_group.id)
+        self._clv.group_ids.append(nogroup_id)
+        g = self.getGroup(papyon_group.id, papyon_group)
+        gv = GroupView(self._core, g)
+        self._em.emit(self._em.events.CLVIEW_UPDATED, self._clv)
+        self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
 
     def onGroupDeleted(self, papyon_group):
-        pass
+        self._clv.group_ids.remove(papyon_group.id)
+        self._em.emit(self._em.events.CLVIEW_UPDATED, self._clv)
+        del self._groups[papyon_group.id]
 
     def onGroupRenamed(self, papyon_group):
         pass
@@ -249,13 +258,13 @@ class aMSNContactListManager:
         self._papyon_addressbook = address_book
         grpviews = []
         cviews = []
-        clv = ContactListView()
+        self._clv = ContactListView()
 
         for group in address_book.groups:
             g = self.getGroup(group.id, group)
             gv = GroupView(self._core, g)
             grpviews.append(gv)
-            clv.group_ids.append(group.id)
+            self._clv.group_ids.append(group.id)
 
         no_group = False
         for contact in address_book.contacts:
@@ -269,10 +278,10 @@ class aMSNContactListManager:
             g = self.getGroup(0, None)
             gv = GroupView(self._core, g)
             grpviews.append(gv)
-            clv.group_ids.append(0)
+            self._clv.group_ids.append(0)
 
         #Emit the events
-        self._em.emit(self._em.events.CLVIEW_UPDATED, clv)
+        self._em.emit(self._em.events.CLVIEW_UPDATED, self._clv)
         for g in grpviews:
             self._em.emit(self._em.events.GROUPVIEW_UPDATED, g)
         for c in cviews:
@@ -299,7 +308,7 @@ class aMSNContactListManager:
             else:
                 raise ValueError
 
-    def getGroup(self, gid, papyon_group = None, cids=[]):
+    def getGroup(self, gid, papyon_group = None):
         """
         @param gid: uid of the group
         @type gid: str
