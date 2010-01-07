@@ -113,12 +113,6 @@ class aMSNGroupInputWindow(base.aMSNGroupInputWindow, gtk.Dialog):
         ca.pack_start(self._name)
 
         # TODO: build list of existing contacts
-        label2 = gtk.Label(message[1])
-        ca.pack_start(label2)
-        self._message = gtk.Entry()
-        ca.pack_start(self._message)
-        label2.show()
-        self._message.show()
 
         self.connect("response", self.onResponse)
         label.show()
@@ -140,7 +134,7 @@ class aMSNContactDeleteWindow(base.aMSNContactDeleteWindow, gtk.Dialog):
                              gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
         self._callback = callback
 
-        label = gtk.Label(message)
+        label = gtk.Label(message[0])
         self._name = gtk.Entry()
         ca = self.get_content_area()
         ca.set_spacing(5)
@@ -167,7 +161,7 @@ class aMSNGroupDeleteWindow(base.aMSNGroupDeleteWindow, gtk.Dialog):
                              gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
         self._callback = callback
 
-        label = gtk.Label(message)
+        label = gtk.Label(message[0])
         self._name = gtk.Entry()
         ca = self.get_content_area()
         ca.set_spacing(5)
