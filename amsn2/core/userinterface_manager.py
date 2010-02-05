@@ -132,10 +132,10 @@ class aMSNUserInterfaceManager(object):
     def load_contact_delete_window(self, callback, contacts):
         return self._ui.aMSNContactDeleteWindow(('Contact to remove: ',), callback, contacts)
 
-    def loadGroupInputWindow(self, callback, contacts):
+    def load_group_input_window(self, callback, contacts):
         return self._ui.aMSNGroupInputWindow(('Group to add: ',), callback, contacts)
 
-    def loadGroupDeleteWindow(self, callback, groups):
+    def load_group_delete_window(self, callback, groups):
         return self._ui.aMSNGroupDeleteWindow(('Group to remove: ',), callback, groups)
 
     def load_DP_chooser_window(self):

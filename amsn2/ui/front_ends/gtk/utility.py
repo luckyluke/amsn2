@@ -14,10 +14,10 @@ class aMSNErrorWindow(base.aMSNErrorWindow, gtk.Dialog):
         self.get_content_area().set_spacing(5)
         self.get_content_area().pack_start(label)
         label.show()
-        self.connect("response", self.onResponse)
+        self.connect("response", self.on_response)
         self.show()
 
-    def onResponse(self, dialog, id):
+    def on_response(self, dialog, id):
         self.destroy()
 
 class aMSNNotificationWindow(base.aMSNNotificationWindow, gtk.Dialog):
@@ -28,10 +28,10 @@ class aMSNNotificationWindow(base.aMSNNotificationWindow, gtk.Dialog):
         self.get_content_area().set_spacing(5)
         self.get_content_area().pack_start(label)
         label.show()
-        self.connect("response", self.onResponse)
+        self.connect("response", self.on_response)
         self.show()
 
-    def onResponse(self, dialog, id):
+    def on_response(self, dialog, id):
         self.destroy()
 
 class aMSNDialogWindow(base.aMSNDialogWindow, gtk.Dialog):
@@ -50,11 +50,11 @@ class aMSNDialogWindow(base.aMSNDialogWindow, gtk.Dialog):
             self._cbs[id] = cb
             id = id - 1
 
-        self.connect("response", self.onResponse)
+        self.connect("response", self.on_response)
         label.show()
         self.show()
 
-    def onResponse(self, dialog, id):
+    def on_response(self, dialog, id):
         try:
             self._cbs[id]()
         except KeyError:
@@ -83,12 +83,12 @@ class aMSNContactInputWindow(base.aMSNContactInputWindow, gtk.Dialog):
         label2.show()
         self._message.show()
 
-        self.connect("response", self.onResponse)
+        self.connect("response", self.on_response)
         label.show()
         self._name.show()
         self.show()
 
-    def onResponse(self, dialog, id):
+    def on_response(self, dialog, id):
         if id == gtk.RESPONSE_ACCEPT:
             name = self._name.get_text()
             msg = self._message.get_text()
@@ -114,12 +114,12 @@ class aMSNGroupInputWindow(base.aMSNGroupInputWindow, gtk.Dialog):
 
         # TODO: build list of existing contacts
 
-        self.connect("response", self.onResponse)
+        self.connect("response", self.on_response)
         label.show()
         self._name.show()
         self.show()
 
-    def onResponse(self, dialog, id):
+    def on_response(self, dialog, id):
         if id == gtk.RESPONSE_ACCEPT:
             name = self._name.get_text()
             self._callback(name)
@@ -141,12 +141,12 @@ class aMSNContactDeleteWindow(base.aMSNContactDeleteWindow, gtk.Dialog):
         ca.pack_start(label)
         ca.pack_start(self._name)
 
-        self.connect("response", self.onResponse)
+        self.connect("response", self.on_response)
         label.show()
         self._name.show()
         self.show()
 
-    def onResponse(self, dialog, id):
+    def on_response(self, dialog, id):
         if id == gtk.RESPONSE_ACCEPT:
             name = self._name.get_text()
             self._callback(name)
@@ -168,12 +168,12 @@ class aMSNGroupDeleteWindow(base.aMSNGroupDeleteWindow, gtk.Dialog):
         ca.pack_start(label)
         ca.pack_start(self._name)
 
-        self.connect("response", self.onResponse)
+        self.connect("response", self.on_response)
         label.show()
         self._name.show()
         self.show()
 
-    def onResponse(self, dialog, id):
+    def on_response(self, dialog, id):
         if id == gtk.RESPONSE_ACCEPT:
             name = self._name.get_text()
             self._callback(name)

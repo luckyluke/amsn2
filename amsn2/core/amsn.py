@@ -219,10 +219,10 @@ class aMSNCore(object):
                                      command=self._contactlist_manager.remove_group)
 
         contactsMenu = MenuItemView(MenuItemView.CASCADE_MENU, label="Contacts")
-        contactsMenu.addItem(addContactItem)
-        contactsMenu.addItem(removeContactItem)
-        contactsMenu.addItem(addGroupItem)
-        contactsMenu.addItem(removeGroupItem)
+        contactsMenu.add_item(addContactItem)
+        contactsMenu.add_item(removeContactItem)
+        contactsMenu.add_item(addGroupItem)
+        contactsMenu.add_item(removeGroupItem)
 
         menu.add_item(mainMenu)
         menu.add_item(contactsMenu)

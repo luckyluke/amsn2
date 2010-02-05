@@ -33,17 +33,17 @@ class aMSNContactListManager:
 
         #TODO: if contacts are sorted by presence, remove contact
         # from the offline/online group depending on the change
-        groups = self.getGroups(c.uid)
+        groups = self.get_groups(c.uid)
         for g in groups:
             g.fill()
-            self.onAmsnGroupChanged(g)
+            self.on_amsn_group_changed(g)
 
-    def onGroupChanged(self, papyon_group):
-        g = self.getGroup(papyon_group.id)
+    def on_group_changed(self, papyon_group):
+        g = self.get_group(papyon_group.id)
         g.fill(papyon_group)
-        self.onAmsnGroupChanged(g)
+        self.on_amsn_group_changed(g)
 
-    def onAmsnGroupChanged(self, amsn_group):
+    def on_amsn_group_changed(self, amsn_group):
         gv = GroupView(self._core, amsn_group)
         self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
 
@@ -119,13 +119,13 @@ class aMSNContactListManager:
                 self.remove_contact_Uid(papyon_contact.id)
 
         contacts = ()
-        self._core._ui_manager.load_contact_delete_window(contactCB, contacts)
+        self._core._ui_manager.load_contact_delete_window(contact_cb, contacts)
 
     def remove_contact_Uid(self, uid):
         papyon_contact = self._papyon_addressbook.contacts.search_by('id', uid)[0]
         def cb_ok():
             def failed(papyon_contact):
-                self._core._ui_manager.showError('Failed to remove the contact %s',
+                self._core._ui_manager.show_error('Failed to remove the contact %s',
                                                   papyon_contact.account)
             self._papyon_addressbook.delete_contact(papyon_contact, failed_cb=failed)
 
@@ -213,7 +213,7 @@ class aMSNContactListManager:
         nogroup_id = self._clv.group_ids.pop()
         self._clv.group_ids.append(papyon_group.id)
         self._clv.group_ids.append(nogroup_id)
-        g = self.getGroup(papyon_group.id, papyon_group)
+        g = self.get_group(papyon_group.id, papyon_group)
         gv = GroupView(self._core, g)
         self._em.emit(self._em.events.CLVIEW_UPDATED, self._clv)
         self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
@@ -269,14 +269,14 @@ class aMSNContactListManager:
 
         no_group = False
         for contact in address_book.contacts:
-            c = self.getContact(contact.id, contact)
+            c = self.get_contact(contact.id, contact)
             cv = ContactView(self._core, c)
             cviews.append(cv)
             if len(contact.groups) == 0:
                 no_group =True
 
         if no_group:
-            g = self.getGroup(0, None)
+            g = self.get_group(0, None)
             gv = GroupView(self._core, g)
             grpviews.append(gv)
             self._clv.group_ids.append(0)

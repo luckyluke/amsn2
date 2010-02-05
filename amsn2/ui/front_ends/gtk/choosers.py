@@ -32,12 +32,12 @@ class aMSNFileChooserWindow(base.aMSNFileChooserWindow, gtk.FileChooserDialog):
         if directory:
             self.set_current_folder_uri(directory)
 
-        self.connect('selection-changed', self.activatePreview)
-        self.connect('response', self.onResponse)
+        self.connect('selection-changed', self.activate_preview)
+        self.connect('response', self.on_response)
 
         self.run()
 
-    def activatePreview(self, chooser):
+    def activate_preview(self, chooser):
         filename = self.get_preview_filename()
         if filename:
             info = gtk.gdk.pixbuf_get_file_info(filename)
@@ -49,7 +49,7 @@ class aMSNFileChooserWindow(base.aMSNFileChooserWindow, gtk.FileChooserDialog):
 
         self.set_preview_widget_active(False)
 
-    def onResponse(self, chooser, id):
+    def on_response(self, chooser, id):
         if id ==gtk.RESPONSE_OK:
             self.callback(self.get_filename())
         elif id == gtk.RESPONSE_CANCEL:
