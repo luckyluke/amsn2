@@ -125,18 +125,18 @@ class aMSNUserInterfaceManager(object):
     def load_chat_widget(self, conversation, window, cuids):
         return self._ui.aMSNChatWidget(conversation, window, cuids)
 
-    def load_contact_input_window(self, callback, groups):
+    def load_contact_input_window(self, callback, groupviews):
         return self._ui.aMSNContactInputWindow(('Contact to add: ', 'Invite message: '),
-                                                 callback, groups)
+                                                 callback, groupviews)
 
-    def load_contact_delete_window(self, callback, contacts):
-        return self._ui.aMSNContactDeleteWindow(('Contact to remove: ',), callback, contacts)
+    def load_contact_delete_window(self, callback, contactviews):
+        return self._ui.aMSNContactDeleteWindow(('Contact to remove: ',), callback, contactviews)
 
-    def load_group_input_window(self, callback, contacts):
-        return self._ui.aMSNGroupInputWindow(('Group to add: ',), callback, contacts)
+    def load_group_input_window(self, callback, contactviews):
+        return self._ui.aMSNGroupInputWindow(('Group to add: ',), callback, contactviews)
 
-    def load_group_delete_window(self, callback, groups):
-        return self._ui.aMSNGroupDeleteWindow(('Group to remove: ',), callback, groups)
+    def load_group_delete_window(self, callback, groupviews):
+        return self._ui.aMSNGroupDeleteWindow(('Group to remove: ',), callback, groupviews)
 
     def load_DP_chooser_window(self):
         self._ui.aMSNDPChooserWindow(self._core._account.set_dp ,self._core._backend_manager)

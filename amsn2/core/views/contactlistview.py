@@ -39,6 +39,7 @@ class ContactView:
         """
 
         self.uid = amsn_contact.uid
+        self.account = amsn_contact.account
 
         self.icon = amsn_contact.icon
         #TODO: apply emblem on dp
@@ -60,6 +61,7 @@ class ContactView:
         self.name.append_stringview(amsn_contact.personal_message)
         self.name.unset_italic()
         self.name.close_tag("psm")
+
         #TODO:
         def start_conversation_cb(c_uid):
             core._conversation_manager.new_conversation([c_uid])
