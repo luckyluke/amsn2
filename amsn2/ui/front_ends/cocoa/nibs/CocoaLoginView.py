@@ -26,7 +26,7 @@ class aMSNCocoaLoginView(NSView):
     def setParent(self, parent):
         self.parent = parent
 
-    def login_(self):
+    def login(self):
         username = str(self.usernameField.stringValue())
         password = str(self.passwordField.stringValue())
         self.parent.login(username, password)

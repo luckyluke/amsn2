@@ -7,7 +7,7 @@ python-imaging
 maybe some other stuff...
 
 Before launching amsn2 you have to fetch the submodules (papyon). Instructions can be found on the aMSN forum:
-http://www.amsn-project.net/forums/viewtopic.php?t=5994
+http://www.amsn-project.net/forums/index.php/topic,5994.0.html
 
 If you launch ./amsn2.py and it gives an error, that error probably tells you which dependency you need...
 You can type ./amsn2.py --help for more info... and the front ends can be selected with -f :
@@ -34,9 +34,9 @@ If you have the following error with the qt4 front-end:
 	File "./amsn2.py", line 76, in <module>
 	amsn = aMSNCore(options)
 	File "/home/price/amsn2/amsn2/core/amsn.py", line 46, in __init__
-	self._loop = self._gui.gui.aMSNMainLoop(self)
+	self._loop = self._ui.ui.aMSNMainLoop(self)
 	AttributeError: 'NoneType' object has no attribute 'aMSNMainLoop'
-try moving into the amsn2/gui/front_ends/qt4 directory and calling generateFiles.sh
+try moving into the amsn2/ui/front_ends/qt4 directory and calling generateFiles.sh
 
 If the backspace is not working as expected with the ncurses front-end it is probably because your TERM is not set to the correct value. Try to launch amsn2 with some other setting for TERM, like:
 TERM=konsole ./amsn2.py -f curses

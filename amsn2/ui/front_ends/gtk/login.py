@@ -171,15 +171,8 @@ class aMSNLoginWindow(gtk.VBox, base.aMSNLoginWindow):
         self.login_button = gtk.Button('Login', gtk.STOCK_CONNECT)
         self.login_button.connect('clicked', self.__login_clicked)
         button_box.pack_start(self.login_button, False, False)
-        self.login = False
 
-        self.pack_start(langbox, True, False)
-        self.pack_start(dpbox, True, False)
-        self.pack_start(fields_align, True, False)
-        self.pack_start(checkAlign, True, False)
-        self.pack_start(button_box, True, False)
-
-        # temporarily not used
+        # used during login
         self.status = gtk.Label('')
         self.pgbar = gtk.ProgressBar()
         pgAlign = gtk.Alignment(0.5, 0.5)
@@ -189,6 +182,9 @@ class aMSNLoginWindow(gtk.VBox, base.aMSNLoginWindow):
         self.fixed_boxes = [dpbox, button_box]
         self.connecting_boxes = [self.status, pgAlign]
 
+        self.accountview = None
+        self.login = False
+        self.__show_boxes(self.login)
         self._main_win.set_view(self)
         
 
@@ -212,9 +208,10 @@ class aMSNLoginWindow(gtk.VBox, base.aMSNLoginWindow):
 
     def __login_clicked(self, *args):
         if self.login:
-            self.signout()
+            self._amsn_core.signOutOfAccount()
         else:
-            self.signin()
+            self.accountview = self.__get_account()
+            self._amsn_core.signin_to_account(self, self.accountview)
 
     def show(self):
         if self.user.get_active_text() == "":
@@ -231,7 +228,7 @@ class aMSNLoginWindow(gtk.VBox, base.aMSNLoginWindow):
     def __switch_to_account(self, email):
         logger.info("Switching to account %s", email)
 
-        accv = self._ui_manager.getAccountViewFromEmail(email)
+        accv = self._ui_manager.get_accountview_from_email(email)
 
         if accv is None:
             accv = AccountView(self._amsn_core, email)
@@ -245,10 +242,45 @@ class aMSNLoginWindow(gtk.VBox, base.aMSNLoginWindow):
         self.rememberMe.set_active(accv.save)
         self.rememberPass.set_active(accv.save_password)
         self.autoLogin.set_active(accv.autologin)
+        self.accountview = accv
 
-    def setAccounts(self, accountviews):
+    def __show_boxes(self, login):
+        for box in self.get_children():
+            self.remove(box)
+        self.login = login
+        if login:
+            self.pack_start(self.fixed_boxes[0])
+            self.pack_start(self.connecting_boxes[0])
+            self.pack_start(self.connecting_boxes[1])
+            self.pack_start(self.fixed_boxes[1])
+
+            for box in self.connecting_boxes:
+                box.show()
+            self.pgbar.show()
+
+            self.login_button.set_label(gtk.STOCK_DISCONNECT)
+            self.timer = gobject.timeout_add(40, self.__animation)
+
+        else:
+            self.pack_start(self.input_boxes[0])
+            self.pack_start(self.fixed_boxes[0])
+            self.pack_start(self.input_boxes[1])
+            self.pack_start(self.input_boxes[2])
+            self.pack_start(self.fixed_boxes[1])
+
+            # TODO: set the account's dp
+            _, filename = self._theme_manager.get_dp("dp_amsn")
+            self.dp.set_from_file(filename)
+
+            self.login_button.set_label(gtk.STOCK_CONNECT)
+            if self.timer is not None:
+                gobject.source_remove(self.timer)
+
+    def set_accounts(self, accountviews):
         self._account_views = accountviews
 
+        self.user.get_children()[0].set_text('')
+        self.password.set_text('')
         for accv in self._account_views:
             self.user.append_text(accv.email)
 
@@ -256,31 +288,10 @@ class aMSNLoginWindow(gtk.VBox, base.aMSNLoginWindow):
             # first in the list, default
             self.__switch_to_account(self._account_views[0].email)
 
-            if self._account_views[0].autologin:
-                self.signin()
-
     def signout(self):
-        self.remove(self.connecting_boxes[0])
-        self.remove(self.connecting_boxes[1])
-        for box in self.input_boxes:
-            self.pack_start(box, True, False)
+        self.__show_boxes(False)
 
-        self.reorder_child(self.fixed_boxes[1], -1)
-        self.reorder_child(self.fixed_boxes[0], 1)
-
-        self.login = False
-        self.login_button.set_label(gtk.STOCK_CONNECT)
-
-        if self.timer is not None:
-            gobject.source_remove(self.timer)
-        # TODO: set the account's dp
-        _, filename = self._theme_manager.get_dp("dp_amsn")
-        self.dp.set_from_file(filename)
-
-        self._amsn_core.signOutOfAccount()
-
-    def signin(self):
-
+    def __get_account(self):
         if self.user.get_active_text() == "":
             self.user.grab_focus()
             return
@@ -289,7 +300,7 @@ class aMSNLoginWindow(gtk.VBox, base.aMSNLoginWindow):
             return
 
         email = self.user.get_active_text()
-        accv = self._ui_manager.getAccountViewFromEmail(email)
+        accv = self._ui_manager.get_accountview_from_email(email)
 
         if accv is None:
             accv = AccountView(self._amsn_core, email)
@@ -304,24 +315,12 @@ class aMSNLoginWindow(gtk.VBox, base.aMSNLoginWindow):
         accv.save_password = self.rememberPass.get_active()
         accv.autologin = self.autoLogin.get_active()
 
-        for box in self.input_boxes:
-            self.remove(box)
+        return accv
 
-        self.login = True
-        self.status.show()
-        pgAlign = self.pgbar.get_parent()
-        pgAlign.show()
-        self.pgbar.show()
-        self.pack_start(pgAlign, False, False)
-        self.pack_start(self.status, False, False)
-        self.login_button.set_label(gtk.STOCK_DISCONNECT)
-        self.reorder_child(self.fixed_boxes[1], -1)
-        self.set_child_packing(self.fixed_boxes[1], True, False, 0, gtk.PACK_START)
+    def signin(self):
+        self.__show_boxes(True)
 
-        self._amsn_core.signinToAccount(self, accv)
-        self.timer = gobject.timeout_add(40, self.__animation)
-
-    def onConnecting(self, progress, message):
+    def on_connecting(self, progress, message):
         self.status.set_text(message)
         self.pgbar.set_fraction(progress)
 
@@ -341,7 +340,7 @@ class aMSNLoginWindow(gtk.VBox, base.aMSNLoginWindow):
     def __on_toggled_cb(self, source):
 
         email = self.user.get_active_text()
-        accv = self._ui_manager.getAccountViewFromEmail(email)
+        accv = self._ui_manager.get_accountview_from_email(email)
 
         if accv is None:
             accv = AccountView(self._amsn_core, email)

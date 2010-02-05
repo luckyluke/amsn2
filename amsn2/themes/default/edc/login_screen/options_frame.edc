@@ -9,6 +9,7 @@ CREATE_FRAME("options_frame", "fields_frame", 76)
       min: 50 20;                                  \
       max: 500 20;                                 \
       state: "default" 0.0;                        \
+      fixed: 1 1;                                  \
       rel1 {                                       \
         to: "options_frame";                       \
         relative: 0.2 0.0;                         \

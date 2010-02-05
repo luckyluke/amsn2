@@ -16,15 +16,15 @@ class aMSNMainLoop(base.aMSNMainLoop):
             except KeyboardInterrupt:
                 self.quit()
 
-    def idlerAdd(self, func):
+    def idler_add(self, func):
         gobject.idle_add(func)
 
-    def timerAdd(self, delay, func):
+    def timer_add(self, delay, func):
         gobject.timeout_add(delay, func)
 
     def quit(self):
         import curses
-        stdscr = self._amsn_core.getMainWindow()._stdscr
+        stdscr = self._amsn_core.get_main_window()._stdscr
         curses.nocbreak()
         stdscr.keypad(0)
         curses.echo()

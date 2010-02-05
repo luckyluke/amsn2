@@ -8,8 +8,8 @@ from dircache import listdir
 files = ['amsn2', 'papyon']
 
 # Nibs need to be appened individually because they they need to be in the root of the bundle.
-for f in listdir('amsn2/gui/front_ends/cocoa/nibs/files/'):
-    files.append('amsn2/gui/front_ends/cocoa/nibs/files/' + f)
+for f in listdir('amsn2/ui/front_ends/cocoa/nibs/files/'):
+    files.append('amsn2/ui/front_ends/cocoa/nibs/files/' + f)
 
 setup(
     name = 'aMSN2',

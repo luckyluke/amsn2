@@ -1,6 +1,9 @@
 import curses
 import curses.textpad
+import logging
+from amsn2.core.views import AccountView
 
+logger = logging.getLogger('amsn2.curses.login')
 
 class TextBox(object):
     def __init__(self, win, y, x, txt):
@@ -89,20 +92,29 @@ class aMSNLoginWindow(object):
     def switch_to_profile(self, profile):
         self.current_profile = profile
         if self.current_profile is not None:
-            self._username = self.current_profile.username
+            self._username = self.current_profile.email
             self._password = self.current_profile.password
 
     def signin(self):
-        self.current_profile.username = self._username_t.value()
         self.current_profile.email = self._username_t.value()
         self.current_profile.password = self._password_t.value()
-        self._amsn_core.signinToAccount(self, self.current_profile)
+        self._amsn_core.signin_to_account(self, self.current_profile)
 
 
-    def onConnecting(self, progress, message):
+    def on_connecting(self, progress, message):
         self._username_t = None
         self._password_t = None
         self._win.clear()
 
         self._win.addstr(10, 25, message, curses.A_BOLD | curses.A_STANDOUT)
         self._win.refresh()
+
+    def set_accounts(self, account_views):
+        self.accounts = account_views
+        #TODO: add autologin stuff, account selection
+        if len(self.accounts) == 0:
+            a = AccountView(self._amsn_core, "")
+            self.switch_to_profile(a)
+        for a in self.accounts:
+            self.switch_to_profile(a)
+            break

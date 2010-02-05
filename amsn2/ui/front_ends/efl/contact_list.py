@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 from constants import *
 import evas
@@ -13,44 +14,46 @@ from amsn2.ui import base
 import papyon
 
 class aMSNContactListWindow(elementary.Box, base.aMSNContactListWindow):
-    def __init__(self, core, parent):
+    def __init__(self, core, win):
         self._core = core
-        self._evas = parent._evas
-        self._parent = parent
+        self._evas = win._evas
+        self._win = win
         self._skin = core._skin_manager.skin
-        elementary.Box.__init__(self, parent)
-        self.size_hint_weight_set(1.0, 1.0)
-        self.size_hint_align_set(-1.0, -1.0)
+        elementary.Box.__init__(self, win)
+        self.size_hint_weight_set(evas.EVAS_HINT_EXPAND, evas.EVAS_HINT_EXPAND)
+        self.size_hint_align_set(evas.EVAS_HINT_FILL, evas.EVAS_HINT_FILL)
         self.homogenous_set(False)
-        self._parent.resize_object_add(self)
+        self._win.child = self
         self.show()
 
         """ Personal Info """
-        self._personal_info = PersonalInfoWidget(self._core, self._parent)
-        self._personal_info.size_hint_weight_set(1.0, 0.0)
-        self._personal_info.size_hint_align_set(-1.0, 1.0)
+        self._personal_info = PersonalInfoWidget(self._core, self._win)
+        self._personal_info.size_hint_weight_set(evas.EVAS_HINT_EXPAND, 0.0)
+        self._personal_info.size_hint_align_set(evas.EVAS_HINT_FILL, 1.0)
         self.pack_start(self._personal_info)
         self._personal_info.show()
 
         """ ContactList Widget """
-        self._clwidget = aMSNContactListWidget(self._core, self._parent)
-        self._clwidget.size_hint_weight_set(1.0, 1.0)
-        self._clwidget.size_hint_align_set(-1.0, -1.0)
+        self._clwidget = aMSNContactListWidget(self._core, self._win)
+        self._clwidget.size_hint_weight_set(evas.EVAS_HINT_EXPAND,
+                                            evas.EVAS_HINT_EXPAND)
+        self._clwidget.size_hint_align_set(evas.EVAS_HINT_FILL,
+                                           evas.EVAS_HINT_FILL)
         self.pack_end(self._clwidget)
         self._clwidget.show()
 
-        self._parent.show()
+        self._win.show()
 
-    def setTitle(self, text):
-        self._parent.setTitle(text)
+    def set_title(self, text):
+        self._win.set_title(text)
 
-    def setMenu(self, menu):
-        self._parent.setMenu(menu)
+    def set_menu(self, menu):
+        self._win.set_menu(menu)
 
-    def myInfoUpdated(self, view):
-        self._personal_info.myInfoUpdated(view)
+    def my_info_updated(self, view):
+        self._personal_info.my_info_updated(view)
 
-    def getContactListWidget(self):
+    def get_contactlist_widget(self):
         return self._clwidget
 
 class PersonalInfoWidget(elementary.Layout):
@@ -59,7 +62,7 @@ class PersonalInfoWidget(elementary.Layout):
         self._parent = parent
         self._personal_info_view = None
         elementary.Layout.__init__(self, self._parent)
-        self.file_set(THEME_FILE, "personal_info")
+        self.file_set(THEME_FILE, "amsn2/personal_info")
 
         self._dp = elementary.Button(self._parent)
         self._dp.label_set("pouet")
@@ -94,13 +97,13 @@ class PersonalInfoWidget(elementary.Layout):
         sc.content_min_limit(0, 1)
         sc.policy_set(elementary.ELM_SCROLLER_POLICY_OFF,
                       elementary.ELM_SCROLLER_POLICY_OFF);
-        sc.size_hint_weight_set(1.0, 0.0)
-        sc.size_hint_align_set(-1.0, 0.0)
+        sc.size_hint_weight_set(evas.EVAS_HINT_EXPAND, 0.0)
+        sc.size_hint_align_set(evas.EVAS_HINT_FILL, 0.0)
         self.content_set("nick", sc)
         self._nick = elementary.Entry(self._parent)
         self._nick.single_line_set(True)
-        self._nick.size_hint_weight_set(1.0, 0.0)
-        self._nick.size_hint_align_set(-1.0, 0.0)
+        self._nick.size_hint_weight_set(evas.EVAS_HINT_EXPAND, 0.0)
+        self._nick.size_hint_align_set(evas.EVAS_HINT_FILL, 0.0)
         sc.content_set(self._nick)
         self._nick.show()
         sc.show()
@@ -109,13 +112,13 @@ class PersonalInfoWidget(elementary.Layout):
         sc.content_min_limit(0, 1)
         sc.policy_set(elementary.ELM_SCROLLER_POLICY_OFF,
                       elementary.ELM_SCROLLER_POLICY_OFF);
-        sc.size_hint_weight_set(1.0, 0.0)
-        sc.size_hint_align_set(-1.0, -1.0)
+        sc.size_hint_weight_set(evas.EVAS_HINT_EXPAND, 0.0)
+        sc.size_hint_align_set(evas.EVAS_HINT_FILL, evas.EVAS_HINT_FILL)
         self.content_set("psm", sc);
         self._psm = elementary.Entry(self._parent)
         self._psm.single_line_set(True)
-        self._psm.size_hint_weight_set(1.0, 0.0)
-        self._psm.size_hint_align_set(-1.0, -1.0)
+        self._psm.size_hint_weight_set(evas.EVAS_HINT_EXPAND, 0.0)
+        self._psm.size_hint_align_set(evas.EVAS_HINT_FILL, evas.EVAS_HINT_FILL)
         sc.content_set(self._psm)
         self._psm.show()
         sc.show()
@@ -124,37 +127,39 @@ class PersonalInfoWidget(elementary.Layout):
         sc.content_min_limit(0, 1)
         sc.policy_set(elementary.ELM_SCROLLER_POLICY_OFF,
                       elementary.ELM_SCROLLER_POLICY_OFF)
-        sc.size_hint_weight_set(1.0, 0.0)
-        sc.size_hint_align_set(-1.0, -1.0)
+        sc.size_hint_weight_set(evas.EVAS_HINT_EXPAND, 0.0)
+        sc.size_hint_align_set(evas.EVAS_HINT_FILL, evas.EVAS_HINT_FILL)
         self.content_set("current_media", sc)
         self._cm = elementary.Entry(self._parent)
         self._cm.single_line_set(True)
-        self._cm.size_hint_weight_set(1.0, 0.0)
-        self._cm.size_hint_align_set(-1.0, -1.0)
+        self._cm.size_hint_weight_set(evas.EVAS_HINT_EXPAND, 0.0)
+        self._cm.size_hint_align_set(evas.EVAS_HINT_FILL, evas.EVAS_HINT_FILL)
         sc.content_set(self._cm)
         self._cm.show()
         sc.show()
 
-    def myInfoUpdated(self, view):
-        print "myInfoUpdated: view=%s" %(view,)
+    def my_info_updated(self, view):
         self._personal_info_view = view
 
         #TODO
         self._dp.show()
         self._presence.show()
 
-        self._nick.entry_set("nick is"+str(view.nick));
+        self._nick.entry_set("nick is: "+str(view.nick));
         self._nick.show()
 
-        self._psm.entry_set("psm is "+str(view.psm));
+        self._psm.entry_set("psm is: "+str(view.psm));
         self._psm.show()
 
-        self._cm.entry_set("cm is "+str(view.current_media));
+        self._cm.entry_set("cm is: "+str(view.current_media));
         self._cm.show()
 
         self.show()
 
 class aMSNContactListWidget(elementary.Box, base.aMSNContactListWidget):
+    """ The widget is a Box and not a Scroller, because we'll add search entry
+    in it someday…
+    """
     def __init__(self, core, parent):
         elementary.Box.__init__(self, parent)
         self._core = core
@@ -162,13 +167,14 @@ class aMSNContactListWidget(elementary.Box, base.aMSNContactListWidget):
         self._skin = core._skin_manager.skin
 
         self.homogenous_set(False)
-        self.size_hint_weight_set(1.0, 1.0)
-        self.size_hint_align_set(-1.0, -1.0)
+        self.size_hint_weight_set(evas.EVAS_HINT_EXPAND, evas.EVAS_HINT_EXPAND)
+        self.size_hint_align_set(evas.EVAS_HINT_FILL, evas.EVAS_HINT_FILL)
         self.show()
 
         self._sc = elementary.Scroller(parent)
-        self._sc.size_hint_weight_set(1.0, 1.0)
-        self._sc.size_hint_align_set(-1.0, -1.0)
+        self._sc.size_hint_weight_set(evas.EVAS_HINT_EXPAND,
+                                      evas.EVAS_HINT_EXPAND)
+        self._sc.size_hint_align_set(evas.EVAS_HINT_FILL, evas.EVAS_HINT_FILL)
         self._sc.policy_set(elementary.ELM_SCROLLER_POLICY_OFF,
                             elementary.ELM_SCROLLER_POLICY_AUTO)
         self.pack_start(self._sc)
@@ -179,18 +185,18 @@ class aMSNContactListWidget(elementary.Box, base.aMSNContactListWidget):
         self.group_holder.show()
 
 
-    def contactUpdated(self, contact):
+    def contact_updated(self, contact):
         for gi in self.group_holder.group_items_list:
             if contact.uid in gi.contact_holder.contacts_dict:
                 gi.contact_holder.contact_updated(contact)
 
-    def groupUpdated(self, group):
+    def group_updated(self, group):
         if group.uid in self.group_holder.group_items_dict:
             self.group_holder.group_items_dict[group.uid].group_updated(group)
 
 
-    def contactListUpdated(self, clview):
-        self.group_holder.viewUpdated(clview)
+    def contactlist_updated(self, clview):
+        self.group_holder.view_updated(clview)
 
 
 class ContactHolder(elementary.Box):
@@ -200,8 +206,8 @@ class ContactHolder(elementary.Box):
         self.contacts_list = []
         self._skin = parent._skin
         self._parent = parent
-        self.size_hint_weight_set(1.0, 1.0)
-        self.size_hint_align_set(-1.0, -1.0)
+        self.size_hint_weight_set(evas.EVAS_HINT_EXPAND, evas.EVAS_HINT_EXPAND)
+        self.size_hint_align_set(evas.EVAS_HINT_FILL, evas.EVAS_HINT_FILL)
 
     def contact_updated(self, contactview):
         #TODO : clean :)
@@ -234,10 +240,9 @@ class ContactHolder(elementary.Box):
                 c.data['on_click'] = None
         c.size_hint_min_set(26, 26)
         c.show()
-        print c.size_hint_min_get()
 
 
-    def groupViewUpdated(self, groupview):
+    def group_view_updated(self, groupview):
         contact_items = self.contacts_list
         cuids = [c.uid for g in contact_items]
         self.contact_items = []
@@ -255,16 +260,16 @@ class ContactHolder(elementary.Box):
 
     def add_contact(self, uid):
         new_contact = elementary.Layout(self)
-        new_contact.file_set(THEME_FILE, "contact_item")
+        new_contact.file_set(THEME_FILE, "amsn2/contact_item")
         new_contact.data['uid'] = uid
         new_contact.data['on_click'] = None
         self.contacts_list.append(new_contact)
         self.contacts_dict[uid] = new_contact
         self.pack_end(new_contact)
-        new_contact.size_hint_min_set(26, 26)
-        new_contact.size_hint_weight_set(1.0, 1.0)
-        new_contact.size_hint_align_set(-1.0, -1.0)
-        print new_contact.size_hint_min_get()
+        new_contact.size_hint_weight_set(evas.EVAS_HINT_EXPAND,
+                                         evas.EVAS_HINT_EXPAND)
+        new_contact.size_hint_align_set(evas.EVAS_HINT_FILL,
+                                        evas.EVAS_HINT_FILL)
 
 
     def remove_contact(self, uid):
@@ -286,7 +291,7 @@ class ContactHolder(elementary.Box):
 class GroupItem(elementary.Layout):
     def __init__(self, parent, uid):
         elementary.Layout.__init__(self, parent)
-        self.file_set(THEME_FILE, "group_item")
+        self.file_set(THEME_FILE, "amsn2/group_item")
         self._parent = parent
         self._skin = parent._skin
         self.expanded = True
@@ -299,8 +304,8 @@ class GroupItem(elementary.Layout):
         self.edj.signal_callback_add("collapsed", "*", self.__collapsed_cb)
         self.edj.signal_callback_add("expanded", "*", self.__expanded_cb)
 
-        self.size_hint_weight_set(1.0, 0.0)
-        self.size_hint_align_set(-1.0, 0.0)
+        self.size_hint_weight_set(evas.EVAS_HINT_EXPAND, evas.EVAS_HINT_EXPAND)
+        self.size_hint_align_set(evas.EVAS_HINT_FILL, 0.0)
 
     def num_contacts(self):
         if self.expanded == False:
@@ -310,25 +315,15 @@ class GroupItem(elementary.Layout):
 
     def group_updated(self, groupview):
         self.edj.part_text_set("group_name", str(groupview.name))
-        self.contact_holder.groupViewUpdated(groupview)
+        self.contact_holder.group_view_updated(groupview)
 
     # Private methods
     def __expanded_cb(self, edje_obj, signal, source):
         self.expanded = True
-        print "expand"
-        print self.size_hint_min_get()
-        print self.contact_holder.size_hint_min_get()
-        for c in self.contact_holder.contacts_list:
-            print c.size_hint_min_get()
         self.contact_holder.hide()
 
     def __collapsed_cb(self, edje_obj, signal, source):
         self.expanded = False
-        print "collapse"
-        print self.size_hint_min_get()
-        print self.contact_holder.size_hint_min_get()
-        for c in self.contact_holder.contacts_list:
-            print c.size_hint_min_get()
         self.contact_holder.show()
 
 class GroupHolder(elementary.Box):
@@ -338,8 +333,8 @@ class GroupHolder(elementary.Box):
         self.group_items_dict = {}
         self._parent = parent
         self._skin = skin
-        self.size_hint_weight_set(1.0, 0.0)
-        self.size_hint_align_set(-1.0, 0.0)
+        self.size_hint_weight_set(evas.EVAS_HINT_EXPAND, 0.0)
+        self.size_hint_align_set(evas.EVAS_HINT_FILL, 0.0)
 
     def add_group(self, uid):
         new_group = GroupItem(self, uid)
@@ -361,7 +356,7 @@ class GroupHolder(elementary.Box):
         except KeyError:
             pass
 
-    def viewUpdated(self, clview):
+    def view_updated(self, clview):
         group_items = self.group_items_list
         guids = [g.uid for g in group_items]
         self.group_items = []

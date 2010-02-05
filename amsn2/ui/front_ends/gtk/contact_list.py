@@ -26,6 +26,7 @@ import os
 import gtk
 import pango
 import gobject
+import logging
 
 #import papyon
 from image import *
@@ -37,6 +38,8 @@ from amsn2.core.views import PersonalInfoView
 from amsn2.ui import base
 
 import common
+
+logger = logging.getLogger('amsn2.ui.gtk')
 
 class aMSNContactListWindow(base.aMSNContactListWindow, gtk.VBox):
     '''GTK contactlist'''
@@ -124,7 +127,7 @@ class aMSNContactListWindow(base.aMSNContactListWindow, gtk.VBox):
         self.status.pack_start(txtCell, False)
         self.status.add_attribute(iconCell, 'pixbuf',0)
         self.status.add_attribute(txtCell, 'markup',1)
-        self.status.connect('changed', self.onStatusChanged)
+        self.status.connect('changed', self.on_status_changed)
 
     def __create_box(self):
         frameDisplay = gtk.Frame()
@@ -234,7 +237,7 @@ class aMSNContactListWindow(base.aMSNContactListWindow, gtk.VBox):
         parentWidget.add(entry)
         entry.show()
         parentWidget.set_relief(gtk.RELIEF_NONE)        # remove cool elevated effect
-        
+
     def __onDisplayClicked(self, source):
         self._myview.changeDP()
 
@@ -244,16 +247,16 @@ class aMSNContactListWindow(base.aMSNContactListWindow, gtk.VBox):
     def hide(self):
         pass
 
-    def setTitle(self, text):
+    def set_title(self, text):
         self._main_win.set_title(text)
 
-    def setMenu(self, menu):
+    def set_menu(self, menu):
         """ This will allow the core to change the current window's main menu
         @type menu: MenuView
         """
         pass
 
-    def myInfoUpdated(self, view):
+    def my_info_updated(self, view):
         """ This will allow the core to change pieces of information about
         ourself, such as DP, nick, psm, the current media being played,...
         @type view: PersonalInfoView
@@ -273,7 +276,7 @@ class aMSNContactListWindow(base.aMSNContactListWindow, gtk.VBox):
             pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(imview.imgs[0][1], 64, 64)
             self.display.set_from_pixbuf(pixbuf)
 
-    def onStatusChanged(self, combobox):
+    def on_status_changed(self, combobox):
         status = combobox.get_active()
         for key in self.status_values:
             if self.status_values[key] == status:
@@ -281,7 +284,7 @@ class aMSNContactListWindow(base.aMSNContactListWindow, gtk.VBox):
         if key != self._myview.presence:
             self._myview.presence = key
 
-    def getContactListWidget(self):
+    def get_contactlist_widget(self):
         return self._clwidget
 
 class aMSNContactListWidget(base.aMSNContactListWidget, gtk.TreeView):
@@ -368,6 +371,7 @@ class aMSNContactListWidget(base.aMSNContactListWidget, gtk.TreeView):
 
     def __search_by_id(self, id):
         parent = self._model.get_iter_first()
+        children = []
 
         while (parent is not None):
             obj = self._model.get_value(parent, 3)
@@ -375,11 +379,14 @@ class aMSNContactListWidget(base.aMSNContactListWidget, gtk.TreeView):
             child = self._model.iter_children(parent)
             while (child is not None):
                 cobj = self._model.get_value(child, 3)
-                if (cobj == id): return child
+                if (cobj == id): children.append(child)
                 child = self._model.iter_next(child)
             parent = self._model.iter_next(parent)
 
-        return None
+        # many iters can have the same id,
+        # if a contact belongs to more than one group
+        if children: return children
+        else: return None
 
     def show(self):
         pass
@@ -387,7 +394,7 @@ class aMSNContactListWidget(base.aMSNContactListWidget, gtk.TreeView):
     def hide(self):
         pass
 
-    def contactListUpdated(self, clview):
+    def contactlist_updated(self, clview):
         guids = self.groups
         self.groups = []
 
@@ -404,9 +411,11 @@ class aMSNContactListWidget(base.aMSNContactListWidget, gtk.TreeView):
                 giter = self.__search_by_id(gid)
                 self._model.remove(giter)
 
-    def groupUpdated(self, groupview):
+    def group_updated(self, groupview):
         if (groupview.uid == 0): groupview.uid = '0'
-        if groupview.uid not in self.groups: return
+        if groupview.uid not in self.groups:
+            logger.error('Group iter %s not found!' %(contactview.uid))
+            return
 
         giter = self.__search_by_id(groupview.uid)
         self._model.set_value(giter, 1, groupview)
@@ -427,25 +436,29 @@ class aMSNContactListWidget(base.aMSNContactListWidget, gtk.TreeView):
         # Remove unused contacts
         for cid in cuids:
             if cid not in self.contacts[groupview.uid]:
-                citer = self.__search_by_id(cid)
-                self._model.remove(citer)
+                citers = self.__search_by_id(cid)
+                citer = [c for c in citers if self._model.is_ancestor(giter, c)]
+                self._model.remove(citer[0])
 
-    def contactUpdated(self, contactview):
+    def contact_updated(self, contactview):
         """
         @type contactview: ContactView
         """
 
-        citer = self.__search_by_id(contactview.uid)
-        if citer is None: return
+        citers = self.__search_by_id(contactview.uid)
+        if citers is None:
+            logger.error('Contact iter %s not found!' %(contactview.uid))
+            return
 
         img = Image(self._cwin._theme_manager, contactview.dp)
         #img = Image(self._cwin._theme_manager, contactview.icon)
         dp = img.to_pixbuf(28, 28)
 
-        self._model.set_value(citer, 0, dp)
-        self._model.set_value(citer, 1, contactview)
-        self._model.set_value(citer, 2, common.escape_pango(
-            str(contactview.name)))
+        for citer in citers:
+            self._model.set_value(citer, 0, dp)
+            self._model.set_value(citer, 1, contactview)
+            self._model.set_value(citer, 2, common.escape_pango(
+                                  str(contactview.name)))
         del dp
         gc.collect()
 
