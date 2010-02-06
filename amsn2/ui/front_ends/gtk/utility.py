@@ -1,8 +1,10 @@
 
 from amsn2.ui import base
 from amsn2.core import views
+
 import gtk
 import logging
+import pango
 
 logger = logging.getLogger('amsn2.gtk.utility')
 
@@ -104,25 +106,61 @@ class aMSNGroupInputWindow(base.aMSNGroupInputWindow, gtk.Dialog):
                             (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT,
                              gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
         self._callback = callback
+        self.set_default_size(250, 300)
 
         label = gtk.Label(message[0])
+        #label1 = gtk.Label(message[1])
         self._name = gtk.Entry()
+
+        cstore = gtk.ListStore(str, object, bool)
+        cstore.connect("row-changed", self._row_selected)
+        for cw in contacts:
+            cstore.append([cw.name, cw, None])
+
+        name = gtk.CellRendererText()
+        name.set_property('ellipsize-set',True)
+        name.set_property('ellipsize', pango.ELLIPSIZE_END)
+        toggle = gtk.CellRendererToggle()
+        toggle.set_property('activatable', True)
+        toggle.connect('toggled', self._toggled, cstore)
+        column = gtk.TreeViewColumn()
+        column.set_expand(True)
+        column.pack_start(name, True)
+        column.add_attribute(name, "text", 0)
+        column.pack_end(toggle, False)
+        column.add_attribute(toggle, "active", 2)
+        self.c_treeview = gtk.TreeView(model=cstore)
+        self.c_treeview.set_headers_visible(False)
+        self.c_treeview.append_column(column)
+
+        scrollwindow = gtk.ScrolledWindow()
+        scrollwindow.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        scrollwindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)	
+        scrollwindow.add(self.c_treeview)
+
         ca = self.get_content_area()
         ca.set_spacing(5)
-        ca.pack_start(label)
-        ca.pack_start(self._name)
-
-        # TODO: build list of existing contacts
+        namebox = gtk.HBox()
+        namebox.pack_start(label, False)
+        namebox.pack_start(self._name, True)
+        ca.pack_start(namebox, False)
+        #ca.pack_start(label1, False)
+        ca.pack_start(scrollwindow, True)
 
         self.connect("response", self.on_response)
-        label.show()
-        self._name.show()
-        self.show()
+        self.show_all()
+
+    def _row_selected(self, dialog, row, boh):
+        pass
+
+    def _toggled(self, cell, path, model):
+        model[path][2] = not model[path][2]
 
     def on_response(self, dialog, id):
         if id == gtk.RESPONSE_ACCEPT:
             name = self._name.get_text()
-            self._callback(name)
+            contacts = [c[1].account for c in self.c_treeview.get_model() if c[2]]
+            self._callback(name, contacts)
         elif id == gtk.RESPONSE_REJECT:
             pass
         self.destroy()
