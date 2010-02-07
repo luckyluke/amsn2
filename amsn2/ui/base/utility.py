@@ -4,10 +4,13 @@ class aMSNErrorWindow(object):
     def __init__(self, error_text):
         """
         @type error_text: str
-
-        This will eventually call the related show() method, so the window is
-        displayed when created.
         """
+        raise NotImplementedError
+
+    def set_title(self, title):
+        raise NotImplementedError
+
+    def show(self):
         raise NotImplementedError
 
 class aMSNNotificationWindow(object):
@@ -18,10 +21,13 @@ class aMSNNotificationWindow(object):
     def __init__(self, notification_text):
         """
         @type notification_text: str
-
-        This will eventually call the related show() method, so the window is
-        displayed when created.
         """
+        raise NotImplementedError
+
+    def set_title(self, title):
+        raise NotImplementedError
+
+    def show(self):
         raise NotImplementedError
 
 class aMSNDialogWindow(object):
@@ -36,10 +42,13 @@ class aMSNDialogWindow(object):
         @param actions: A tuple containing the options between
         which the user can choose. Every option is a tuple itself, of the form (name, callback),
         where callback is the function that will be called if the option is selected.
-
-        This will eventually call the related show() method, so the window is
-        displayed when created.
         """
+        raise NotImplementedError
+
+    def set_title(self, title):
+        raise NotImplementedError
+
+    def show(self):
         raise NotImplementedError
 
 class aMSNContactInputWindow(object):
@@ -59,6 +68,12 @@ class aMSNContactInputWindow(object):
         """
         raise notImplementedError
 
+    def set_title(self, title):
+        raise NotImplementedError
+
+    def show(self):
+        raise NotImplementedError
+
 class aMSNGroupInputWindow(object):
     """
     This Interface represent a window used to get a new group.
@@ -74,6 +89,12 @@ class aMSNGroupInputWindow(object):
         @param contactviews: a list of contactviews of existing contacts
         """
         raise notImplementedError
+
+    def set_title(self, title):
+        raise NotImplementedError
+
+    def show(self):
+        raise NotImplementedError
 
 class aMSNContactDeleteWindow(object):
     """
@@ -92,6 +113,12 @@ class aMSNContactDeleteWindow(object):
         """
         raise notImplementedError
 
+    def set_title(self, title):
+        raise NotImplementedError
+
+    def show(self):
+        raise NotImplementedError
+
 class aMSNGroupDeleteWindow(object):
     """
     This Interface represent a window used to delete a group.
@@ -108,4 +135,10 @@ class aMSNGroupDeleteWindow(object):
         that can be removed from the AddressBook.
         """
         raise notImplementedError
+
+    def set_title(self, title):
+        raise NotImplementedError
+
+    def show(self):
+        raise NotImplementedError
 

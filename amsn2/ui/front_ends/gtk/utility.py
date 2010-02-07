@@ -10,7 +10,7 @@ logger = logging.getLogger('amsn2.gtk.utility')
 
 class aMSNErrorWindow(base.aMSNErrorWindow, gtk.Dialog):
     def __init__(self, error_text):
-        gtk.Dialog.__init__(self, "aMSN Error", None, gtk.DIALOG_NO_SEPARATOR,
+        gtk.Dialog.__init__(self, None, None, gtk.DIALOG_NO_SEPARATOR,
                             (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
         label = gtk.Label(error_text)
         self.get_content_area().set_spacing(5)
@@ -22,9 +22,15 @@ class aMSNErrorWindow(base.aMSNErrorWindow, gtk.Dialog):
     def on_response(self, dialog, id):
         self.destroy()
 
+    def show(self):
+        self.show_all()
+
+    def set_title(self, title):
+        gtk.Dialog.set_title(self, title)
+
 class aMSNNotificationWindow(base.aMSNNotificationWindow, gtk.Dialog):
     def __init__(self, notification_text):
-        gtk.Dialog.__init__(self, "aMSN Notification", None, gtk.DIALOG_NO_SEPARATOR,
+        gtk.Dialog.__init__(self, None, None, gtk.DIALOG_NO_SEPARATOR,
                             (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
         label = gtk.Label(notification_text)
         self.get_content_area().set_spacing(5)
@@ -36,9 +42,15 @@ class aMSNNotificationWindow(base.aMSNNotificationWindow, gtk.Dialog):
     def on_response(self, dialog, id):
         self.destroy()
 
+    def show(self):
+        self.show_all()
+
+    def set_title(self, title):
+        gtk.Dialog.set_title(self, title)
+
 class aMSNDialogWindow(base.aMSNDialogWindow, gtk.Dialog):
     def __init__(self, message, actions):
-        gtk.Dialog.__init__(self, "aMSN Dialog", None, gtk.DIALOG_NO_SEPARATOR, None)
+        gtk.Dialog.__init__(self, None, None, gtk.DIALOG_NO_SEPARATOR, None)
 
         label = gtk.Label(message)
         ca = self.get_content_area()
@@ -63,9 +75,15 @@ class aMSNDialogWindow(base.aMSNDialogWindow, gtk.Dialog):
             logger.warning("Unknown dialog choice, id %s" % id)
         self.destroy()
 
+    def show(self):
+        self.show_all()
+
+    def set_title(self, title):
+        gtk.Dialog.set_title(self, title)
+
 class aMSNContactInputWindow(base.aMSNContactInputWindow, gtk.Dialog):
     def __init__(self, message, callback, groups):
-        gtk.Dialog.__init__(self, "aMSN Contact Input", None, gtk.DIALOG_NO_SEPARATOR,
+        gtk.Dialog.__init__(self, None, None, gtk.DIALOG_NO_SEPARATOR,
                             (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT,
                              gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
         self._callback = callback
@@ -99,10 +117,15 @@ class aMSNContactInputWindow(base.aMSNContactInputWindow, gtk.Dialog):
             pass
         self.destroy()
 
+    def show(self):
+        self.show_all()
+
+    def set_title(self, title):
+        gtk.Dialog.set_title(self, title)
 
 class aMSNGroupInputWindow(base.aMSNGroupInputWindow, gtk.Dialog): 
     def __init__(self, message, callback, contacts):
-        gtk.Dialog.__init__(self, "aMSN Group Input", None, gtk.DIALOG_NO_SEPARATOR,
+        gtk.Dialog.__init__(self, None, None, gtk.DIALOG_NO_SEPARATOR,
                             (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT,
                              gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
         self._callback = callback
@@ -165,9 +188,15 @@ class aMSNGroupInputWindow(base.aMSNGroupInputWindow, gtk.Dialog):
             pass
         self.destroy()
 
+    def show(self):
+        self.show_all()
+
+    def set_title(self, title):
+        gtk.Dialog.set_title(self, title)
+
 class aMSNContactDeleteWindow(base.aMSNContactDeleteWindow, gtk.Dialog): 
     def __init__(self, message, callback, contacts):
-        gtk.Dialog.__init__(self, "aMSN Contact Input", None, gtk.DIALOG_NO_SEPARATOR,
+        gtk.Dialog.__init__(self, None, None, gtk.DIALOG_NO_SEPARATOR,
                             (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT,
                              gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
         self._callback = callback
@@ -191,10 +220,16 @@ class aMSNContactDeleteWindow(base.aMSNContactDeleteWindow, gtk.Dialog):
         elif id == gtk.RESPONSE_REJECT:
             pass
         self.destroy()
+
+    def show(self):
+        self.show_all()
+
+    def set_title(self, title):
+        gtk.Dialog.set_title(self, title)
 
 class aMSNGroupDeleteWindow(base.aMSNGroupDeleteWindow, gtk.Dialog): 
     def __init__(self, message, callback, groups):
-        gtk.Dialog.__init__(self, "aMSN Group Input", None, gtk.DIALOG_NO_SEPARATOR,
+        gtk.Dialog.__init__(self, None, None, gtk.DIALOG_NO_SEPARATOR,
                             (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT,
                              gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
         self._callback = callback
@@ -218,4 +253,10 @@ class aMSNGroupDeleteWindow(base.aMSNGroupDeleteWindow, gtk.Dialog):
         elif id == gtk.RESPONSE_REJECT:
             pass
         self.destroy()
+
+    def show(self):
+        self.show_all()
+
+    def set_title(self, title):
+        gtk.Dialog.set_title(self, title)
 

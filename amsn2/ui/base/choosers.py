@@ -15,10 +15,13 @@ class aMSNFileChooserWindow(object):
         @type callback: function
         @param callback: The function called when the file has been choosed.
         Its prototype is callback(file_path)
-
-        This will eventually call the related show() method, so the window is
-        displayed when created.
         """
+        raise NotImplementedError
+
+    def set_title(self, title):
+        raise NotImplementedError
+
+    def show(self):
         raise NotImplementedError
 
 class aMSNDPChooserWindow(object):
@@ -32,9 +35,12 @@ class aMSNDPChooserWindow(object):
         @param callback: The function called when the dp has been choosed.
         Its prototype is callback(dp_path)
         @type backend_manager: aMSNBackendManager
-
-        This will eventually call the related show() method, so the window is
-        displayed when created.
         """
+        raise NotImplementedError
+
+    def set_title(self, title):
+        raise NotImplementedError
+
+    def show(self):
         raise NotImplementedError
 
