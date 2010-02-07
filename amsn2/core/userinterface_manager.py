@@ -52,7 +52,7 @@ class aMSNUserInterfaceManager(object):
         self._splash.image = image
         self._splash.text = "Loading..."
         self._splash.show()
-        self._main.title = "aMSN 2 - Loading"
+        self._main.set_title("aMSN 2 - Loading")
         return self._splash
 
     def load_login(self, accounts):
@@ -72,7 +72,7 @@ class aMSNUserInterfaceManager(object):
             self._login.signout()
             self._login.set_accounts(accounts)
 
-        self._main.title = "aMSN 2 - Login"
+        self._main.set_title("aMSN 2 - Login")
 
         self._login.show()
 
