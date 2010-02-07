@@ -18,6 +18,7 @@ class aMSNContactListManager:
         self._papyon_addressbook = None
 
     #TODO: sorting contacts & groups
+    #TODO: simplify management of groups
 
     ''' normal changes of a contact '''
 
@@ -94,11 +95,11 @@ class aMSNContactListManager:
     def add_contact(self):
         def cb(email, invite_msg='', groups=[]):
             if email:
-                def failed(papyon_contact):
-                    self._core._ui_manager.showError('Failed to remove the contact %s',
-                                                      papyon_contact.account)
+                def failed(error_code):
+                    self._core._ui_manager.showError('Failed to remove the contact %s'
+                                                      %email)
                 self._papyon_addressbook.add_messenger_contact(email, self._core._account.view.email,
-                                                               invite_msg, failed_cb=failed)
+                                                               invite_msg, failed_cb=(failed,))
 
         groupviews = [GroupView(self._core, g) for g in self._groups.values()]
         self._core._ui_manager.load_contact_input_window(cb, groupviews)
@@ -110,7 +111,8 @@ class aMSNContactListManager:
                     papyon_contact = self._papyon_addressbook.\
                                           contacts.search_by('account', account)[0]
                 except IndexError:
-                    self._core._ui_manager.show_error('You don\'t have the %s contact!', account)
+                    self._core._ui_manager.show_error('You don\'t have the %s contact!'
+                                                      %account)
                     return
 
                 self.remove_contact_Uid(papyon_contact.id)
@@ -121,10 +123,10 @@ class aMSNContactListManager:
     def remove_contact_Uid(self, uid):
         papyon_contact = self._papyon_addressbook.contacts.search_by('id', uid)[0]
         def cb_ok():
-            def failed(papyon_contact):
-                self._core._ui_manager.show_error('Failed to remove the contact %s',
-                                                  papyon_contact.account)
-            self._papyon_addressbook.delete_contact(papyon_contact, failed_cb=failed)
+            def failed(error_code):
+                self._core._ui_manager.show_error('Failed to remove the contact %s'
+                                                  %papyon_contact.account)
+            self._papyon_addressbook.delete_contact(papyon_contact, failed_cb=(failed,))
 
         self._core._ui_manager.show_dialog('Are you sure you want to remove the contact %s?'
                                           % papyon_contact.account,
@@ -150,10 +152,22 @@ class aMSNContactListManager:
 
     def add_group(self):
         def cb(name, contacts=[]):
-            def failed(papyon_group):
-                self._core._ui_manager.show_error('Failed to add the group %s', papyon_group)
+            def failed(error_code):
+                self._core._ui_manager.show_error('Failed to add the group %s'
+                                                  %name)
 
-            self._papyon_addressbook.add_group(name, failed_cb=failed)
+            def done(papyon_group):
+                # FIXME: this rely on the fact that papyon first emit
+                # the signal "group-added", then calls this callback
+                # see AddressBook.__common_callback in papyon/service/AddressBook.py
+                for contact in contacts:
+                    cids = [cid for cid in self._contacts.keys()\
+                            if self.get_contact(cid).account==contact]
+
+                    self.add_contact_to_groups(cids[0], [papyon_group.id])
+
+            self._papyon_addressbook.add_group(name, done_cb=(done,),
+                                               failed_cb=(failed,))
 
         contactviews = [ContactView(self._core, c) for c in self._contacts.values()]
         self._core._ui_manager.load_group_input_window(cb, contactviews)
@@ -162,27 +176,39 @@ class aMSNContactListManager:
         def cb(group_name):
             if group_name:
                 group = [g for g in self._groups.values() if g.name==group_name]
-                self.remove_group_gid(group[0].id)
+                if group:
+                    self.remove_group_gid(group[0].id)
 
         groupviews = [GroupView(self._core, g) for g in self._groups.values()]
         self._core._ui_manager.load_group_delete_window(cb, groupviews)
 
     def remove_group_gid(self, gid):
         group = self.get_group(gid)
-        def failed(papyon_group):
-            self._core._ui_manager.show_error('Failed to remove the group %s', papyon_group.name)
+        def failed(error_code):
+            self._core._ui_manager.show_error('Failed to remove the group %s'
+                                              %self.get_group(gid).name)
 
-        self._papyon_addressbook.delete_group(group, failed_cb=failed)
+        self._papyon_addressbook.delete_group(group, failed_cb=(failed,))
 
     def rename_group_gid(self, gid, new_name):
         group = self.get_group(gid)
-        def failed(papyon_group):
-            self._core._ui_manager.show_error('Failed to rename the group %s', papyon_group.name)
+        def failed(error_code):
+            self._core._ui_manager.show_error('Failed to rename the group %s'
+                                              %self.get_group(gid).name)
 
-        self._papyon_addressbook.rename_group(group, new_name, failed_cb=failed)
+        self._papyon_addressbook.rename_group(group, new_name, failed_cb=(failed,))
 
     def add_contact_to_groups(self, cid, gids):
-        pass
+        def failed(error_code):
+            self._core._ui_manager.show_error('Failed to add %s to the groups' %(
+                                              self.get_contact(cid).account))
+        #TODO: contact may exist in multiple networks
+        for gid in gids:
+            groups = [g for g in self._papyon_addressbook.groups if g.id==gid]
+            contacts = self._papyon_addressbook.contacts.search_by('id', cid)
+            self._papyon_addressbook.add_contact_to_group(groups[0],
+                                                          contacts[0],
+                                                          failed_cb=(failed,))
 
     def remove_contact_from_groups(self, cid, gids):
         pass
@@ -200,13 +226,13 @@ class aMSNContactListManager:
         del self._contacts[contact.id]
         self._core._ui_manager.show_notification("Contact %s removed!" % contact.account)
 
-    def onContactBlocked(self, papyon_contact):
+    def on_contact_blocked(self, papyon_contact):
         pass
 
-    def onContactUnblocked(self, papyon_contact):
+    def on_contact_unblocked(self, papyon_contact):
         pass
 
-    def onGroupAdded(self, papyon_group):
+    def on_group_added(self, papyon_group):
         nogroup_id = self._clv.group_ids.pop()
         self._clv.group_ids.append(papyon_group.id)
         self._clv.group_ids.append(nogroup_id)
@@ -215,18 +241,26 @@ class aMSNContactListManager:
         self._em.emit(self._em.events.CLVIEW_UPDATED, self._clv)
         self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
 
-    def onGroupDeleted(self, papyon_group):
+    def on_group_deleted(self, papyon_group):
         self._clv.group_ids.remove(papyon_group.id)
         self._em.emit(self._em.events.CLVIEW_UPDATED, self._clv)
+
+        cids = self.get_group(papyon_group.id).contacts
+        no_group = self.get_group(0)
+        for cid in cids:
+            if not self.get_contact(cid).groups:
+                no_group.contacts.add(cid)
+        gv = GroupView(self._core, no_group)
+        self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
         del self._groups[papyon_group.id]
 
-    def onGroupRenamed(self, papyon_group):
+    def on_group_renamed(self, papyon_group):
         pass
 
-    def onGroupContactAdded(self, papyon_group, papyon_contact):
-        pass
+    def on_group_contact_added(self, papyon_group, papyon_contact):
+        self._add_contact_to_groups(papyon_contact.id, [papyon_group.id])
 
-    def onGroupContactDeleted(self, papyon_group, papyon_contact):
+    def on_group_contact_deleted(self, papyon_group, papyon_contact):
         pass
 
     ''' additional methods '''
@@ -247,10 +281,16 @@ class aMSNContactListManager:
             self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
 
         c = self.get_contact(cid)
+        no_group = self.get_group(0)
+        no_group.contacts.discard(cid)
+        c.groups.discard(0)
+        gv = GroupView(self._core, no_group)
+        self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
         cv = ContactView(self._core, c)
         self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
 
-    # can this be reused to rebuild the contactlist when we want to group the contacts in another way?
+    # can this be reused to rebuild the contactlist when we
+    # want to group the contacts in another way?
     # maybe adding a createGroups method?
     def on_CL_downloaded(self, address_book):
         self._papyon_addressbook = address_book
