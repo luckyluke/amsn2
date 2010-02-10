@@ -185,12 +185,12 @@ class aMSNContactListManager:
         self._core._ui_manager.load_group_delete_window(cb, groupviews)
 
     def remove_group_gid(self, gid):
-        group = self.get_group(gid)
+        papyon_group = [g for g in self._papyon_addressbook.groups if g.id==gid][0]
         def failed(error_code):
             self._core._ui_manager.show_error('Failed to remove the group %s'
                                               %self.get_group(gid).name)
 
-        self._papyon_addressbook.delete_group(group, failed_cb=(failed,))
+        self._papyon_addressbook.delete_group(papyon_group, failed_cb=(failed,))
 
     def rename_group_gid(self, gid, new_name):
         group = self.get_group(gid)
@@ -234,38 +234,15 @@ class aMSNContactListManager:
     def on_contact_unblocked(self, papyon_contact):
         pass
 
-    # redraw the contactlist if a group is added or removed
     def on_group_added(self, papyon_group):
-        self.update_CL()
-        return
-        nogroup_id = self._clv.group_ids.pop()
-        self._clv.group_ids.append(papyon_group.id)
-        self._clv.group_ids.append(nogroup_id)
-        g = self.get_group(papyon_group.id, papyon_group)
-        gv = GroupView(self._core, g)
-        self._em.emit(self._em.events.CLVIEW_UPDATED, self._clv)
-        self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
+        self.update_groups()
 
     def on_group_deleted(self, papyon_group):
-        self._clv.group_ids.remove(papyon_group.id)
-        self.update_CL()
-        return
-        self._clv.group_ids.remove(papyon_group.id)
-        self._em.emit(self._em.events.CLVIEW_UPDATED, self._clv)
-
-        cids = self.get_group(papyon_group.id).contacts
-        no_group = self.get_group(0)
-        for cid in cids:
-            if not self.get_contact(cid).groups:
-                no_group.contacts.add(cid)
-        gv = GroupView(self._core, no_group)
-        self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
-        del self._groups[papyon_group.id]
+        self.update_groups()
 
     def on_group_renamed(self, papyon_group):
         pass
 
-    # manage removing/adding of NoGroup when necessary
     def on_group_contact_added(self, papyon_group, papyon_contact):
         self._add_contact_to_groups(papyon_contact.id, [papyon_group.id])
 
@@ -286,24 +263,23 @@ class aMSNContactListManager:
         for gid in gids:
             g = self.get_group(gid)
             g.fill()
+            #gv = GroupView(self._core, g)
+            #self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
 
-        self.update_CL()
+        self.update_groups()
 
         c = self.get_contact(cid)
         cv = ContactView(self._core, c)
         self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
 
-    # can this be reused to rebuild the contactlist when we
-    # want to group the contacts in another way?
-    # maybe adding a createGroups method?
     def on_CL_downloaded(self, address_book):
         self._papyon_addressbook = address_book
         self._clv = ContactListView()
 
-        self.update_CL()
+        self.update_groups()
         self.update_contacts()
 
-    def update_CL(self):
+    def update_groups(self):
         grpviews = []
 
         # if grouping by user groups:
@@ -370,6 +346,7 @@ class aMSNContactListManager:
             else:
                 raise ValueError
 
+    # TODO: create aMSNPresenceGroup, ... depending on the gid type
     def get_group(self, gid, papyon_group = None):
         """
         @param gid: uid of the group
@@ -383,11 +360,11 @@ class aMSNContactListManager:
             return self._groups[gid]
         except KeyError:
             if papyon_group:
-                g = aMSNUserGroup(self._core, papyon_group)
+                g = aMSNPapyonGroup(self._core, papyon_group)
                 g.fill()
                 # is AMSNGROUP_UPDATED necessary?
             elif gid == 0:
-                g = aMSNUserGroup(self._core, None)
+                g = aMSNPapyonGroup(self._core, None)
                 g.fill()
             else:
                 raise ValueError
@@ -485,13 +462,15 @@ class aMSNBaseGroup():
         self._contacts_storage = core._contactlist_manager._papyon_addressbook.contacts
         self.contacts = set()
         self.contacts_online = set()
+        self.id = None
+        self.name = ''
         #self.papyon_group = papyon_group
         #self.fill(papyon_group)
 
     def fill(self):
         raise NotImplementedError
 
-class aMSNUserGroup(aMSNBaseGroup):
+class aMSNPapyonGroup(aMSNBaseGroup):
     def __init__(self, core, papyon_group):
         aMSNBaseGroup.__init__(self, core)
         self.papyon_group = papyon_group
