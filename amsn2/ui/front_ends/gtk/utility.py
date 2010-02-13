@@ -90,29 +90,64 @@ class aMSNContactInputWindow(base.aMSNContactInputWindow, gtk.Dialog):
 
         label = gtk.Label(message[0])
         self._name = gtk.Entry()
+        label2 = gtk.Label(message[1])
+        self._message = gtk.Entry()
+
+        gstore = gtk.ListStore(str, object, bool)
+        gstore.connect("row-changed", self._row_selected)
+        for gw in groups:
+            if gw.uid != 0:
+                gstore.append([gw.name, gw, None])
+
+        name = gtk.CellRendererText()
+        name.set_property('ellipsize-set',True)
+        name.set_property('ellipsize', pango.ELLIPSIZE_END)
+        toggle = gtk.CellRendererToggle()
+        toggle.set_property('activatable', True)
+        toggle.connect('toggled', self._toggled, gstore)
+        column = gtk.TreeViewColumn()
+        column.set_expand(True)
+        column.pack_start(name, True)
+        column.add_attribute(name, "text", 0)
+        column.pack_end(toggle, False)
+        column.add_attribute(toggle, "active", 2)
+        self.g_treeview = gtk.TreeView(model=gstore)
+        self.g_treeview.set_headers_visible(False)
+        self.g_treeview.append_column(column)
+
+        scrollwindow = gtk.ScrolledWindow()
+        scrollwindow.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        scrollwindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)	
+        scrollwindow.add(self.g_treeview)
+
         ca = self.get_content_area()
         ca.set_spacing(5)
-        ca.pack_start(label)
-        ca.pack_start(self._name)
-
-        # TODO: build list of existing groups
-        label2 = gtk.Label(message[1])
-        ca.pack_start(label2)
-        self._message = gtk.Entry()
-        ca.pack_start(self._message)
-        label2.show()
-        self._message.show()
+        inputbox = gtk.VBox()
+        cbox = gtk.HBox()
+        msgbox = gtk.HBox()
+        cbox.pack_start(label, False)
+        cbox.pack_start(self._name, True)
+        msgbox.pack_start(label2, False)
+        msgbox.pack_start(self._message, True)
+        inputbox.pack_start(cbox, False)
+        inputbox.pack_start(msgbox, False)
+        ca.pack_start(inputbox, False)
+        ca.pack_start(scrollwindow, True)
 
         self.connect("response", self.on_response)
-        label.show()
-        self._name.show()
-        self.show()
+
+    def _row_selected(self, dialog, row, boh):
+        pass
+
+    def _toggled(self, cell, path, model):
+        model[path][2] = not model[path][2]
 
     def on_response(self, dialog, id):
         if id == gtk.RESPONSE_ACCEPT:
             name = self._name.get_text()
             msg = self._message.get_text()
-            self._callback(name, msg)
+            groups = [g[1].uid for g in self.g_treeview.get_model() if g[2]]
+            self._callback(name, msg, groups)
         elif id == gtk.RESPONSE_REJECT:
             pass
         self.destroy()
@@ -171,7 +206,6 @@ class aMSNGroupInputWindow(base.aMSNGroupInputWindow, gtk.Dialog):
         ca.pack_start(scrollwindow, True)
 
         self.connect("response", self.on_response)
-        self.show_all()
 
     def _row_selected(self, dialog, row, boh):
         pass
