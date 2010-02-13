@@ -100,8 +100,17 @@ class aMSNContactListManager:
                 def failed(error_code):
                     self._core._ui_manager.showError('Failed to remove the contact %s'
                                                       %email)
+                def done(papyon_contact):
+                    # FIXME: this rely on the fact that papyon first emit
+                    # the signal "contact-added", then calls this callback
+                    # see AddressBook.__common_callback in papyon/service/AddressBook.py
+
+                    # here groups is the list of group ids
+                    self.add_contact_to_groups(papyon_contact.id, groups)
+
                 self._papyon_addressbook.add_messenger_contact(email, self._core._account.view.email,
-                                                               invite_msg, failed_cb=(failed,))
+                                                               invite_msg, failed_cb=(failed,),
+                                                               done_cb=(done,))
 
         groupviews = [GroupView(self._core, g) for g in self._groups.values()]
         self._core._ui_manager.load_contact_input_window(cb, groupviews)
