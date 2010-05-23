@@ -21,7 +21,7 @@ class GroupView:
 
         self.on_click = None #TODO: collapse, expand
         self.on_double_click = None
-        self.on_right_click_popup_menu = GroupPopupMenu(core)
+        self.on_right_click_popup_menu = GroupPopupMenu(core, amsn_group)
         self.tooltip = None
         self.context_menu = None
 
@@ -67,22 +67,74 @@ class ContactView:
             core._conversation_manager.new_conversation([c_uid])
         self.on_click = start_conversation_cb
         self.on_double_click = None
-        self.on_right_click_popup_menu = ContactPopupMenu(core, amsn_contact)
+        #self.on_right_click_popup_menu = ContactPopupMenu(core, amsn_contact)
         self.tooltip = None
         self.context_menu = None
+
+        # FIXME: should not store these, but the right click menu has to be updated
+        self._core = core
+        self._amsn_contact = amsn_contact
+
+    def update_right_click_menu(self):
+        return ContactPopupMenu(self._core, self._amsn_contact)
+    on_right_click_popup_menu = property(update_right_click_menu)
 
     #TODO: @roproperty: context_menu, tooltip
 
 class ContactPopupMenu(MenuView):
-    def __init__(self, core, amsncontact):
+    def __init__(self, core, amsn_contact):
         MenuView.__init__(self)
         remove = MenuItemView(MenuItemView.COMMAND,
-                              label="Remove %s" % amsncontact.account,
+                              label="Remove %s" % amsn_contact.account,
                               command= lambda:
-                              core._contactlist_manager.remove_contact_Uid(amsncontact.uid))
+                              core._contactlist_manager.remove_contact_Uid(amsn_contact.uid))
+
+        # TODO: move_to_group, but the popupmenu should know which
+        # group it belongs to, and should be updated when a group is added/deleted/renamed
+        copy_to_group = MenuItemView(MenuItemView.CASCADE_MENU, label="Copy to group")
+        remove_from_group = MenuItemView(MenuItemView.CASCADE_MENU, label="Remove from group")
+        for gid in core._contactlist_manager._groups.keys():
+            if gid in amsn_contact.groups or gid == 0: continue
+            amsn_group = core._contactlist_manager.get_group(gid)
+
+            def add_to_g(gid):
+                return lambda: core._contactlist_manager.\
+                                add_contact_to_groups(amsn_contact.uid, (gid,))
+            group_entry = MenuItemView(MenuItemView.COMMAND, label=amsn_group.name,
+                                       command=add_to_g(gid))
+            copy_to_group.add_item(group_entry)
+
+        for gid in amsn_contact.groups:
+            if gid == 0:
+                remove_from_group.disabled = True
+                continue
+
+            amsn_group = core._contactlist_manager.get_group(gid)
+            def remove_from_g(gid):
+                return lambda: core._contactlist_manager.\
+                                remove_contact_from_groups(amsn_contact.uid, (gid,))
+            group_entry = MenuItemView(MenuItemView.COMMAND, label=amsn_group.name,
+                                       command=remove_from_g(gid))
+            remove_from_group.add_item(group_entry)
+
         self.add_item(remove)
+        self.add_item(remove_from_group)
+        self.add_item(copy_to_group)
 
 class GroupPopupMenu(MenuView):
-    def __init__(self, core):
+    def __init__(self, core, amsn_group):
         MenuView.__init__(self)
+        add_group = MenuItemView(MenuItemView.COMMAND,
+                                 label="Add group",
+                                 command= lambda:
+                                 core._contactlist_manager.add_group())
+
+        self.add_item(add_group)
+        if amsn_group.id != 0:
+            remove = MenuItemView(MenuItemView.COMMAND,
+                                  label="Remove group",
+                                  command= lambda:
+                                  core._contactlist_manager.remove_group_gid(amsn_group.id))
+
+            self.add_item(remove)
 

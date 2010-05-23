@@ -222,7 +222,16 @@ class aMSNContactListManager:
                                                           failed_cb=(failed,))
 
     def remove_contact_from_groups(self, cid, gids):
-        pass
+        def failed(error_code):
+            self._core._ui_manager.show_error('Failed to remove %s to the groups' %(
+                                              self.get_contact(cid).account))
+        #TODO: contact may exist in multiple networks
+        for gid in gids:
+            groups = [g for g in self._papyon_addressbook.groups if g.id==gid]
+            contacts = self._papyon_addressbook.contacts.search_by('id', cid)
+            self._papyon_addressbook.delete_contact_from_group(groups[0],
+                                                          contacts[0],
+                                                          failed_cb=(failed,))
 
     ''' callbacks for the user's actions '''
 
@@ -247,7 +256,12 @@ class aMSNContactListManager:
         self.update_groups()
 
     def on_group_deleted(self, papyon_group):
+        amsn_group = self.get_group(papyon_group.id)
         self.update_groups()
+        for cid in amsn_group.contacts:
+            c = self.get_contact(cid)
+            cv = ContactView(self._core, c)
+            self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
 
     def on_group_renamed(self, papyon_group):
         pass
@@ -256,17 +270,33 @@ class aMSNContactListManager:
         self._add_contact_to_groups(papyon_contact.id, [papyon_group.id])
 
     def on_group_contact_deleted(self, papyon_group, papyon_contact):
-        pass
+        #amsn_group = self.get_group(papyon_group.id)
+        #amsn_group.contacts.remove(papyon_contact.id)
+        ###gv = GroupView(self._core, amsn_group)
+        ###self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
+        #self.update_groups()
+        self._remove_contact_from_groups(papyon_contact.id, [papyon_group.id])
 
     ''' additional methods '''
 
     # used when a contact is deleted, moved or change status to offline
-    def _remove_contact_from_groups(self, cid):
-        groups = self.get_groups(cid)
+    def _remove_contact_from_groups(self, cid, gids=None):
+        if gids:
+            groups = [self.get_group(gid) for gid in gids]
+        else:
+            groups = self.get_groups(cid)
         for g in groups:
             g.contacts.remove(cid)
-            gv = GroupView(self._core, g)
-            self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
+
+        print [g.contacts for g in self._groups.values()]
+        self.update_groups()
+        print [g.contacts for g in self._groups.values()]
+
+        # if a contact has to be removed from all the groups, has been deleted
+        if gids:
+            c = self.get_contact(cid)
+            cv = ContactView(self._core, c)
+            self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
 
     def _add_contact_to_groups(self, cid, gids):
         for gid in gids:
@@ -275,9 +305,13 @@ class aMSNContactListManager:
             #gv = GroupView(self._core, g)
             #self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
 
+        print [g.contacts for g in self._groups.values()]
         self.update_groups()
+        print [g.contacts for g in self._groups.values()]
 
         c = self.get_contact(cid)
+        print c.groups
+        for gid in gids: c.groups.add(gid)
         cv = ContactView(self._core, c)
         self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
 
