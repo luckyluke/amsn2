@@ -6,6 +6,9 @@ class ContactListView:
     def __init__(self):
         self.group_ids = []
 
+    def __repr__(self):
+        return "<ContactListView {group_ids=%s}>" \
+                % (repr(self.group_ids),)
 
 
 class GroupView:
@@ -32,7 +35,9 @@ class GroupView:
 
     #TODO: @roproperty: context_menu, tooltip
 
-
+    def __repr__(self):
+        return "<GroupView {uid='%s', name='%s', contact_ids=%s}>" \
+                % (self.uid, self.name, repr(self.contact_ids))
 
 """ a view of a contact on the contact list """
 class ContactView:
@@ -74,6 +79,9 @@ class ContactView:
         self.context_menu = None
 
     #TODO: @roproperty: context_menu, tooltip
+
+    def __repr__(self):
+        return "<ContactView {uid='%s', name='%s'}>" % (self.uid, self.name)
 
 class ContactPopupMenu(MenuView):
     def __init__(self, core, amsncontact):

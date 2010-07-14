@@ -15,12 +15,9 @@ class aMSNLoginWindow(object):
         self._main.login_window = None
 
     def set_accounts(self, accountviews):
-        print "accoutviews:"
-        print accountviews
         self._account_views = accountviews
 
     def signin(self, u, p, *args, **kwargs):
-        print "1"
         accv = self._core._ui_manager.get_accountview_from_email(u)
         accv.password = p
 
@@ -30,7 +27,6 @@ class aMSNLoginWindow(object):
         accv.save_password = False
         accv.autologin = False
 
-        print "2"
         self._core.signin_to_account(self, accv)
 
     def signing_in(self):

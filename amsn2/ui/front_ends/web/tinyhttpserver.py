@@ -61,7 +61,6 @@ class TinyHTTPServer(object):
         eol = headers.find("\r\n")
         start_line = headers[:eol]
         self._method, uri, self._version = start_line.split(" ")
-        print headers
         self._headers = {}
         for line in headers[eol:].splitlines():
             if line:
@@ -85,9 +84,13 @@ class TinyHTTPServer(object):
             self._404()
         elif self._method == "POST":
             if "Content-Length" in self._headers:
-                self._read_delimiter = None
-                self._rcb = self.on_body
-                self._bytes_to_read = int(self._headers["Content-Length"])
+                r = int(self._headers["Content-Length"])
+                if r > 0:
+                    self._read_delimiter = None
+                    self._rcb = self.on_body
+                    self._bytes_to_read = r
+                else:
+                    self._400()
             else:
                 self._400()
         else:
@@ -96,7 +99,6 @@ class TinyHTTPServer(object):
 
 
     def on_body(self, body):
-        print "ON BODY"
         if self._method == "POST":
             path = self._uri[2]
             for (r, _, post_cb) in self._rules:
@@ -113,7 +115,6 @@ class TinyHTTPServer(object):
             self._501()
 
     def on_read(self, s, c):
-        print "on read"
         try:
             chunk = self._socket.recv(READ_CHUNK_SIZE)
         except socket.error, e:
@@ -182,13 +183,20 @@ class TinyHTTPServer(object):
                    % (len(r), r))
         self.close()
 
+    def _200(self, body = None):
+        if body:
+            self.write("HTTP/1.1 200 OK\r\nContent-Length: %d\r\n\r\n%s"
+                       % (len(body), body))
+        else:
+            self.write("HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n")
+        self.close()
+
     """
     400 Bad Request
     The request contains bad syntax or cannot be fulfilled
     """
     def _400(self, body = None):
         path = self._uri[2]
-        print "400 on %s" % (path,)
         self.write("HTTP/1.1 400\r\n\r\n")
         self.close()
 
@@ -198,7 +206,6 @@ class TinyHTTPServer(object):
     """
     def _404(self, body = None):
         path = self._uri[2]
-        print "404 on %s" % (path,)
         self.write("HTTP/1.1 404\r\n\r\n")
         self.close()
 
@@ -208,7 +215,6 @@ class TinyHTTPServer(object):
     """
     def _500(self, body = None):
         path = self._uri[2]
-        print "500 on %s" % (path,)
         self.write("HTTP/1.1 500\r\n\r\n")
         self.close()
 
@@ -218,7 +224,6 @@ class TinyHTTPServer(object):
     """
     def _501(self, body = None):
         path = self._uri[2]
-        print "501 on %s" % (path,)
         self.write("HTTP/1.1 501\r\n\r\n")
         self.close()
 

@@ -12,10 +12,10 @@
   <body>
     <div class="splashScreen"></div>
     <div class="login">
-      <form method="post" action="signin">
-      Username:<input type="text" name="username" /> <br/>
-      Password:<input type="password" name="password" /> <br/>
-      <input type="submit" value="SignIn" name="signin" />
+      <form id="signin" action="fake_to_store_creds">
+      Username:<input id='u' name='u' type="text" /> <br/>
+      Password:<input id='p' name='p' type="password" /> <br/>
+      <input type="submit" value="SignIn" />
       </form>
     </div>
     <div class="mainWindow">
@@ -26,5 +26,16 @@
         <div class="title"></div>
       </div>
     </div>
+
+    <script type="text/javascript">
+      $('#signin').submit(function(){
+        $.post('/signin',
+               {username: $('#u').val(),
+                password: $('#p').val()},
+               function() { Listening();} );
+        return false;
+      });
+    </script>
+
   </body>
 </html>

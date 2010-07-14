@@ -292,14 +292,15 @@ function onConnecting(mesgL)
 function showLogin()
 {
     $("div.login").show("slow");
-    $("#signin").click(function() {
-        $.post("/signin", {u:$("#username").val(), p:$("#password").val()},
-               function(data, textStatus){});
-    });
 }
 function hideLogin()
 {
     $("div.login").hide("slow");
+}
+
+function signingIn()
+{
+    hideLogin();
 }
 
 // splash screen
@@ -318,6 +319,12 @@ function showSplashScreen()
 function hideSplashScreen()
 {
     $("div.splashScreen").hide("slow");
+}
+
+
+function myInfoUpdated()
+{
+  // TODO
 }
 
 // contact_list
@@ -345,17 +352,19 @@ function contactListUpdated(groupsL)
 
 function groupUpdated(groupV)
 {
-    var uid = groupV[0];
-    var contact_ids = groupV[1];
-    var name = groupV[2];
-    var group = contactList.getGroup(uid);
-    group.setName(name);
+  var uid = groupV[0];
+  var contact_ids = groupV[1];
+  var name = groupV[2];
+  var group = contactList.getGroup(uid);
+  group.setName(name);
+  if (contact_ids) {
     var cuids = contact_ids.split(',');
     var clist = [];
     $.each(cuids, function(){
         clist.push(contactList.getContact(cuids.shift()));
     });
     group.setContacts(clist);
+  }
 }
 
 function contactUpdated(contactV)
@@ -434,39 +443,32 @@ function Sending()
             (xhr=$.post("amsn2.php", {in:ReqSend.join("\n")},
                         function(data,textStatus){})).onreadystatechange = function() {
                 if (xhr.readyState == 4)
-                    setTimeout(Sending, 5e2);
+                    setTimeout(Sending, 500);
             }
         } else {
-            setTimeout(Sending, 5e2);
+            setTimeout(Sending, 500);
         }
     } catch(e) {}
 }
 */
 function Listening() {
-    try {
-        var xhr;
-        (xhr=$.get("/out", null, function (data, textStatus) {
-            console.log(data)
-            eval(data);
-        },'text')).onreadystatechange = function() {
-            if (xhr.readyState == 4)
-                setTimeout(Listening, 5e2);
-        };
-    } catch(e) {}
+  $.get("/out", function(data){
+    setTimeout(Listening, 5000);
+    //try {
+      eval(data);
+    //} catch(e) {}
+  });
 }
 
 // init
 $(document).ready(function()
 {
-    /*
     $(".mainWindow").dialog({
         position:['left','top'],
         height: '100%',
         width: '400px',
         stack: false
     });
-    */
-    //showMainWindow();
     showLogin();
     //Listening();
 });
