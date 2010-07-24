@@ -93,7 +93,7 @@ class aMSNContactListWidget(object):
         self._main.send("groupUpdated",
                         groupView.uid,
                         str(groupView.name),
-                        groupView.contact_ids)
+                        sorted(groupView.contact_ids))
 
     def contact_updated(self, contactView):
         """ This method will be called to notify the contact list
