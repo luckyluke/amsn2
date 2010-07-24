@@ -148,7 +148,7 @@ function Contact(_uid)
     var uid = _uid;
 
     element.click(function(){
-                  Send(["contactClicked",uid]);
+        $.post('/contactClicked', {uid: uid});
     });
 
     this.setName = function(_name) {
@@ -276,9 +276,9 @@ function ChatWidget(_uid)
 
     $(textInput).keydown(function(event) {
         if (event.keyCode == 13) {
-            text = textInput.val();
+            msg = textInput.val();
             textInput.val("");
-            Send(["sendMessage",_uid,text]);
+            $.post('/sendMsg', {uid: uid, msg: msg});
             return false;
         }
     });

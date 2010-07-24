@@ -9,17 +9,17 @@ class aMSNChatWindow(object):
         self._amsn_core = amsn_core
         self._uid = hashlib.md5(str(random.random())).hexdigest()
         self._main = amsn_core._core._main
-        self._main.send("newChatWindow",[self._uid])
+        self._main.send("newChatWindow", self._uid)
 
     def add_chat_widget(self, chat_widget):
         """ add an aMSNChatWidget to the window """
-        self._main.send("addChatWidget",[self._uid,chat_widget._uid])
+        self._main.send("addChatWidget", self._uid, chat_widget._uid)
 
     def show(self):
-        self._main.send("showChatWindow",[self._uid])
+        self._main.send("showChatWindow", self._uid)
 
     def hide(self):
-        self._main.send("hideChatWindow",[self._uid])
+        self._main.send("hideChatWindow", self._uid)
 
     def add(self):
         print "aMSNChatWindow.add"
@@ -57,11 +57,10 @@ class aMSNChatWidget(object):
     def __init__(self, amsn_conversation, parent, contacts_uid):
         """ create the chat widget for the 'parent' window, but don't attach to
         it."""
-        self._main=parent._main
-        self._uid=md5.new(str(random.random())).hexdigest()
-        self._main.send("newChatWidget",[self._uid])
-        self._main.addListener("sendMessage",self.sendMessage)
-        self._amsn_conversation=amsn_conversation
+        self._main = parent._main
+        self._uid = hashlib.md5(str(random.random())).hexdigest()
+        self._main.send("newChatWidget", self._uid)
+        self._amsn_conversation = amsn_conversation
 
     def sendMessage(self,smL):
         if smL[0]==self._uid:
@@ -75,8 +74,9 @@ class aMSNChatWidget(object):
     def on_message_received(self, messageview):
         """ Called for incoming and outgoing messages
             message: a MessageView of the message"""
-        self._main.send("onMessageReceivedChatWidget", [self._uid, str(messageview.toStringView())])
+        self._main.send("onMessageReceivedChatWidget",
+                        self._uid, str(messageview.toStringView()))
 
     def nudge(self):
-        self._main.send("nudgeChatWidget",[self._uid])
+        self._main.send("nudgeChatWidget", self._uid)
 

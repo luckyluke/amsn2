@@ -42,6 +42,8 @@ class Backend(object):
             (re.compile('/static/(.*)'), self.get_static_file, None),
             (re.compile('/out$'), self.out, self.out),
             (re.compile('/signin'), None, self.post_signin),
+            (re.compile('/contactClicked'), None, self.post_contact_clicked),
+            (re.compile('/sendMsg'), None, self.post_send_msg),
         )
 
         gobject.io_add_watch(self._socket, gobject.IO_IN, self.on_accept)
@@ -113,6 +115,28 @@ class Backend(object):
             args = cgi.parse_qs(body)
             print "<<< %s" %(args,)
             self.login_window.signin(args['username'][0], args['password'][0])
+            w.write("HTTP/1.1 200 OK\r\n\r\n")
+            w.close()
+            return
+        w._400()
+
+    def post_contact_clicked(self, w, uri, headers, body = None):
+        print "Contact Clicked"
+        if (body and 'Content-Type' in headers
+        and headers['Content-Type'].startswith('application/x-www-form-urlencoded')):
+            args = cgi.parse_qs(body)
+            print "<<< %s" %(args,)
+            w.write("HTTP/1.1 200 OK\r\n\r\n")
+            w.close()
+            return
+        w._400()
+
+    def post_send_msg(self, w, uri, headers, body = None):
+        print "Send Msg"
+        if (body and 'Content-Type' in headers
+        and headers['Content-Type'].startswith('application/x-www-form-urlencoded')):
+            args = cgi.parse_qs(body)
+            print "<<< %s" %(args,)
             w.write("HTTP/1.1 200 OK\r\n\r\n")
             w.close()
             return
