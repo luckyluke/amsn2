@@ -421,37 +421,6 @@ function myInfoUpdated()
   // TODO
 }
 
-
-
-// Comunication functions
-/*
-var ReqStack = [];
-function Send(msg)
-{
-    ReqStack.push(msg);
-}
-function Sending()
-{
-    try {
-        if (ReqStack.length) {
-            var xhr;
-            var ReqSend = [];
-
-            while (ReqStack.length)
-                ReqSend.push(ReqStack.shift().join("\t"));
-
-            ReqStack = [];
-            (xhr=$.post("amsn2.php", {in:ReqSend.join("\n")},
-                        function(data,textStatus){})).onreadystatechange = function() {
-                if (xhr.readyState == 4)
-                    setTimeout(Sending, 500);
-            }
-        } else {
-            setTimeout(Sending, 500);
-        }
-    } catch(e) {}
-}
-*/
 function Listening() {
   $.get("/out", function(data){
     setTimeout(Listening, 5000);
