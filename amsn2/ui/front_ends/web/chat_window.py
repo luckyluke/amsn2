@@ -1,25 +1,30 @@
 import hashlib
 import random
 from amsn2.core.views import ContactView, StringView
+from amsn2.ui import base
 
-class aMSNChatWindow(object):
+class aMSNChatWindow(base.aMSNChatWindow):
     """ This interface will represent a chat window of the UI
         It can have many aMSNChatWidgets"""
     def __init__(self, amsn_core):
         self._amsn_core = amsn_core
         self._uid = hashlib.md5(str(random.random())).hexdigest()
         self._main = amsn_core._core._main
-        self._main.send("newChatWindow",[self._uid])
+        self._main.chat_windows[self._uid] = self
+        self._main.send("newChatWindow", self._uid)
+
+    def __del__(self):
+        self._main.chat_windows[self._uid] = None
 
     def add_chat_widget(self, chat_widget):
         """ add an aMSNChatWidget to the window """
-        self._main.send("addChatWidget",[self._uid,chat_widget._uid])
+        self._main.send("addChatWidget", self._uid, chat_widget._uid)
 
     def show(self):
-        self._main.send("showChatWindow",[self._uid])
+        self._main.send("showChatWindow", self._uid)
 
     def hide(self):
-        self._main.send("hideChatWindow",[self._uid])
+        self._main.send("hideChatWindow", self._uid)
 
     def add(self):
         print "aMSNChatWindow.add"
@@ -52,31 +57,37 @@ class aMSNChatWindow(object):
         flash..."""
 
 
-class aMSNChatWidget(object):
+class aMSNChatWidget(base.aMSNChatWidget):
     """ This interface will present a chat widget of the UI """
     def __init__(self, amsn_conversation, parent, contacts_uid):
         """ create the chat widget for the 'parent' window, but don't attach to
         it."""
-        self._main=parent._main
-        self._uid=md5.new(str(random.random())).hexdigest()
-        self._main.send("newChatWidget",[self._uid])
-        self._main.addListener("sendMessage",self.sendMessage)
-        self._amsn_conversation=amsn_conversation
+        self._main = parent._main
+        self._uid = hashlib.md5(str(random.random())).hexdigest()
+        self._main.chat_widgets[self._uid] = self
+        self._main.send("newChatWidget", self._uid)
+        self._amsn_conversation = amsn_conversation
 
-    def sendMessage(self,smL):
-        if smL[0]==self._uid:
+    def __del__(self):
+        self._main.chat_widgets[self._uid] = None
+
+    def send_message(self, uid, msg):
+        if uid == self._uid:
             stmess = StringView()
-            stmess.appendText(smL[1])
-            self._amsn_conversation.sendMessage(stmess)
+            stmess.append_text('\n'.join(msg))
+            self._amsn_conversation.send_message(stmess)
         return True
 
 
 
-    def on_message_received(self, messageview):
+    def on_message_received(self, messageview, formatting):
         """ Called for incoming and outgoing messages
             message: a MessageView of the message"""
-        self._main.send("onMessageReceivedChatWidget", [self._uid, str(messageview.toStringView())])
+        self._main.send("onMessageReceivedChatWidget",
+                        self._uid, str(messageview.to_stringview()))
 
     def nudge(self):
-        self._main.send("nudgeChatWidget",[self._uid])
+        self._main.send("nudgeChatWidget", self._uid)
 
+    def on_user_typing(self, contact):
+        pass

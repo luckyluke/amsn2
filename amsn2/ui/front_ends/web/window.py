@@ -1,5 +1,6 @@
+from amsn2.ui import base
 
-class aMSNWindow(object):
+class aMSNWindow(base.aMSNWindow):
     """ This Interface represents a window of the application. Everything will be done from here """
     def __init__(self, amsn_core):
         pass

@@ -1,5 +1,7 @@
 from papyon import Presence
-class aMSNLoginWindow(object):
+from amsn2.ui import base
+
+class aMSNLoginWindow(base.aMSNLoginWindow):
     def __init__(self, core, main):
         self._main = main
         self._core = core

@@ -1,42 +1,49 @@
 // Backend functions
 
 
+// Contact List {{{
 function ContactList()
 {
     var groups = {};
     var contacts = {};
     var group_ids = [];
     var head=$("<div/>");
+
     this.setGroups = function(parent, _group_ids){
         var prev = head;
-        var k, i, j = 0;
+        var i, j = 0;
+
+        console.log("group ids = " + _group_ids);
+        console.log("length = " + _group_ids.length);
 
         if (prev.parent() != parent)
             parent.append(prev);
 
-        while (group_ids.length && _group_ids.indexOf(group_ids[j]) < 0)
-            group_ids.splice(j,1);
+        for (i = group_ids.length - 1; i >= 0; i--) {
+            if (_group_ids.indexOf(group_ids[i]) < 0) {
+                group_ids.splice(i,1);
+            }
+        }
 
         for (i = 0; i < _group_ids.length; i++) {
             if (group_ids[j] == _group_ids[i]) {
                 prev = this.getGroup(_group_ids[i]).getTop();
                 j++;
-                while (group_ids.length && _group_ids.indexOf(group_ids[j]) < 0)
-                    group_ids.splice(j, 1);
             } else {
-                if ((k = group_ids.indexOf(_group_ids[i])) > -1)
-                    group_ids.splice(k, 1);
                 elem = this.getGroup(_group_ids[i]).getTop();
                 elem.insertAfter(prev);
                 prev = elem;
             }
         }
+        group_ids = _group_ids;
     }
+
     this.getContact = function(uid){
         if (contacts[uid] == undefined)
             contacts[uid] = new Contact(uid);
         return contacts[uid];
     }
+
     this.getGroup = function(uid){
         if (groups[uid] == undefined)
             groups[uid] = new Group(uid);
@@ -47,7 +54,7 @@ function ContactList()
 function Group(_uid)
 {
     var uid = _uid;
-    var contacts = [];
+    var contact_ids = [];
 
     var name = "";
     var top = $("<div/>");
@@ -61,6 +68,7 @@ function Group(_uid)
 
     var elementVisible = true;
 
+    console.log("New group " + _uid);
     header.click(function() {
         element.slideToggle("slow");
         elementVisible = !elementVisible;
@@ -75,46 +83,58 @@ function Group(_uid)
     this.getName = function() {
         return name;
     }
+
     this.getUid = function() {
         return uid;
     }
+
     this.setName = function(_name) {
         name = _name;
         refresh();
     }
-    this.setContacts = function(_contacts) {
+
+    this.setContacts = function(_contact_ids) {
         var prev = first;
-        var k, i, j = 0;
+        var i, j = 0;
 
-        while (contacts.length && _contacts.indexOf(contacts[j]) < 0)
-            contacts.splice(j,1);
+        for (i = contact_ids.length - 1; i >= 0; i--) {
+            if (_contact_ids.indexOf(contact_ids[i]) < 0) {
+                contact_ids.splice(i,1);
+            }
+        }
 
-        for (i = 0; i < _contacts.length; i++) {
-            if (contacts[j] == _contacts[i]) {
-                prev = contacts[i].getElement(uid);
+        for (i = 0; i < _contact_ids.length; i++) {
+            if (contact_ids[j] == _contact_ids[i]) {
+                prev = contactList.getContact(_contact_ids[i]).getElement(uid);
                 j++;
-                while (contacts.length && contacts.indexOf(contacts[j]) < 0)
-                    contacts.splice(j,1);
             } else {
-                if ((k = contacts.indexOf(_contacts[i])) > -1)
-                    contacts.splice(k, 1);
-                elem = _contacts[i].getElement(uid);
+                elem = contactList.getContact(_contact_ids[i]).getElement(uid);
                 elem.insertAfter(prev);
                 prev = elem;
             }
         }
-        contacts = _contacts;
+        contact_ids = _contact_ids;
         refresh();
     }
+
     this.getContacts = function() {
-        return contacts;
+        return contact_ids;
     }
+
     this.getElement = function() {
         return element;
     }
+
+    this.getContact = function(uid){
+        if (contacts[uid] == undefined)
+            contacts[uid] = new Contact(uid);
+        return contacts[uid];
+    }
+
     this.getTop = function() {
         return top;
     }
+
     refresh();
 }
 
@@ -128,7 +148,7 @@ function Contact(_uid)
     var uid = _uid;
 
     element.click(function(){
-                  Send(["contactClicked",uid]);
+        $.post('/contactClicked', {uid: uid});
     });
 
     this.setName = function(_name) {
@@ -161,8 +181,45 @@ function Contact(_uid)
     }
 }
 
+// contact_list
+var contactList = new ContactList();
+
+function showContactListWindow()
+{
+    $("div.contact_list").show("slow");
+}
+
+function hideContactListWindow()
+{
+    $("div.contact_list").hide("slow");
+}
+
+function setContactListTitle(title)
+{
+    $("div.contact_list div.title").text(title);
+}
+
+function contactListUpdated(groupsL)
+{
+    contactList.setGroups($("div.contact_list"), groupsL);
+}
+
+function groupUpdated(uid, name, contact_ids)
+{
+  var group = contactList.getGroup(uid);
+  group.setName(name);
+  group.setContacts(contact_ids);
+}
+
+function contactUpdated(uid, name)
+{
+    contactList.getContact(uid).setName(name);
+}
+// }}}
+// ChatWindow {{{
 function ChatWindow(_uid)
 {
+
     var uid = _uid;
     var element = $("<div class='chatWindow'/>");
 
@@ -219,9 +276,9 @@ function ChatWidget(_uid)
 
     $(textInput).keydown(function(event) {
         if (event.keyCode == 13) {
-            text = textInput.val();
+            msg = textInput.val();
             textInput.val("");
-            Send(["sendMessage",_uid,text]);
+            $.post('/sendMsg', {uid: uid, msg: msg});
             return false;
         }
     });
@@ -271,6 +328,44 @@ function ChatWidget(_uid)
     }
 }
 
+// Chat functions
+var chatWindows = {};
+var chatWidgets = {};
+
+function newChatWindow(uid)
+{
+    chatWindows[uid] = new ChatWindow(uid);
+}
+
+function addChatWidget(windowUid, widgetUid)
+{
+    chatWindows[windowUid].addChatWidget(chatWidgets[widgetUid]);
+}
+
+function showChatWindow(uid)
+{
+    chatWindows[uid].show();
+}
+
+function hideChatWindow(uid)
+{
+    chatWindows[uid].hide();
+}
+
+function newChatWidget(uid)
+{
+    chatWidgets[uid] = new ChatWidget(uid);
+}
+
+function onMessageReceivedChatWidget(uid, msg)
+{
+    chatWidgets[uid].onMessageReceived(msg);
+}
+
+function nudgeChatWidget(uid)
+{
+    chatWidgets[uid].nudge();
+}
 // main
 function showMainWindow()
 {
@@ -280,14 +375,13 @@ function hideMainWindow()
 {
     $("div.mainWindow").hide("slow");
 }
-function setMainWindowTitle(titleL)
+function setMainWindowTitle(title)
 {
-    $(".mainWindow .ui-dialog-title").text(titleL.pop());
+    $(".mainWindow .ui-dialog-title").text(title);
 }
-function onConnecting(mesgL)
+function onConnecting(msg)
 {
-    var mesg = mesgL.pop();
-    $(".message").text(mesg);
+    $(".message").text(msg);
 }
 function showLogin()
 {
@@ -301,16 +395,12 @@ function hideLogin()
 function signingIn()
 {
     hideLogin();
-}
-
-// splash screen
-function setImageSplashScreen()
+} // }}}
+// splash screen {{{
+function setImageSplashScreen() {}
+function setTextSplashScreen(txt)
 {
-    // TODO
-}
-function setTextSplashScreen(textL)
-{
-    $("div.splashScreen").text(textL.pop());
+    $("div.splashScreen").text(txt);
 }
 function showSplashScreen()
 {
@@ -319,141 +409,27 @@ function showSplashScreen()
 function hideSplashScreen()
 {
     $("div.splashScreen").hide("slow");
-}
-
+} // }}}
 
 function myInfoUpdated()
 {
   // TODO
 }
 
-// contact_list
-var contactList = new ContactList();
-
-function showContactListWindow()
+function aMSNStart()
 {
-    $("div.contact_list").show("slow");
+  $(".mainWindow").dialog({
+        position:['left','top'],
+        height: '100%',
+        width: '400px',
+        stack: false
+  });
+  Listening();
 }
 
-function hideContactListWindow()
-{
-    $("div.contact_list").hide("slow");
-}
-
-function setContactListTitle(title)
-{
-    $("div.contact_list div.title").text(title);
-}
-
-function contactListUpdated(groupsL)
-{
-    contactList.setGroups($("div.contact_list"), groupsL);
-}
-
-function groupUpdated(groupV)
-{
-  var uid = groupV[0];
-  var contact_ids = groupV[1];
-  var name = groupV[2];
-  var group = contactList.getGroup(uid);
-  group.setName(name);
-  if (contact_ids) {
-    var cuids = contact_ids.split(',');
-    var clist = [];
-    $.each(cuids, function(){
-        clist.push(contactList.getContact(cuids.shift()));
-    });
-    group.setContacts(clist);
-  }
-}
-
-function contactUpdated(contactV)
-{
-    var uid = contactV[0];
-    var name = contactV[1];
-    contactList.getContact(uid).setName(name);
-}
-
-// Chat functions
-var chatWindows = {};
-var chatWidgets = {};
-
-function newChatWindow(uidL)
-{
-    var uid = uidL.pop();
-    chatWindows[uid] = new ChatWindow(uid);
-}
-
-function addChatWidget(uidL)
-{
-    var windowUid = uidL.shift();
-    var widgetUid = uidL.shift();
-    chatWindows[windowUid].addChatWidget(chatWidgets[widgetUid]);
-}
-
-function showChatWindow(uidL)
-{
-    var uid = uidL.shift();
-    chatWindows[uid].show();
-}
-
-function hideChatWindow(uidL)
-{
-    var uid = uidL.shift();
-    chatWindows[uid].hide();
-}
-
-function newChatWidget(uidL)
-{
-    var uid = uidL.pop();
-    chatWidgets[uid] = new ChatWidget(uid);
-}
-
-function onMessageReceivedChatWidget(omrcwL)
-{
-    var uid = omrcwL.shift();
-    var msg = omrcwL.shift();
-    chatWidgets[uid].onMessageReceived(msg);
-}
-
-function nudgeChatWidget(uidL)
-{
-    var uid = uidL.shift();
-    chatWidgets[uid].nudge();
-}
-
-// Comunication functions
-/*
-var ReqStack = [];
-function Send(msg)
-{
-    ReqStack.push(msg);
-}
-function Sending()
-{
-    try {
-        if (ReqStack.length) {
-            var xhr;
-            var ReqSend = [];
-
-            while (ReqStack.length)
-                ReqSend.push(ReqStack.shift().join("\t"));
-
-            ReqStack = [];
-            (xhr=$.post("amsn2.php", {in:ReqSend.join("\n")},
-                        function(data,textStatus){})).onreadystatechange = function() {
-                if (xhr.readyState == 4)
-                    setTimeout(Sending, 500);
-            }
-        } else {
-            setTimeout(Sending, 500);
-        }
-    } catch(e) {}
-}
-*/
 function Listening() {
   $.get("/out", function(data){
-    setTimeout(Listening, 5000);
+    setTimeout(Listening, 500);
     //try {
       eval(data);
     //} catch(e) {}
@@ -463,12 +439,5 @@ function Listening() {
 // init
 $(document).ready(function()
 {
-    $(".mainWindow").dialog({
-        position:['left','top'],
-        height: '100%',
-        width: '400px',
-        stack: false
-    });
-    showLogin();
-    //Listening();
+        showLogin();
 });

@@ -1,5 +1,6 @@
+from amsn2.ui import base
 
-class aMSNSplashScreen(object):
+class aMSNSplashScreen(base.aMSNSplashScreen):
     """ This interface will represent the splashscreen of the UI"""
     def __init__(self, amsn_core, parent):
         """Initialize the interface. You should store the reference to the core in here
@@ -11,22 +12,18 @@ class aMSNSplashScreen(object):
 
     def show(self):
         """ Draw the splashscreen """
-        self._main.send("showSplashScreen",[])
         pass
 
     def hide(self):
         """ Hide the splashscreen """
-        self._main.send("hideSplashScreen",[])
         pass
 
     def set_text(self, text):
         """ Shows a different text inside the splashscreen """
-        self._main.send("setTextSplashScreen",[text])
         pass
 
     def set_image(self, image):
         """ Set the image to show in the splashscreen. This is an ImageView object """
-        self._main.send("setImageSplashScreen",["..."])
         pass
 
 
