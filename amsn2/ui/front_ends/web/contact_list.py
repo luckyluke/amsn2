@@ -16,13 +16,19 @@ class aMSNContactListWindow(base.aMSNContactListWindow):
     def __init__(self, amsn_core, parent):
         self._main = parent
         self._clwidget = aMSNContactListWidget(amsn_core,self)
+        self._main.cl_window = self
+
+    def __del__(self):
+        self._main.cl_window = None
 
     def show(self):
         """ Show the contact list window """
+        self._main.cl_window = self
         self._main.send("showContactListWindow")
 
     def hide(self):
         """ Hide the contact list window """
+        self._main.login_window = None
         self._main.send("hideContactListWindow")
 
     def set_title(self, text):
@@ -54,8 +60,7 @@ class aMSNContactListWidget(base.aMSNContactListWidget):
         self.contacts = {}
         self.groups = {}
 
-    def contactClicked(self,uidL):
-        uid = uidL.pop()
+    def contact_clicked(self, uid):
         try:
             self.contacts[uid].on_click(uid)
         except Exception, inst:

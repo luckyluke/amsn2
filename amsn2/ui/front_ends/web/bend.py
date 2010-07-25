@@ -48,6 +48,8 @@ class Backend(object):
 
         gobject.io_add_watch(self._socket, gobject.IO_IN, self.on_accept)
         self._q = ""
+        self.login_window = None
+        self.cl_window = None
 
     def on_accept(self, s, c):
         w = s.accept()
@@ -121,11 +123,14 @@ class Backend(object):
         w._400()
 
     def post_contact_clicked(self, w, uri, headers, body = None):
-        print "Contact Clicked"
+        if self.cl_window is None:
+            w._400()
+            return
         if (body and 'Content-Type' in headers
         and headers['Content-Type'].startswith('application/x-www-form-urlencoded')):
             args = cgi.parse_qs(body)
             print "<<< %s" %(args,)
+            self.cl_window.get_contactlist_widget().contact_clicked(args['uid'][0])
             w.write("HTTP/1.1 200 OK\r\n\r\n")
             w.close()
             return
