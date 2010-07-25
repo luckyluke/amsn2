@@ -62,20 +62,20 @@ class aMSNChatWidget(object):
         self._main.send("newChatWidget", self._uid)
         self._amsn_conversation = amsn_conversation
 
-    def sendMessage(self,smL):
-        if smL[0]==self._uid:
+    def sendMessage(self, uid, msg):
+        if uid == self._uid:
             stmess = StringView()
-            stmess.appendText(smL[1])
+            stmess.appendText(msg)
             self._amsn_conversation.sendMessage(stmess)
         return True
 
 
 
-    def on_message_received(self, messageview):
+    def on_message_received(self, messageview, formatting):
         """ Called for incoming and outgoing messages
             message: a MessageView of the message"""
         self._main.send("onMessageReceivedChatWidget",
-                        self._uid, str(messageview.toStringView()))
+                        self._uid, str(messageview.to_stringview()))
 
     def nudge(self):
         self._main.send("nudgeChatWidget", self._uid)

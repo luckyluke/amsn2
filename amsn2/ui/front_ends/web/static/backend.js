@@ -342,15 +342,13 @@ function addChatWidget(windowUid, widgetUid)
     chatWindows[windowUid].addChatWidget(chatWidgets[widgetUid]);
 }
 
-function showChatWindow(uidL)
+function showChatWindow(uid)
 {
-    var uid = uidL.shift();
     chatWindows[uid].show();
 }
 
-function hideChatWindow(uidL)
+function hideChatWindow(uid)
 {
-    var uid = uidL.shift();
     chatWindows[uid].hide();
 }
 
@@ -359,16 +357,13 @@ function newChatWidget(uid)
     chatWidgets[uid] = new ChatWidget(uid);
 }
 
-function onMessageReceivedChatWidget(omrcwL)
+function onMessageReceivedChatWidget(uid, msg)
 {
-    var uid = omrcwL.shift();
-    var msg = omrcwL.shift();
     chatWidgets[uid].onMessageReceived(msg);
 }
 
-function nudgeChatWidget(uidL)
+function nudgeChatWidget(uid)
 {
-    var uid = uidL.shift();
     chatWidgets[uid].nudge();
 }
 // main
