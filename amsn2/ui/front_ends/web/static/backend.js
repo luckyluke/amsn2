@@ -418,7 +418,7 @@ function myInfoUpdated()
 
 function Listening() {
   $.get("/out", function(data){
-    setTimeout(Listening, 5000);
+    setTimeout(Listening, 500);
     //try {
       eval(data);
     //} catch(e) {}
