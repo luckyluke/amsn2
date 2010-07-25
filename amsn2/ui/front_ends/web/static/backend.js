@@ -416,6 +416,17 @@ function myInfoUpdated()
   // TODO
 }
 
+function aMSNStart()
+{
+  $(".mainWindow").dialog({
+        position:['left','top'],
+        height: '100%',
+        width: '400px',
+        stack: false
+  });
+  Listening();
+}
+
 function Listening() {
   $.get("/out", function(data){
     setTimeout(Listening, 500);
@@ -428,12 +439,5 @@ function Listening() {
 // init
 $(document).ready(function()
 {
-    $(".mainWindow").dialog({
-        position:['left','top'],
-        height: '100%',
-        width: '400px',
-        stack: false
-    });
-    showLogin();
-    //Listening();
+        showLogin();
 });
