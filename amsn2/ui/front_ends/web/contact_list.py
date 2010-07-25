@@ -6,8 +6,9 @@
     ...
 """
 
+from amsn2.ui import base
 
-class aMSNContactListWindow(object):
+class aMSNContactListWindow(base.aMSNContactListWindow):
     """ This interface represents the main Contact List Window
         self._clwidget is an aMSNContactListWidget
     """
@@ -46,7 +47,7 @@ class aMSNContactListWindow(object):
     def get_contactlist_widget(self):
         return self._clwidget
 
-class aMSNContactListWidget(object):
+class aMSNContactListWidget(base.aMSNContactListWidget):
     """ This interface implements the contact list of the UI """
     def __init__(self, amsn_core, parent):
         self._main = parent._main

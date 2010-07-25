@@ -1,5 +1,6 @@
+from amsn2.ui import base
 
-class aMSNSplashScreen(object):
+class aMSNSplashScreen(base.aMSNSplashScreen):
     """ This interface will represent the splashscreen of the UI"""
     def __init__(self, amsn_core, parent):
         """Initialize the interface. You should store the reference to the core in here

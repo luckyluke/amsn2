@@ -1,8 +1,9 @@
 import hashlib
 import random
 from amsn2.core.views import ContactView, StringView
+from amsn2.ui import base
 
-class aMSNChatWindow(object):
+class aMSNChatWindow(base.aMSNChatWindow):
     """ This interface will represent a chat window of the UI
         It can have many aMSNChatWidgets"""
     def __init__(self, amsn_core):
@@ -52,7 +53,7 @@ class aMSNChatWindow(object):
         flash..."""
 
 
-class aMSNChatWidget(object):
+class aMSNChatWidget(base.aMSNChatWidget):
     """ This interface will present a chat widget of the UI """
     def __init__(self, amsn_conversation, parent, contacts_uid):
         """ create the chat widget for the 'parent' window, but don't attach to
@@ -80,3 +81,5 @@ class aMSNChatWidget(object):
     def nudge(self):
         self._main.send("nudgeChatWidget", self._uid)
 
+    def on_user_typing(self, contact):
+        pass
