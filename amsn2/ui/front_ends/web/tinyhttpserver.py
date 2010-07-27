@@ -183,6 +183,14 @@ class TinyHTTPServer(object):
                    % (len(r), r))
         self.close()
 
+    def send_javascript(self, code):
+        if code:
+            self.write("HTTP/1.1 200 OK\r\nContent-Type: text/javascript; charset=UTF-8\r\nContent-Length: %d\r\n\r\n%s"
+                       % (len(code), code))
+        else:
+            self.write("HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n")
+        self.close()
+
     def _200(self, body = None):
         if body:
             self.write("HTTP/1.1 200 OK\r\nContent-Length: %d\r\n\r\n%s"

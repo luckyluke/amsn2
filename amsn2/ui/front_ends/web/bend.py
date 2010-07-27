@@ -61,20 +61,10 @@ class Backend(object):
         self._workers.append(t)
         return True
 
-    def emit_event(self, event, *args, **kwargs):
-        """
-        if event in self.listeners.keys():
-            for func in self.listeners[event]:
-                try:
-                    func(*args, **kwargs)
-                except:
-                    pass
-        """
-
     def out(self, w, uri, headers, body = None):
         if len(self._q):
             print ">>> %s" % (self._q,)
-        w._200(self._q)
+        w.send_javascript(self._q)
         self._q = ""
 
     def _args2JS(self, *args):
