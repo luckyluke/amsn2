@@ -83,8 +83,8 @@ class TinyHTTPServer(object):
                         return
             self._404()
         elif self._method == "POST":
-            if "Content-Length" in self._headers:
-                r = int(self._headers["Content-Length"])
+            if "content-length" in self._headers:
+                r = int(self._headers["content-length"])
                 if r > 0:
                     self._read_delimiter = None
                     self._rcb = self.on_body
