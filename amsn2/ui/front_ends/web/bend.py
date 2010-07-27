@@ -116,8 +116,8 @@ class Backend(object):
         if self.login_window is None:
             w._400()
             return
-        if (body and 'Content-Type' in headers
-        and headers['Content-Type'].startswith('application/x-www-form-urlencoded')):
+        if (body and 'content-type' in headers
+        and headers['content-type'].startswith('application/x-www-form-urlencoded')):
             args = cgi.parse_qs(body)
             print "<<< signin: %s" %(args,)
             self.login_window.signin(args['username'][0], args['password'][0])

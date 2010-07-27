@@ -65,8 +65,8 @@ class TinyHTTPServer(object):
         for line in headers[eol:].splitlines():
             if line:
                 name, value = line.split(":", 1)
-                self._headers[name] = value.strip()
         #print "method=%s, uri=%s, version=%s" % (self._method, uri, self._version)
+                self._headers[name.lower()] = value.strip()
         if not self._version.startswith("HTTP/"):
             self.close()
             return
