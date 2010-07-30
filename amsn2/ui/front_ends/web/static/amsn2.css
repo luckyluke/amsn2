@@ -1,9 +1,10 @@
 
 /* Elements that are invisible at the begining */
-
-.login,.contact_list,.mainWindow,.chatWindow,.chatMessage{
+/*
+.contact_list,.mainWindow,.chatWindow,.chatMessage{
     display: none;
 }
+*/
 
 /* general stuff */
 
