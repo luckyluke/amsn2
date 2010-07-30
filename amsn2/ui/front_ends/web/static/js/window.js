@@ -588,7 +588,7 @@ Window.prototype = {
     var className = this.options.className;
     var win = document.createElement("div");
     win.setAttribute('id', id);
-    win.className = "dialog";
+    win.className = className;
 
     var content;
     if (this.options.url)
