@@ -182,26 +182,30 @@ function Contact(_uid)
 }
 
 // contact_list
-var contactList = new ContactList();
+var contactList = null;
 
 function showContactListWindow()
 {
-    $("div.contact_list").show("slow");
+  // FIXME
+  $("div.contact_list").show("slow");
 }
 
 function hideContactListWindow()
 {
-    $("div.contact_list").hide("slow");
+  // FIXME
+  $("div.contact_list").hide("slow");
 }
 
 function setContactListTitle(title)
 {
-    $("div.contact_list div.title").text(title);
+  // FIXME
+  //$("div.contact_list div.title").text(title);
 }
 
 function contactListUpdated(groupsL)
 {
-    contactList.setGroups($("div.contact_list"), groupsL);
+  // FIXME
+  contactList.setGroups($("div.contact_list"), groupsL);
 }
 
 function groupUpdated(uid, name, contact_ids)
@@ -217,6 +221,7 @@ function contactUpdated(uid, name)
 }
 // }}}
 // ChatWindow {{{
+/*
 function ChatWindow(_uid)
 {
 
@@ -327,7 +332,6 @@ function ChatWidget(_uid)
         this.parent.shake();
     }
 }
-
 // Chat functions
 var chatWindows = {};
 var chatWidgets = {};
@@ -365,37 +369,60 @@ function onMessageReceivedChatWidget(uid, msg)
 function nudgeChatWidget(uid)
 {
     chatWidgets[uid].nudge();
-}
-// main
+} */ // }}}
+
+// main {{{
+//
+var mainWindow = null;
+
 function showMainWindow()
 {
-    $("div.mainWindow").show("slow");
+  console.log('SHOW MW');
+  if (!mainWindow) {
+    function fixMainWindow() {
+      $('mw_minimize').setStyle({left: (mainWindow.getSize()['width'] - 21) + 'px'});
+    }
+
+    Event.observe(window, 'resize', fixMainWindow);
+
+    mainWindow = new Window({id: 'mw', className: "win", width: 210, height: (document.viewport.getHeight() - 60), zIndex: 100, resizable: true, draggable: true, closable: false, maximizable: false, detachable: false, minWidth: 205, minHeight: 150, showEffectOptions: {duration: 0}, hideEffectOptions: {duration: 0}});
+    mainWindow.setConstraint(true, {left: 0, right: 0, top: 0, bottom: 0});
+    fixMainWindow();
+  }
+  mainWindow.getContent().update("<h1>Hello world !!</h1>"); 
+  mainWindow.showCenter(false);
+  mainWindow.toFront();
 }
 function hideMainWindow()
 {
-    $("div.mainWindow").hide("slow");
+    /* FIXME */
+    //$("div.mainWindow").hide("slow");
 }
 function setMainWindowTitle(title)
 {
-    $(".mainWindow .ui-dialog-title").text(title);
+    /* FIXME */
+    //$(".mainWindow .ui-dialog-title").text(title);
 }
 function onConnecting(msg)
 {
-    $(".message").text(msg);
+    /* FIXME */
+    //$(".message").text(msg);
 }
 function showLogin()
 {
-    $("div.login").show("slow");
+    /* FIXME */
+    //$("div.login").show("slow");
 }
 function hideLogin()
 {
-    $("div.login").hide("slow");
-}
+    /* FIXME */
+    //$("div.login").hide("slow");
+} // }}}
 
 function signingIn()
 {
-    hideLogin();
-} // }}}
+  hideLogin();
+}
 
 function myInfoUpdated()
 {
@@ -404,26 +431,23 @@ function myInfoUpdated()
 
 function aMSNStart()
 {
+    /*
   $(".mainWindow").dialog({
         position:['left','top'],
         height: '100%',
         width: '400px',
         stack: false
   });
-  Listening();
+  */
+
+  new PeriodicalExecuter(function(pe) {
+    //new Ajax.Request('/out', {method: 'get'});
+    new Ajax.Request('/out', {method: 'get',
+      onException: function(r, e) {//alert(e.name+": "+e.message);
+      console.log(e)}
+    });
+  }, 5);
 }
 
-function Listening() {
-  $.get("/out", function(data){
-    setTimeout(Listening, 500);
-    //try {
-      eval(data);
-    //} catch(e) {}
-  });
-}
 
-// init
-$(document).ready(function()
-{
-        showLogin();
-});
+//vim: set sw=2: set fdm=marker:

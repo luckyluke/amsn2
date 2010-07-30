@@ -1,39 +1,39 @@
 <html>
   <head>
     <title>aMSN2 FrontEnd</title>
-    <script type="text/javascript" src="static/js/jquery.js"></script>
-    <script type="text/javascript" src="static/js/jquery.ui.js"></script>
-    <link rel="stylesheet" href="static/jquery.ui.css" type="text/css" media="screen">
+    <script type="text/javascript" src="static/js/prototype.js"></script>
+    <script type="text/javascript" src="static/js/effects.js"></script>
+    <script type="text/javascript" src="static/js/window.js"></script>
     <style type="text/css">
       @import url("static/amsn2.css");
+      @import url("static/style.css");
     </style>
     <script type="text/javascript" src="static/js/backend.js"></script>
   </head>
   <body>
     <div class="splashScreen"></div>
     <div class="login">
-      <form id="signin" action="fake_to_store_creds">
-      Username:<input id='u' name='u' type="text" /> <br/>
-      Password:<input id='p' name='p' type="password" /> <br/>
+      <form id="signin" action="/signin">
+      Username:<input name='username' type="text" /> <br/>
+      Password:<input name='password' type="password" /> <br/>
       <input type="submit" value="SignIn" />
       </form>
     </div>
-    <div class="mainWindow">
-      <pre class="message">
-                &nbsp;
-      </pre>
-      <div class="contact_list">
+    <pre id="message">
+              &nbsp;
+    </pre>
+    <div id="mainWindow">
+      <div id="cl">
         <div class="title"></div>
       </div>
     </div>
 
     <script type="text/javascript">
-      $('#signin').submit(function(){
-        $.post('/signin',
-               {username: $('#u').val(),
-                password: $('#p').val()},
-               function() { aMSNStart();});
-        return false;
+      Event.observe('signin', 'submit', function(event) {
+        $('signin').request({
+          onComplete: function(){ aMSNStart(); }
+        });
+        event.stop();
       });
     </script>
 
