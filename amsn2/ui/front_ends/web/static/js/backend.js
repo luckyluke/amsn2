@@ -372,7 +372,7 @@ function nudgeChatWidget(uid)
 } */ // }}}
 
 // main {{{
-//
+
 var mainWindow = null;
 
 function showMainWindow()
@@ -395,13 +395,11 @@ function showMainWindow()
 }
 function hideMainWindow()
 {
-    /* FIXME */
-    //$("div.mainWindow").hide("slow");
+    mainWindow.hide();
 }
 function setMainWindowTitle(title)
 {
-    /* FIXME */
-    //$(".mainWindow .ui-dialog-title").text(title);
+    mainWindow.setTitle(title);
 }
 function onConnecting(msg)
 {
@@ -410,13 +408,11 @@ function onConnecting(msg)
 }
 function showLogin()
 {
-    /* FIXME */
-    //$("div.login").show("slow");
+  $('login').show();
 }
 function hideLogin()
 {
-    /* FIXME */
-    //$("div.login").hide("slow");
+    $('login').hide();
 } // }}}
 
 function signingIn()
@@ -431,15 +427,6 @@ function myInfoUpdated()
 
 function aMSNStart()
 {
-    /*
-  $(".mainWindow").dialog({
-        position:['left','top'],
-        height: '100%',
-        width: '400px',
-        stack: false
-  });
-  */
-
   new PeriodicalExecuter(function(pe) {
     //new Ajax.Request('/out', {method: 'get'});
     new Ajax.Request('/out', {method: 'get',
@@ -450,4 +437,4 @@ function aMSNStart()
 }
 
 
-//vim: set sw=2: set fdm=marker:
+//vim:sw=2:fdm=marker:
