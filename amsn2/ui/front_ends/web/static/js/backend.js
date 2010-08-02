@@ -2,6 +2,8 @@
 
 
 // Contact List {{{
+var contact_list = null;
+
 function ContactList(_parent)
 {
   var groups = {};
@@ -9,7 +11,7 @@ function ContactList(_parent)
   var group_ids = [];
   var parent = _parent;
 
-  parent.update('<p>bite</p><ul><li id="fakegroup" style="display:none"></li></ul>');
+  parent.update('<ul><li id="fakegroup" style="display:none"></li></ul>');
 
   this.setGroups = function(_group_ids){
     console.log("SET GROUPS");
@@ -53,6 +55,14 @@ function ContactList(_parent)
     if (groups[uid] == undefined)
       groups[uid] = new Group(uid);
     return groups[uid];
+  }
+
+  this.contactClick = function(uid) {
+    alert(uid);
+    new Ajax.Request('/contactClicked',
+      {parameters:
+        {uid: uid}
+    });
   }
 }
 
@@ -122,7 +132,7 @@ function Group(_gid)
     return elem;
   }
 
-  this.getContact = function(_uid){
+  this.getContact = function(_uid) {
     c = contact_list.getContact(_uid);
     if (!c) {
       c = new Contact(gid, _uid);
@@ -135,15 +145,16 @@ function Group(_gid)
 
 function Contact(_gid, _uid)
 {
+  var name = "";
+  var uid = _uid;
+
   var elem = new Element('li',
                          {id: 'ct_' + _uid + '_' + _gid,
-                          class: 'clContact'});
+                          class: 'clContact',
+                          onmousedown: 'contact_list.contactClick(\''+uid+'\'); return false;'});
 
   var elements = {};
   elements[_gid] = elem;
-
-  var name = "";
-  var uid = _uid;
 
   /* FIXME
      element.click(function(){
@@ -153,8 +164,6 @@ function Contact(_gid, _uid)
 
   this.setName = function(_name) {
     name = _name;
-    // TODO
-    alert(_name);
     for (k in elements) {
       elements[k].update(_name);
     }
@@ -175,8 +184,6 @@ function Contact(_gid, _uid)
   }
 }
 
-// contact_list
-var contact_list = null;
 
 function showContactListWindow()
 {
