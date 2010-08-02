@@ -120,8 +120,8 @@ class Backend(object):
         if self.cl_window is None:
             w._400()
             return
-        if (body and 'Content-Type' in headers
-        and headers['Content-Type'].startswith('application/x-www-form-urlencoded')):
+        if (body and 'content-type' in headers
+        and headers['content-type'].startswith('application/x-www-form-urlencoded')):
             args = cgi.parse_qs(body)
             print "<<< contactClicked: %s" %(args,)
             self.cl_window.get_contactlist_widget().contact_clicked(args['uid'][0])
@@ -131,8 +131,8 @@ class Backend(object):
         w._400()
 
     def post_send_msg(self, w, uri, headers, body = None):
-        if (body and 'Content-Type' in headers
-        and headers['Content-Type'].startswith('application/x-www-form-urlencoded')):
+        if (body and 'content-type' in headers
+        and headers['content-type'].startswith('application/x-www-form-urlencoded')):
             args = cgi.parse_qs(body)
             print "<<< sendMsg: %s" %(args,)
             uid = args['uid'][0]
