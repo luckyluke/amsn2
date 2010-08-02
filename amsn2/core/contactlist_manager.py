@@ -288,9 +288,7 @@ class aMSNContactListManager:
         for g in groups:
             g.contacts.remove(cid)
 
-        print [g.contacts for g in self._groups.values()]
         self.update_groups()
-        print [g.contacts for g in self._groups.values()]
 
         # if a contact has to be removed from all the groups, has been deleted
         if gids:
@@ -305,12 +303,9 @@ class aMSNContactListManager:
             #gv = GroupView(self._core, g)
             #self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
 
-        print [g.contacts for g in self._groups.values()]
         self.update_groups()
-        print [g.contacts for g in self._groups.values()]
 
         c = self.get_contact(cid)
-        print c.groups
         for gid in gids: c.groups.add(gid)
         cv = ContactView(self._core, c)
         self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
@@ -501,6 +496,7 @@ class aMSNContact():
         self._papyon_contact = papyon_contact
 
 class aMSNBaseGroup():
+    """ Base class that represent a group of amsn2contacts """
     def __init__(self, core):
         self._contacts_storage = core._contactlist_manager._papyon_addressbook.contacts
         self.contacts = set()
@@ -514,6 +510,7 @@ class aMSNBaseGroup():
         raise NotImplementedError
 
 class aMSNPapyonGroup(aMSNBaseGroup):
+    """ Group which holds the contacts according to the group assigned in the WLM network """
     def __init__(self, core, papyon_group):
         aMSNBaseGroup.__init__(self, core)
         self.papyon_group = papyon_group
@@ -534,6 +531,7 @@ class aMSNPapyonGroup(aMSNBaseGroup):
         self.contacts_online = set([c.id for c in contacts if c.presence != papyon.Presence.OFFLINE])
 
 class aMSNPreseceGroup(aMSNBaseGroup):
+    """ Group which holds the contacts according to their status """
     def __init__(self, core):
         aMSNBaseGroup.__init__(self, core)
 

@@ -62,7 +62,6 @@ class ContactView:
         self.name.unset_italic()
         self.name.close_tag("psm")
 
-        #TODO:
         def start_conversation_cb(c_uid):
             core._conversation_manager.new_conversation([c_uid])
         self.on_click = start_conversation_cb
@@ -70,10 +69,6 @@ class ContactView:
         self.on_right_click_popup_menu = ContactPopupMenu(core, amsn_contact)
         self.tooltip = None
         self.context_menu = None
-
-        # FIXME: should not store these, but the right click menu has to be updated
-        self._core = core
-        self._amsn_contact = amsn_contact
 
     #TODO: @roproperty: context_menu, tooltip
 
