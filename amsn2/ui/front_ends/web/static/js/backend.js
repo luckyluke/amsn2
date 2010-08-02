@@ -1,199 +1,193 @@
-// Backend functions
+// TODO: have info/debug/err functions
 
 
 // Contact List {{{
-function ContactList()
+function ContactList(_parent)
 {
-    var groups = {};
-    var contacts = {};
-    var group_ids = [];
-    var head=$("<div/>");
+  var groups = {};
+  var contacts = {};
+  var group_ids = [];
+  var parent = _parent;
 
-    this.setGroups = function(parent, _group_ids){
-        var prev = head;
-        var i, j = 0;
+  parent.update('<p>bite</p><ul><li id="fakegroup" style="display:none"></li></ul>');
 
-        console.log("group ids = " + _group_ids);
-        console.log("length = " + _group_ids.length);
+  this.setGroups = function(_group_ids){
+    console.log("SET GROUPS");
+    var prev = $('fakegroup');
+    var i, j = 0;
 
-        if (prev.parent() != parent)
-            parent.append(prev);
+    console.log("group ids = " + _group_ids);
+    console.log("length = " + _group_ids.length);
 
-        for (i = group_ids.length - 1; i >= 0; i--) {
-            if (_group_ids.indexOf(group_ids[i]) < 0) {
-                group_ids.splice(i,1);
-            }
-        }
-
-        for (i = 0; i < _group_ids.length; i++) {
-            if (group_ids[j] == _group_ids[i]) {
-                prev = this.getGroup(_group_ids[i]).getTop();
-                j++;
-            } else {
-                elem = this.getGroup(_group_ids[i]).getTop();
-                elem.insertAfter(prev);
-                prev = elem;
-            }
-        }
-        group_ids = _group_ids;
+    for (i = group_ids.length - 1; i >= 0; i--) {
+      if (_group_ids.indexOf(group_ids[i]) < 0) {
+        group_ids.splice(i,1);
+        // TODO: remove group
+      }
     }
 
-    this.getContact = function(uid){
-        if (contacts[uid] == undefined)
-            contacts[uid] = new Contact(uid);
-        return contacts[uid];
+    for (i = 0; i < _group_ids.length; i++) {
+      if (group_ids[j] == _group_ids[i]) {
+        prev = this.getGroup(_group_ids[i]).getElement();
+        j++;
+      } else {
+        elem = this.getGroup(_group_ids[i]).getElement();
+        prev.insert({after: elem});
+        prev = elem;
+      }
     }
+    group_ids = _group_ids;
+  }
 
-    this.getGroup = function(uid){
-        if (groups[uid] == undefined)
-            groups[uid] = new Group(uid);
-        return groups[uid];
-    }
+  this.getContact = function(uid){
+    if (contacts[uid] == undefined)
+      return null;
+    return contacts[uid];
+  }
+
+  this.setContact = function(uid, c) {
+    contacts[uid] = c;
+  }
+
+  this.getGroup = function(uid){
+    if (groups[uid] == undefined)
+      groups[uid] = new Group(uid);
+    return groups[uid];
+  }
 }
 
-function Group(_uid)
+function Group(_gid)
 {
-    var uid = _uid;
-    var contact_ids = [];
+  var gid = _gid;
+  var contact_ids = [];
 
-    var name = "";
-    var top = $("<div/>");
-    var element = $("<div/>");
-    var first = $("<div/>");
-    var header = $("<div class='groupheader'/>");
+  var name = "";
 
-    top.append(header);
-    top.append(element);
-    element.append(first);
+  var elem = new Element('li', {id: 'grp_' + gid,
+                         class: 'clGroup'});
 
-    var elementVisible = true;
+  var h;
+  h  = '<div id="grp_' + gid + '_hdr"></div>';
+  h += '<ul  id="grp_' + gid + '_cts" class="clContacts">';
+  h += '<li  id="grp_' + gid + '_fake" style="display:none"></ul>';
+  elem.update(h);
 
-    console.log("New group " + _uid);
-    header.click(function() {
-        element.slideToggle("slow");
-        elementVisible = !elementVisible;
-        refresh();
-    });
 
-    function refresh()
-    {
-        header.text((elementVisible?'-':'+')+' '+name);
+  var isCollapsed = false;
+
+  console.log("New group " + gid);
+
+  this.getName = function() {
+    return name;
+  }
+
+  this.getGid = function() {
+    return gid;
+  }
+
+  this.setName = function(_name) {
+    var hdr  = $('grp_' + gid + '_hdr');
+    this.name = _name;
+    hdr.update(_name);
+  }
+
+  this.setContacts = function(_contact_ids) {
+    var prev = $('grp_' + gid + '_fake');
+    var i, j = 0;
+
+    for (i = contact_ids.length - 1; i >= 0; i--) {
+      if (_contact_ids.indexOf(contact_ids[i]) < 0) {
+        contact_ids.splice(i,1);
+      }
     }
 
-    this.getName = function() {
-        return name;
+    for (i = 0; i < _contact_ids.length; i++) {
+      if (contact_ids[j] == _contact_ids[i]) {
+        prev = this.getContact(_contact_ids[i]).getElement(gid);
+        j++;
+      } else {
+        elem = this.getContact(_contact_ids[i]).getElement(gid);
+        prev.insert({after: elem});
+        prev = elem;
+      }
     }
+    contact_ids = _contact_ids;
+  }
 
-    this.getUid = function() {
-        return uid;
+  this.getContacts = function() {
+    return contact_ids;
+  }
+
+  this.getElement = function() {
+    return elem;
+  }
+
+  this.getContact = function(_uid){
+    c = contact_list.getContact(_uid);
+    if (!c) {
+      c = new Contact(gid, _uid);
+      contact_list.setContact(_uid, c);
     }
-
-    this.setName = function(_name) {
-        name = _name;
-        refresh();
-    }
-
-    this.setContacts = function(_contact_ids) {
-        var prev = first;
-        var i, j = 0;
-
-        for (i = contact_ids.length - 1; i >= 0; i--) {
-            if (_contact_ids.indexOf(contact_ids[i]) < 0) {
-                contact_ids.splice(i,1);
-            }
-        }
-
-        for (i = 0; i < _contact_ids.length; i++) {
-            if (contact_ids[j] == _contact_ids[i]) {
-                prev = contactList.getContact(_contact_ids[i]).getElement(uid);
-                j++;
-            } else {
-                elem = contactList.getContact(_contact_ids[i]).getElement(uid);
-                elem.insertAfter(prev);
-                prev = elem;
-            }
-        }
-        contact_ids = _contact_ids;
-        refresh();
-    }
-
-    this.getContacts = function() {
-        return contact_ids;
-    }
-
-    this.getElement = function() {
-        return element;
-    }
-
-    this.getContact = function(uid){
-        if (contacts[uid] == undefined)
-            contacts[uid] = new Contact(uid);
-        return contacts[uid];
-    }
-
-    this.getTop = function() {
-        return top;
-    }
-
-    refresh();
+    contact_ids[_uid] = c;
+    return c;
+  }
 }
 
-function Contact(_uid)
+function Contact(_gid, _uid)
 {
-    var element = $("<li/>");
-    var elements = {};
-    refresh();
+  var elem = new Element('li',
+                         {id: 'ct_' + _uid + '_' + _gid,
+                          class: 'clContact'});
 
-    var name = "";
-    var uid = _uid;
+  var elements = {};
+  elements[_gid] = elem;
 
-    element.click(function(){
-        $.post('/contactClicked', {uid: uid});
-    });
+  var name = "";
+  var uid = _uid;
 
-    this.setName = function(_name) {
-        name = _name;
-        refresh();
+  /* FIXME
+     element.click(function(){
+     $.post('/contactClicked', {uid: uid});
+     });
+     */
+
+  this.setName = function(_name) {
+    name = _name;
+    // TODO
+    alert(_name);
+    for (k in elements) {
+      elements[k].update(_name);
     }
+  }
 
-    this.getUid = function() {
-        return uid;
-    }
+  this.getUid = function() {
+    return uid;
+  }
 
-    this.getName = function() {
-        return name;
-    }
+  this.getName = function() {
+    return name;
+  }
 
-    this.getElement = function(groupId) {
-        if (elements[groupId] == undefined)
-            elements[groupId] = element.clone(true);
-        return elements[groupId];
-    }
-
-    function refresh() {
-        element.text(name);
-        $.each(elements, function(groupId, val) {
-            try {
-                elements[groupId] = element.clone(true);
-                val.replaceWith(elements[groupId]);
-            } catch(e) {}
-        });
-    }
+  this.getElement = function(groupId) {
+    if (elements[groupId] == undefined)
+      elements[groupId] = elem.clone(true);
+    return elements[groupId];
+  }
 }
 
 // contact_list
-var contactList = null;
+var contact_list = null;
 
 function showContactListWindow()
 {
   // FIXME
-  $("div.contact_list").show("slow");
+  //$("div.contact_list").show("slow");
 }
 
 function hideContactListWindow()
 {
   // FIXME
-  $("div.contact_list").hide("slow");
+  //$("div.contact_list").hide("slow");
 }
 
 function setContactListTitle(title)
@@ -202,22 +196,25 @@ function setContactListTitle(title)
   //$("div.contact_list div.title").text(title);
 }
 
-function contactListUpdated(groupsL)
+function contactListUpdated(groups)
 {
-  // FIXME
-  contactList.setGroups($("div.contact_list"), groupsL);
+  if (contact_list)
+    contact_list.setGroups(groups);
 }
 
 function groupUpdated(uid, name, contact_ids)
 {
-  var group = contactList.getGroup(uid);
-  group.setName(name);
-  group.setContacts(contact_ids);
+  if (contact_list) {
+    var group = contact_list.getGroup(uid);
+    group.setName(name);
+    group.setContacts(contact_ids);
+  }
 }
 
 function contactUpdated(uid, name)
 {
-    contactList.getContact(uid).setName(name);
+  if (contact_list)
+    contact_list.getContact(uid).setName(name);
 }
 // }}}
 // ChatWindow {{{
@@ -377,7 +374,6 @@ var mainWindow = null;
 
 function showMainWindow()
 {
-  console.log('SHOW MW');
   if (!mainWindow) {
     function fixMainWindow() {
       $('mw_minimize').setStyle({left: (mainWindow.getSize()['width'] - 21) + 'px'});
@@ -388,18 +384,21 @@ function showMainWindow()
     mainWindow = new Window({id: 'mw', className: "win", width: 210, height: (document.viewport.getHeight() - 60), zIndex: 100, resizable: true, draggable: true, closable: false, maximizable: false, detachable: false, minWidth: 205, minHeight: 150, showEffectOptions: {duration: 0}, hideEffectOptions: {duration: 0}});
     mainWindow.setConstraint(true, {left: 0, right: 0, top: 0, bottom: 0});
     fixMainWindow();
+    mainWindow.setHTMLContent('<h1>Hello world !!</h1><div id="cl"></div>');
   }
-  mainWindow.getContent().update("<h1>Hello world !!</h1>"); 
+  if (!contact_list) {
+    contact_list = new ContactList($('cl'));
+  }
   mainWindow.showCenter(false);
   mainWindow.toFront();
 }
 function hideMainWindow()
 {
-    mainWindow.hide();
+  mainWindow.hide();
 }
 function setMainWindowTitle(title)
 {
-    mainWindow.setTitle(title);
+  mainWindow.setTitle(title);
 }
 function onConnecting(msg)
 {
@@ -412,7 +411,7 @@ function showLogin()
 }
 function hideLogin()
 {
-    $('login').hide();
+  $('login').hide();
 } // }}}
 
 function signingIn()
@@ -435,6 +434,5 @@ function aMSNStart()
     });
   }, 5);
 }
-
 
 //vim:sw=2:fdm=marker:
