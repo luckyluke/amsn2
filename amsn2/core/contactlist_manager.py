@@ -219,7 +219,7 @@ class aMSNContactListManager:
             self._core._ui_manager.show_error('Failed to rename the group %s'
                                               %self.get_group(gid).name)
 
-        logger.info('Renaming group %s to %s' %(group.name, new_name)
+        logger.info('Renaming group %s to %s' %(group.name, new_name))
         self._papyon_addressbook.rename_group(group, new_name, failed_cb=(failed,))
 
     def add_contact_to_groups(self, cid, gids):
@@ -245,7 +245,7 @@ class aMSNContactListManager:
             logger.warning('Failed to add %s to the groups %s'
                                             %(account, ' '.join(groups)))
             self._core._ui_manager.show_error('Failed to remove %s to the groups'
-                                                                    %(account)
+                                                                    %(account))
         #TODO: contact may exist in multiple networks
         for gid in gids:
             groups = [g for g in self._papyon_addressbook.groups if g.id==gid]
