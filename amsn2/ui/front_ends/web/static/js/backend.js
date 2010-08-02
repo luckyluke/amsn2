@@ -2,7 +2,7 @@
 
 
 // Contact List {{{
-var contact_list = null;
+var cl = null;
 
 function ContactList(_parent)
 {
@@ -58,11 +58,19 @@ function ContactList(_parent)
   }
 
   this.contactClick = function(uid) {
-    alert(uid);
     new Ajax.Request('/contactClicked',
       {parameters:
         {uid: uid}
     });
+  }
+
+  this.groupToggle = function(gid) {
+    var cts = $('grp_' + gid + '_cts');
+    if (cts.visible()) {
+      cts.hide();
+    } else {
+      cts.show();
+    }
   }
 }
 
@@ -74,7 +82,8 @@ function Group(_gid)
   var name = "";
 
   var elem = new Element('li', {id: 'grp_' + gid,
-                         class: 'clGroup'});
+                         class: 'clGroup',
+                         onclick: 'cl.groupToggle(\''+gid+'\'); return false;'});
 
   var h;
   h  = '<div id="grp_' + gid + '_hdr"></div>';
@@ -133,10 +142,10 @@ function Group(_gid)
   }
 
   this.getContact = function(_uid) {
-    c = contact_list.getContact(_uid);
+    c = cl.getContact(_uid);
     if (!c) {
       c = new Contact(gid, _uid);
-      contact_list.setContact(_uid, c);
+      cl.setContact(_uid, c);
     }
     contact_ids[_uid] = c;
     return c;
@@ -151,7 +160,7 @@ function Contact(_gid, _uid)
   var elem = new Element('li',
                          {id: 'ct_' + _uid + '_' + _gid,
                           class: 'clContact',
-                          onmousedown: 'contact_list.contactClick(\''+uid+'\'); return false;'});
+                          onclick: 'cl.contactClick(\''+uid+'\'); return false;'});
 
   var elements = {};
   elements[_gid] = elem;
@@ -205,14 +214,14 @@ function setContactListTitle(title)
 
 function contactListUpdated(groups)
 {
-  if (contact_list)
-    contact_list.setGroups(groups);
+  if (cl)
+    cl.setGroups(groups);
 }
 
 function groupUpdated(uid, name, contact_ids)
 {
-  if (contact_list) {
-    var group = contact_list.getGroup(uid);
+  if (cl) {
+    var group = cl.getGroup(uid);
     group.setName(name);
     group.setContacts(contact_ids);
   }
@@ -220,8 +229,8 @@ function groupUpdated(uid, name, contact_ids)
 
 function contactUpdated(uid, name)
 {
-  if (contact_list)
-    contact_list.getContact(uid).setName(name);
+  if (cl)
+    cl.getContact(uid).setName(name);
 }
 // }}}
 // ChatWindow {{{
@@ -393,8 +402,8 @@ function showMainWindow()
     fixMainWindow();
     mainWindow.setHTMLContent('<h1>Hello world !!</h1><div id="cl"></div>');
   }
-  if (!contact_list) {
-    contact_list = new ContactList($('cl'));
+  if (!cl) {
+    cl = new ContactList($('cl'));
   }
   mainWindow.showCenter(false);
   mainWindow.toFront();
@@ -436,7 +445,7 @@ function aMSNStart()
   new PeriodicalExecuter(function(pe) {
     //new Ajax.Request('/out', {method: 'get'});
     new Ajax.Request('/out', {method: 'get',
-      onException: function(r, e) {//alert(e.name+": "+e.message);
+      onException: function(r, e) {
       console.log(e)}
     });
   }, 5);
