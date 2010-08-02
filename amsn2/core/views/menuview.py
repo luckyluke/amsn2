@@ -87,12 +87,26 @@ class MenuItemView(object):
     def add_item(self, item):
         self.items.append(item)
 
-
 class MenuView(object):
-
+    """
+    Base class for a menu.
+    If subclassed allows a menu, or part of it, to be updated when the items are requested.
+    """
     def __init__(self):
-        self.items = []
+        self._fixed_items = []
 
     def add_item(self, item):
-        self.items.append(item)
+        self._fixed_items.append(item)
+
+    def _get_items(self):
+        self.create_var_items()
+        return self._fixed_items + self._var_items
+
+    items = property(_get_items)
+    def create_var_items(self):
+        """
+        Override this method to have a MenuView that can
+        change its elements depending on amsn2's status
+        """
+        self._var_items = []
 
