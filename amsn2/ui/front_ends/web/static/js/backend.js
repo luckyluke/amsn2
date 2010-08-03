@@ -11,7 +11,7 @@ function ContactList(_parent)
   var group_ids = [];
   var parent = _parent;
 
-  parent.update('<ul><li id="fakegroup" style="display:none"></li></ul>');
+  parent.update('<ul class="clGroups"><li id="fakegroup" style="display:none"></li></ul>');
 
   this.setGroups = function(_group_ids){
     console.log("SET GROUPS");
@@ -66,10 +66,14 @@ function ContactList(_parent)
 
   this.groupToggle = function(gid) {
     var cts = $('grp_' + gid + '_cts');
+    var arrow = $('grp_' + gid + '_arrow');
+
     if (cts.visible()) {
       cts.hide();
+      arrow.src = 'static/images/arrow_up.png';
     } else {
       cts.show();
+      arrow.src = 'static/images/arrow.png';
     }
   }
 }
@@ -82,15 +86,14 @@ function Group(_gid)
   var name = "";
 
   var elem = new Element('li', {id: 'grp_' + gid,
-                         class: 'clGroup',
                          onclick: 'cl.groupToggle(\''+gid+'\'); return false;'});
 
   var h;
-  h  = '<div id="grp_' + gid + '_hdr"></div>';
+  h  = '<img id="grp_' + gid + '_arrow" src="static/images/arrow.png" />';
+  h += '<span id="grp_' + gid + '_hdr">loading…</span>';
   h += '<ul  id="grp_' + gid + '_cts" class="clContacts">';
   h += '<li  id="grp_' + gid + '_fake" style="display:none"></ul>';
   elem.update(h);
-
 
   var isCollapsed = false;
 
@@ -159,17 +162,10 @@ function Contact(_gid, _uid)
 
   var elem = new Element('li',
                          {id: 'ct_' + _uid + '_' + _gid,
-                          class: 'clContact',
                           onclick: 'cl.contactClick(\''+uid+'\'); return false;'});
 
   var elements = {};
   elements[_gid] = elem;
-
-  /* FIXME
-     element.click(function(){
-     $.post('/contactClicked', {uid: uid});
-     });
-     */
 
   this.setName = function(_name) {
     name = _name;
