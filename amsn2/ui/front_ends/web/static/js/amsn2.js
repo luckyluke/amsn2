@@ -14,12 +14,8 @@ function ContactList(_parent)
   parent.update('<ul class="clGroups"><li id="fakegroup" style="display:none"></li></ul>');
 
   this.setGroups = function(_group_ids){
-    console.log("SET GROUPS");
     var prev = $('fakegroup');
     var i, j = 0;
-
-    console.log("group ids = " + _group_ids);
-    console.log("length = " + _group_ids.length);
 
     for (i = group_ids.length - 1; i >= 0; i--) {
       if (_group_ids.indexOf(group_ids[i]) < 0) {
@@ -96,8 +92,6 @@ function Group(_gid)
   elem.update(h);
 
   var isCollapsed = false;
-
-  console.log("New group " + gid);
 
   this.getName = function() {
     return name;
@@ -230,116 +224,103 @@ function contactUpdated(uid, name)
 }
 // }}}
 // ChatWindow {{{
-/*
 function ChatWindow(_uid)
 {
+  var uid = _uid;
+  var win = new Window({id: 'cw_'+uid, className: "win", width: 300, height: 300, zIndex: 100, resizable: true, draggable: true, closable: true, maximizable: true, detachable: false, minWidth: 205, minHeight: 150, showEffectOptions: {duration: 0}, hideEffectOptions: {duration: 0}});
 
-    var uid = _uid;
-    var element = $("<div class='chatWindow'/>");
+  var widgets = [];
 
-    var widgets = [];
+  this.show = function() {
+    win.show();
+  }
 
-    $("body").append(element);
+  this.hide = function() {
+    win.hide();
+  }
 
-    function callScrollers()
-    {
-        $.each(widgets,  function (i, w) {
-            w.scroll();
-        });
-    }
+  this.shake = function() {
+    // FIXME
+    //win.effect('shake', {times:5}, 50);
+  }
 
-    element.dialog({
-        position:[Math.floor(Math.random()*600), Math.floor(Math.random()*400)],
-        title: 'aMSN 2 Conversation',
-        resizeStop: callScrollers,
-    });
-
-    this.show = function() {
-        element.show("slow");
-    }
-
-    this.hide = function() {
-        element.hide("slow");
-    }
-
-    this.shake = function() {
-        element.effect('shake', {times:5}, 50);
-    }
-
-    this.addChatWidget = function(widget) {
-        widgets.push(widget);
-        widget.setParent(this);
-        element.append(widget.getElement());
-    }
+  this.addChatWidget = function(widget) {
+    win.setContent(widget.getElement());
+  }
+  // TODO: onClose
 }
 
 function ChatWidget(_uid)
 {
-    var uid = _uid;
-    var parent = null;
-    var element = $("<div class='chatWidget'/>");
-    var conversation = $("<div class='chatWidgetConversation'/>");
-    var textInput = $("<textarea class='chatTextInput' contenteditable='true' onload='this.contentDocument.designMode=\"on\"'></textarea>");
-    var bottomDiv = $("<div class='chatBottomDiv'/>");
-    var reScroll = true;
-    var naive = true;
+  var uid = _uid;
 
-    element.append(conversation);
-    bottomDiv.append(textInput);
-    element.append(bottomDiv);
+  var elem = new Element('div', {id: 'cwdgt_' + uid,
+                                 class: 'chatWidget'});
 
-    $(textInput).keydown(function(event) {
-        if (event.keyCode == 13) {
-            msg = textInput.val();
-            textInput.val("");
-            $.post('/sendMsg', {uid: uid, msg: msg});
-            return false;
-        }
+  var c  = new Element('div', {class: 'chatWidgetConversation'});
+  var d = new Element('div', {class: 'chatBottomDiv'});
+  var t  = new Element('textarea',
+                       {class: 'chatTextInput',
+                        contenteditable: true});
+  elem.appendChild(c);
+  d.appendChild(t);
+  elem.appendChild(d);
+
+  this.getElement = function() {
+    return elem;
+  }
+  Event.observe(t, 'keydown',
+    function(event) {
+      if (event.keyCode == Event.KEY_RETURN) {
+        msg = this.getValue();
+        this.setValue("");
+        new Ajax.Request('/sendMsg',
+          {parameters:
+            {uid: uid, msg: msg}
+        });
+        event.stop();
+      }
     });
+  /* TODO/FIXME
+  conversation.scroll(function() {
+    reScroll = Math.abs(conversation[0].scrollHeight - conversation.scrollTop() - conversation.outerHeight()) < 20;
+  });
 
-    conversation.scroll(function() {
-        reScroll = Math.abs(conversation[0].scrollHeight - conversation.scrollTop() - conversation.outerHeight()) < 20;
-    });
 
-    this.setParent = function(parent) {
-        this.parent = parent;
+  function scrollBottom()
+  {
+    if(reScroll)
+      conversation.animate({
+        scrollTop: conversation[0].scrollHeight
+      });
+  }
+  this.scroll = scrollBottom;
+  */
+
+  this.onMessageReceived = function(txt) {
+    var msg = new Element('div', {class:'chatMessage'});
+    msg.insert(txt);
+    //TODO: process smilies on msg
+    c.appendChild(msg);
+    msg.show();
+    /*
+    if (reScroll) {
+      if (naive) {
+        naive = reScroll = false;
+        setTimeout(function(){
+          scrollBottom();
+          reScroll = true;
+        }, 1000);
+      } else {
+        scrollBottom();
+      }
     }
+    */
+  }
 
-    this.getElement = function() {
-        return element;
-    }
-
-    function scrollBottom()
-    {
-        if(reScroll)
-            conversation.animate({
-                 scrollTop: conversation[0].scrollHeight
-            });
-    }
-    this.scroll = scrollBottom;
-
-    this.onMessageReceived = function(txt) {
-        var msg = $("<div class='chatMessage'/>");
-        msg.text(txt);
-        // process smilies on msg
-        conversation.append(msg);
-        msg.show('fast');
-        if (reScroll) {
-            if (naive) {
-                naive = reScroll = false;
-                setTimeout(function(){
-                    scrollBottom();
-                    reScroll = true;
-                }, 1000);
-            } else {
-                scrollBottom();
-            }
-        }
-    }
-
-    this.nudge = function() {
-        this.parent.shake();
-    }
+  this.nudge = function() {
+    this.parent.shake();
+  }
 }
 // Chat functions
 var chatWindows = {};
@@ -347,38 +328,40 @@ var chatWidgets = {};
 
 function newChatWindow(uid)
 {
-    chatWindows[uid] = new ChatWindow(uid);
+  if (chatWindows[uid] != undefined)
+    chatWindows[uid].destroy()
+  chatWindows[uid] = new ChatWindow(uid);
 }
 
 function addChatWidget(windowUid, widgetUid)
 {
-    chatWindows[windowUid].addChatWidget(chatWidgets[widgetUid]);
+  chatWindows[windowUid].addChatWidget(chatWidgets[widgetUid]);
 }
 
 function showChatWindow(uid)
 {
-    chatWindows[uid].show();
+  chatWindows[uid].show();
 }
 
 function hideChatWindow(uid)
 {
-    chatWindows[uid].hide();
+  chatWindows[uid].hide();
 }
 
 function newChatWidget(uid)
 {
-    chatWidgets[uid] = new ChatWidget(uid);
+  chatWidgets[uid] = new ChatWidget(uid);
 }
 
 function onMessageReceivedChatWidget(uid, msg)
 {
-    chatWidgets[uid].onMessageReceived(msg);
+  chatWidgets[uid].onMessageReceived(msg);
 }
 
 function nudgeChatWidget(uid)
 {
-    chatWidgets[uid].nudge();
-} */ // }}}
+  chatWidgets[uid].nudge();
+} // }}}
 
 // main {{{
 
@@ -396,7 +379,7 @@ function showMainWindow()
     mainWindow = new Window({id: 'mw', className: "win", width: 210, height: (document.viewport.getHeight() - 60), zIndex: 100, resizable: true, draggable: true, closable: false, maximizable: false, detachable: false, minWidth: 205, minHeight: 150, showEffectOptions: {duration: 0}, hideEffectOptions: {duration: 0}});
     mainWindow.setConstraint(true, {left: 0, right: 0, top: 0, bottom: 0});
     fixMainWindow();
-    mainWindow.setHTMLContent('<h1>Hello world !!</h1><div id="cl"></div>');
+    mainWindow.setHTMLContent('<div id="cl"></div>');
   }
   if (!cl) {
     cl = new ContactList($('cl'));
