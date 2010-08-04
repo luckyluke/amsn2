@@ -65,8 +65,8 @@ class TinyHTTPServer(object):
         for line in headers[eol:].splitlines():
             if line:
                 name, value = line.split(":", 1)
-                self._headers[name] = value.strip()
         #print "method=%s, uri=%s, version=%s" % (self._method, uri, self._version)
+                self._headers[name.lower()] = value.strip()
         if not self._version.startswith("HTTP/"):
             self.close()
             return
@@ -83,8 +83,8 @@ class TinyHTTPServer(object):
                         return
             self._404()
         elif self._method == "POST":
-            if "Content-Length" in self._headers:
-                r = int(self._headers["Content-Length"])
+            if "content-length" in self._headers:
+                r = int(self._headers["content-length"])
                 if r > 0:
                     self._read_delimiter = None
                     self._rcb = self.on_body
@@ -181,6 +181,14 @@ class TinyHTTPServer(object):
         f.close()
         self.write("HTTP/1.1 200 OK\r\nContent-Length: %d\r\n\r\n%s"
                    % (len(r), r))
+        self.close()
+
+    def send_javascript(self, code):
+        if code:
+            self.write("HTTP/1.1 200 OK\r\nContent-Type: text/javascript; charset=UTF-8\r\nContent-Length: %d\r\n\r\n%s"
+                       % (len(code), code))
+        else:
+            self.write("HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n")
         self.close()
 
     def _200(self, body = None):
