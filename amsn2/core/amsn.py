@@ -146,6 +146,10 @@ class aMSNCore(object):
         accounts = self._account_manager.get_available_accountviews()
         self._ui_manager.load_login(accounts)
         self._account.client.logout()
+        self._account = None
+
+        accounts = self._account_manager.get_available_accountviews()
+        self._ui_manager.load_login(accounts)
 
     def connection_state_changed(self, account, state):
         """
