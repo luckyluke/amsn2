@@ -1,5 +1,6 @@
 // TODO: have info/debug/err functions
 
+var loop = null;
 
 // Contact List {{{
 var cl = null;
@@ -387,11 +388,11 @@ function nudgeChatWidget(uid)
 var mainWindow = null;
 
 function logoutCb() {
-      if (confirm('Are you sure you want to logout?')) {
-        new Ajax.Request('/logout');
-        return true;
-      }
-      return false;
+  if (confirm('Are you sure you want to logout?')) {
+    new Ajax.Request('/logout');
+    return true;
+  }
+  return false;
 }
 function showMainWindow()
 {
@@ -458,13 +459,21 @@ function myInfoUpdated()
 
 function aMSNStart()
 {
-  new PeriodicalExecuter(function(pe) {
+  loop = new PeriodicalExecuter(function(pe) {
     //new Ajax.Request('/out', {method: 'get'});
     new Ajax.Request('/out', {method: 'get',
       onException: function(r, e) {
       console.log(e)}
     });
   }, 5);
+  Event.observe(window, 'beforeunload', function(event) {
+    if (!logoutCb()) {
+      event.stop();
+    }
+  });
+  Event.observe(window, 'unload', function(event) {
+    new Ajax.Request('/logout');
+  });
 }
 
 //vim:sw=2:fdm=marker:
