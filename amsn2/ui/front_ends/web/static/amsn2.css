@@ -1,3 +1,14 @@
+/* login */
+
+#login {
+   position: absolute;
+   width: 375px;
+   text-align: center;
+   font: 14px Verdana, Tahoma, Arial, sans-serif;
+   font-weight: bold;
+   margin: 0;
+   color: #fff;
+}
 
 /* chat widget/window elements  */
 
@@ -64,7 +75,7 @@ body {
   margin: 0px;
   padding: 0px;
   background-color: #101114;
-  background-image: url(images/logo.png);
+  background-image: url(images/logo/logo2.png);
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;

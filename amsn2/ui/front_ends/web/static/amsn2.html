@@ -10,7 +10,7 @@
     <script type="text/javascript" src="static/js/amsn2.js"></script>
   </head>
   <body>
-    <div id="login">
+    <div id="login" style="display:none">
       <form id="signin" action="/signin">
       Username:<input name="username" type="text" /> <br/>
       Password:<input name="password" type="password" /> <br/>
@@ -22,6 +22,17 @@
     </pre>
 
     <script type="text/javascript">
+      function recenterLogin(event) {
+        var login = $('login');
+        var top = (document.viewport.getHeight() - login.getHeight())/2;
+        var left = (document.viewport.getWidth() - login.getWidth())/2;
+
+        login.setStyle({top: top + 'px', left: left + 'px', display: 'block'});
+        login.show();
+      }
+      Event.observe(window, 'resize', recenterLogin);
+      recenterLogin(null);
+
       Event.observe('signin', 'submit', function(event) {
         $('signin').request({
           onComplete: function(){ aMSNStart(); }
