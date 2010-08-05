@@ -42,9 +42,12 @@ class Backend(object):
             (re.compile('/$'), self.get_index, None),
             (re.compile('/static/(.*)'), self.get_static_file, None),
             (re.compile('/out$'), self.out, self.out),
-            (re.compile('/signin'), None, self.post_signin),
-            (re.compile('/contactClicked'), None, self.post_contact_clicked),
-            (re.compile('/sendMsg'), None, self.post_send_msg),
+            (re.compile('/signin$'), None, self.post_signin),
+            (re.compile('/contactClicked$'), None, self.post_contact_clicked),
+            (re.compile('/sendMsg$'), None, self.post_send_msg),
+            (re.compile('/closeCW$'), None, self.post_close_cw),
+            #TODO: logout, set (nick,psm,status,dp), get (dp, dps),
+            # add/remove group/contact
         )
 
         gobject.io_add_watch(self._socket, gobject.IO_IN, self.on_accept)
@@ -141,6 +144,18 @@ class Backend(object):
                 return
             cw = self.chat_widgets[uid]
             cw.send_message(uid, args['msg'])
+
+    def post_close_cw(self, w, uri, headers, body = None):
+        if (body and 'content-type' in headers
+        and headers['content-type'].startswith('application/x-www-form-urlencoded')):
+            args = cgi.parse_qs(body)
+            print "<<< closeCW: %s" %(args,)
+            uid = args['uid'][0]
+            if uid not in self.chat_windows:
+                w._400()
+                return
+            cw = self.chat_windows[uid]
+            cw.close()
             w.write("HTTP/1.1 200 OK\r\n\r\n")
             w.close()
             return
