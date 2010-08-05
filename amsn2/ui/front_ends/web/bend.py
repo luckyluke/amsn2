@@ -46,7 +46,8 @@ class Backend(object):
             (re.compile('/contactClicked$'), None, self.post_contact_clicked),
             (re.compile('/sendMsg$'), None, self.post_send_msg),
             (re.compile('/closeCW$'), None, self.post_close_cw),
-            #TODO: logout, set (nick,psm,status,dp), get (dp, dps),
+            (re.compile('/logout$'), None, self.post_logout),
+            #TODO: set (nick,psm,status,dp), get (dp, dps),
             # add/remove group/contact
         )
 
@@ -156,6 +157,14 @@ class Backend(object):
                 return
             cw = self.chat_windows[uid]
             cw.close()
+            w.write("HTTP/1.1 200 OK\r\n\r\n")
+            w.close()
+            return
+        w._400()
+
+    def post_logout(self, w, uri, headers, body = None):
+        if self._core._account:
+            self._core.sign_out_of_account()
             w.write("HTTP/1.1 200 OK\r\n\r\n")
             w.close()
             return

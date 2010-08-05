@@ -386,19 +386,37 @@ function nudgeChatWidget(uid)
 
 var mainWindow = null;
 
+function logoutCb() {
+      if (confirm('Are you sure you want to logout?')) {
+        new Ajax.Request('/logout');
+        return true;
+      }
+      return false;
+}
 function showMainWindow()
 {
   if (!mainWindow) {
     function fixMainWindow() {
-      $('mw_minimize').setStyle({left: (mainWindow.getSize()['width'] - 21) + 'px'});
+      $('mw_minimize').setStyle({left: (mainWindow.getSize()['width'] - 42) + 'px'});
     }
 
     Event.observe(window, 'resize', fixMainWindow);
 
-    mainWindow = new Window({id: 'mw', className: "win", width: 210, height: (document.viewport.getHeight() - 60), zIndex: 100, resizable: true, draggable: true, closable: false, maximizable: false, detachable: false, minWidth: 205, minHeight: 150, showEffectOptions: {duration: 0}, hideEffectOptions: {duration: 0}});
+    mainWindow = new Window({
+      id: 'mw', className: "win",
+      width: 210, height: (document.viewport.getHeight() - 60),
+      minWidth: 205, minHeight: 150,
+      zIndex: 100,
+      resizable: true, draggable: true,
+      closable: true, maximizable: false, detachable: false,
+      showEffectOptions: {duration: 0},
+      title: 'aMSN 2',
+      hideEffectOptions: {duration: 0},
+    });
     mainWindow.setConstraint(true, {left: 0, right: 0, top: 0, bottom: 0});
     fixMainWindow();
     mainWindow.setHTMLContent('<div id="cl"></div>');
+    mainWindow.setCloseCallback(logoutCb);
   }
   if (!cl) {
     cl = new ContactList($('cl'));
