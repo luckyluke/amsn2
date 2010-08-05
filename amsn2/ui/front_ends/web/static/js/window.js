@@ -364,6 +364,11 @@ Window.prototype = {
     }
   },
   
+  // Gets Element
+  getElement: function() {
+    return this.element;
+  },
+
   // Gets window ID
   getId: function() {
     return this.element.id;
