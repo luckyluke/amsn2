@@ -227,7 +227,19 @@ function contactUpdated(uid, name)
 function ChatWindow(_uid)
 {
   var uid = _uid;
-  var win = new Window({id: 'cw_'+uid, className: "win", width: 300, height: 300, zIndex: 100, resizable: true, draggable: true, closable: true, maximizable: true, detachable: false, minWidth: 205, minHeight: 150, showEffectOptions: {duration: 0}, hideEffectOptions: {duration: 0}});
+  var win = new Window({
+    id: 'cw_'+uid, className: "win",
+    width: 300, height: 300, zIndex: 100,
+    minWidth: 205, minHeight: 150,
+    resizable: true, draggable: true, closable: true,
+    maximizable: true, detachable: false,
+    showEffectOptions: {duration: 0}, hideEffectOptions: {duration: 0},
+    onClose: function(event) {
+      new Ajax.Request('/closeCW',
+        {parameters:
+          {uid: uid}
+      });
+    }});
 
   var widgets = [];
 
@@ -240,19 +252,22 @@ function ChatWindow(_uid)
   }
 
   this.shake = function() {
-    // FIXME
-    //win.effect('shake', {times:5}, 50);
+    //FIXME
+    var i = 0;
+    for (; i < 5; i++)
+      Effect.Shake(win.getElement());
   }
 
   this.addChatWidget = function(widget) {
     win.setContent(widget.getElement());
+    widget.setParent(this);
   }
-  // TODO: onClose
 }
 
 function ChatWidget(_uid)
 {
   var uid = _uid;
+  var win = null;
 
   var elem = new Element('div', {id: 'cwdgt_' + uid,
                                  class: 'chatWidget'});
@@ -265,6 +280,10 @@ function ChatWidget(_uid)
   elem.appendChild(c);
   d.appendChild(t);
   elem.appendChild(d);
+
+  this.setParent = function(p) {
+    win = p;
+  }
 
   this.getElement = function() {
     return elem;
@@ -319,7 +338,7 @@ function ChatWidget(_uid)
   }
 
   this.nudge = function() {
-    this.parent.shake();
+    win.shake();
   }
 }
 // Chat functions
