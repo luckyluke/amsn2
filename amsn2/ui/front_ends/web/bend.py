@@ -33,7 +33,7 @@ class Backend(object):
     def __init__(self, core):
         self._core = core
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._socket.setblocking(0)
+        self._socket.setblocking(False)
         self._socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._socket.bind((self._options.host, self._options.port))
         self._socket.listen(1)
@@ -96,7 +96,8 @@ class Backend(object):
             self._q += event + '();'
 
     def get_index(self, w, uri, headers, body = None):
-        w.send_file(BASEPATH + "/static/amsn2.html")
+        w.send_file(BASEPATH + "/static/amsn2.html", {'Content-Type':
+                                                      'text/html; charset=utf-8'})
 
     def get_static_file(self, w, uri, headers, body = None):
         path = uri[2]

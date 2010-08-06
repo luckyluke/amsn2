@@ -175,17 +175,21 @@ class TinyHTTPServer(object):
         self.close()
         return self._is_alive
 
-    def send_file(self, path):
+    def send_file(self, path, date=None, hdr={}):
+        #TODO: check open errors. handle Last-Modified -> 304
         f = open(path, "r")
         r = f.read()
         f.close()
-        self.write("HTTP/1.1 200 OK\r\nContent-Length: %d\r\n\r\n%s"
+        self.write("HTTP/1.1 200 OK\r\n")
+        for k,v in hdr.items():
+            self.write("%s: %s\r\n" % (k, v))
+        self.write("Content-Length: %d\r\n\r\n%s"
                    % (len(r), r))
         self.close()
 
     def send_javascript(self, code):
         if code:
-            self.write("HTTP/1.1 200 OK\r\nContent-Type: text/javascript; charset=UTF-8\r\nContent-Length: %d\r\n\r\n%s"
+            self.write("HTTP/1.1 200 OK\r\nContent-Type: text/javascript; charset=utf-8\r\nContent-Length: %d\r\n\r\n%s"
                        % (len(code), code))
         else:
             self.write("HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n")
