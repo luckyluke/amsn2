@@ -35,7 +35,7 @@ class Backend(object):
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._socket.setblocking(0)
         self._socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self._socket.bind(("127.0.0.1", 8080))
+        self._socket.bind((self._options.host, self._options.port))
         self._socket.listen(1)
         self._workers = []
         self._rules = (
