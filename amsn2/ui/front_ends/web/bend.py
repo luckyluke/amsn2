@@ -2,10 +2,14 @@ import os
 import socket
 import errno
 import logging
-import urlparse
 import re
 import gobject
-import cgi
+import sys
+
+if sys.hexversion < 0x020600f0:
+    from cgi import parse_qs
+else:
+    from urlparse import parse_qs
 
 from constants import BASEPATH
 from tinyhttpserver import TinyHTTPServer
