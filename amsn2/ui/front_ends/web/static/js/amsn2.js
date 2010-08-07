@@ -14,14 +14,18 @@ function ContactList(_parent)
 
   parent.update('<ul class="clGroups"><li id="fakegroup" style="display:none"></li></ul>');
 
+  this.remove = function() {
+    parent.update();
+  }
+
   this.setGroups = function(_group_ids){
     var prev = $('fakegroup');
     var i, j = 0;
 
     for (i = group_ids.length - 1; i >= 0; i--) {
       if (_group_ids.indexOf(group_ids[i]) < 0) {
+        group_ids[i].remove();
         group_ids.splice(i,1);
-        // TODO: remove group
       }
     }
 
@@ -94,6 +98,13 @@ function Group(_gid)
 
   var isCollapsed = false;
 
+  this.remove = function() {
+    for (cid in contact_ids) {
+      contact_ids[cid].removeFromGroup(gid);
+    }
+    elem.remove();
+  }
+
   this.getName = function() {
     return name;
   }
@@ -161,6 +172,19 @@ function Contact(_gid, _uid)
 
   var elements = {};
   elements[_gid] = elem;
+
+  this.remove = function() {
+    for (k in elements) {
+      elements[k].remove();
+    }
+    cl.contacts[uid] = undefined;
+  }
+
+  this.removeFromGroup = function(_gid) {
+    if (elements[groupId] != undefined)
+      elements[groupId].remove();
+    // TODO: check if elements is empty
+  }
 
   this.setName = function(_name) {
     name = _name;
@@ -252,6 +276,13 @@ function ChatWindow(_uid)
     win.hide();
   }
 
+  this.remove = function() {
+    for (w in widgets) {
+      w.remove();
+    }
+    win.destroy();
+  }
+
   this.shake = function() {
     //FIXME
     var i = 0;
@@ -282,13 +313,6 @@ function ChatWidget(_uid)
   d.appendChild(t);
   elem.appendChild(d);
 
-  this.setParent = function(p) {
-    win = p;
-  }
-
-  this.getElement = function() {
-    return elem;
-  }
   Event.observe(t, 'keydown',
     function(event) {
       if (event.keyCode == Event.KEY_RETURN) {
@@ -300,7 +324,21 @@ function ChatWidget(_uid)
         });
         event.stop();
       }
-    });
+  });
+
+  this.remove = function() {
+    Event.StopObserving(t, 'keydown');
+    elem.remove();
+    win = null;
+  }
+
+  this.setParent = function(p) {
+    win = p;
+  }
+
+  this.getElement = function() {
+    return elem;
+  }
   /* TODO/FIXME
   conversation.scroll(function() {
     reScroll = Math.abs(conversation[0].scrollHeight - conversation.scrollTop() - conversation.outerHeight()) < 20;
@@ -349,7 +387,7 @@ var chatWidgets = {};
 function newChatWindow(uid)
 {
   if (chatWindows[uid] != undefined)
-    chatWindows[uid].destroy()
+    chatWindows[uid].remove()
   chatWindows[uid] = new ChatWindow(uid);
 }
 
@@ -457,13 +495,43 @@ function myInfoUpdated()
   // TODO
 }
 
+function loggedOut() {
+  // TODO: show message
+  loop.stop();
+  loop = null;
+
+  if (cl) {
+    cl.remove();
+    cl = null;
+  }
+
+  if (mainWindow) {
+    mainWindow.remove();
+    Event.StopObserving(window, 'resize');
+    mainWindow = null;
+  }
+
+  for (c in chatWidgets) {
+    chatWidgets[c].remove()
+  }
+  chatWidgets = {};
+
+  for (c in chatWindows) {
+    chatWindows[c].remove()
+  }
+  chatWindows = {};
+
+  showLogin();
+}
+
 function aMSNStart()
 {
   loop = new PeriodicalExecuter(function(pe) {
-    //new Ajax.Request('/out', {method: 'get'});
-    new Ajax.Request('/out', {method: 'get',
+    new Ajax.Request('/out', {
+      method: 'get',
       onException: function(r, e) {
-      console.log(e)}
+        console.log(e);
+      }
     });
   }, 5);
   Event.observe(window, 'beforeunload', function(event) {
