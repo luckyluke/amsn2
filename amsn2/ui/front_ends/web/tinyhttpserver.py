@@ -2,9 +2,9 @@ import os
 import socket
 import errno
 import logging
-import urlparse
 import re
 import gobject
+from urlparse import urlsplit
 from constants import READ_CHUNK_SIZE
 import traceback
 
@@ -65,12 +65,12 @@ class TinyHTTPServer(object):
         for line in headers[eol:].splitlines():
             if line:
                 name, value = line.split(":", 1)
-        #print "method=%s, uri=%s, version=%s" % (self._method, uri, self._version)
                 self._headers[name.lower()] = value.strip()
+        #print "method=%s, uri=%s, version=%s" % (self._method, uri, self._version)
         if not self._version.startswith("HTTP/"):
             self.close()
             return
-        self._uri = (scheme, netloc, path, query, fragment) = urlparse.urlsplit(uri)
+        self._uri = (scheme, netloc, path, query, fragment) = urlsplit(uri)
         if self._method == "GET":
             for (r, get_cb, _) in self._rules:
                 if r.match(path) and get_cb:

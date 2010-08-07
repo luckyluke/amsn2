@@ -135,9 +135,11 @@ class Backend(object):
             return
         if (body and 'content-type' in headers
         and headers['content-type'].startswith('application/x-www-form-urlencoded')):
-            args = cgi.parse_qs(body)
+            args = parse_qs(body)
             print "<<< signin: %s" %(args,)
             self.login_window.signin(args['username'][0], args['password'][0])
+            self._logged_in = True
+            self._last_poll = time()
             w.write("HTTP/1.1 200 OK\r\n\r\n")
             w.close()
             return
@@ -149,7 +151,7 @@ class Backend(object):
             return
         if (body and 'content-type' in headers
         and headers['content-type'].startswith('application/x-www-form-urlencoded')):
-            args = cgi.parse_qs(body)
+            args = parse_qs(body)
             print "<<< contactClicked: %s" %(args,)
             self.cl_window.get_contactlist_widget().contact_clicked(args['uid'][0])
             w.write("HTTP/1.1 200 OK\r\n\r\n")
@@ -160,7 +162,7 @@ class Backend(object):
     def post_send_msg(self, w, uri, headers, body = None):
         if (body and 'content-type' in headers
         and headers['content-type'].startswith('application/x-www-form-urlencoded')):
-            args = cgi.parse_qs(body)
+            args = parse_qs(body)
             print "<<< sendMsg: %s" %(args,)
             uid = args['uid'][0]
             if uid not in self.chat_widgets:
@@ -168,11 +170,15 @@ class Backend(object):
                 return
             cw = self.chat_widgets[uid]
             cw.send_message(uid, args['msg'])
+            w.write("HTTP/1.1 200 OK\r\n\r\n")
+            w.close()
+            return
+        w._400()
 
     def post_close_cw(self, w, uri, headers, body = None):
         if (body and 'content-type' in headers
         and headers['content-type'].startswith('application/x-www-form-urlencoded')):
-            args = cgi.parse_qs(body)
+            args = parse_qs(body)
             print "<<< closeCW: %s" %(args,)
             uid = args['uid'][0]
             if uid not in self.chat_windows:
