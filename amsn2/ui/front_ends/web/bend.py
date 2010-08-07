@@ -13,6 +13,7 @@ else:
 
 from constants import BASEPATH
 from tinyhttpserver import TinyHTTPServer
+from time import time
 
 def uri_path_is_safe(path):
     if not BASEPATH and path[0] == '/':
@@ -63,6 +64,18 @@ class Backend(object):
         self.chat_windows = {}
         self.chat_widgets = {}
 
+        self._logged_in = False
+        self._last_poll = 0
+
+        #TODO: on log out
+        def cb():
+            if self._logged_in:
+                if time() - self._last_poll >= 30:
+                    self._core.sign_out_of_account()
+                    self._logged_in = False
+            return True
+        self._core._loop.timer_add(30000, cb)
+
     def on_accept(self, s, c):
         w = s.accept()
         t = TinyHTTPServer(self, *w, rules = self._rules)
@@ -70,10 +83,14 @@ class Backend(object):
         return True
 
     def out(self, w, uri, headers, body = None):
-        if len(self._q):
-            print ">>> %s" % (self._q,)
-        w.send_javascript(self._q)
-        self._q = ""
+        if self._logged_in:
+            if len(self._q):
+                print ">>> %s" % (self._q,)
+            self._last_poll = time()
+            w.send_javascript(self._q)
+            self._q = ""
+        else:
+            w.send_javascript("loggedOut();")
 
     def _args2JS(self, *args):
         call = ""
