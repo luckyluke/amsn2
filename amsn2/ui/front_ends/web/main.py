@@ -19,16 +19,12 @@ class aMSNMainWindow(base.aMSNMainWindow, Backend):
 
     def show(self):
         self.send("showMainWindow")
-        self._core.idler_add(self.__on_show)
 
     def hide(self):
         self.send("hideMainWindow")
 
-    def set_title(self,title):
+    def set_title(self, title):
         self.send("setMainWindowTitle", title)
 
     def set_menu(self,menu):
-        print "aMSNMainWindow.setMenu"
-
-    def __on_show(self):
-        self._core.main_window_shown()
+        print "TODO: aMSNMainWindow.setMenu"

@@ -37,7 +37,7 @@ class Backend(object):
         self._socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._socket.bind((self._options.host, self._options.port))
         self._socket.listen(1)
-        self._workers = []
+        #self._workers = []
         self._rules = (
             (re.compile('/$'), self.get_index, None),
             (re.compile('/static/(.*)'), self.get_static_file, None),
@@ -62,7 +62,7 @@ class Backend(object):
     def on_accept(self, s, c):
         w = s.accept()
         t = TinyHTTPServer(self, *w, rules = self._rules)
-        self._workers.append(t)
+        #self._workers.append(t)
         return True
 
     def out(self, w, uri, headers, body = None):
@@ -96,6 +96,7 @@ class Backend(object):
             self._q += event + '();'
 
     def get_index(self, w, uri, headers, body = None):
+        self._core.main_window_shown()
         w.send_file(BASEPATH + "/static/amsn2.html", {'Content-Type':
                                                       'text/html; charset=utf-8'})
 
