@@ -533,7 +533,7 @@ function aMSNStart()
         console.log(e);
       }
     });
-  }, 5);
+  }, 0.5);
   Event.observe(window, 'beforeunload', function(event) {
     if (!logoutCb()) {
       event.stop();
