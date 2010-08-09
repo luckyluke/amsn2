@@ -20,7 +20,7 @@ class aMSNChatWindow(base.aMSNChatWindow):
     def add_chat_widget(self, chat_widget):
         """ add an aMSNChatWidget to the window """
         self._main.send("addChatWidget", self._uid, chat_widget._uid)
-        self._chat_widgets[chat_widget.uid] = chat_widget
+        self._chat_widgets[chat_widget._uid] = chat_widget
 
     def show(self):
         self._main.send("showChatWindow", self._uid)
