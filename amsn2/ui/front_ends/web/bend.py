@@ -61,20 +61,10 @@ class Backend(object):
         self._workers.append(t)
         return True
 
-    def emit_event(self, event, *args, **kwargs):
-        """
-        if event in self.listeners.keys():
-            for func in self.listeners[event]:
-                try:
-                    func(*args, **kwargs)
-                except:
-                    pass
-        """
-
     def out(self, w, uri, headers, body = None):
         if len(self._q):
             print ">>> %s" % (self._q,)
-        w._200(self._q)
+        w.send_javascript(self._q)
         self._q = ""
 
     def _args2JS(self, *args):
@@ -116,8 +106,8 @@ class Backend(object):
         if self.login_window is None:
             w._400()
             return
-        if (body and 'Content-Type' in headers
-        and headers['Content-Type'].startswith('application/x-www-form-urlencoded')):
+        if (body and 'content-type' in headers
+        and headers['content-type'].startswith('application/x-www-form-urlencoded')):
             args = cgi.parse_qs(body)
             print "<<< signin: %s" %(args,)
             self.login_window.signin(args['username'][0], args['password'][0])

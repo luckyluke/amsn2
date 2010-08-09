@@ -396,20 +396,6 @@ function signingIn()
 {
     hideLogin();
 } // }}}
-// splash screen {{{
-function setImageSplashScreen() {}
-function setTextSplashScreen(txt)
-{
-    $("div.splashScreen").text(txt);
-}
-function showSplashScreen()
-{
-    $("div.splashScreen").show("slow");
-}
-function hideSplashScreen()
-{
-    $("div.splashScreen").hide("slow");
-} // }}}
 
 function myInfoUpdated()
 {
