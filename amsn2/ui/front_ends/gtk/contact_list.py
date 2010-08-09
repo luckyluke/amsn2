@@ -347,7 +347,7 @@ class aMSNContactListWidget(base.aMSNContactListWidget, gtk.TreeView):
                     self.grab_focus()
                     self.set_cursor(path, tree_column, 0)
                     menu = gtk.Menu()
-                    common.createMenuItemsFromView(menu,
+                    common.create_menu_items_from_view(menu,
                                 view.on_right_click_popup_menu.items)
                     menu.popup(None, None, None, event.button, event.time)
 
