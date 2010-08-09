@@ -1,39 +1,43 @@
 <html>
   <head>
     <title>aMSN2 FrontEnd</title>
-    <script type="text/javascript" src="static/js/jquery.js"></script>
-    <script type="text/javascript" src="static/js/jquery.ui.js"></script>
-    <link rel="stylesheet" href="static/jquery.ui.css" type="text/css" media="screen">
+    <script type="text/javascript" src="static/js/prototype.js"></script>
+    <script type="text/javascript" src="static/js/effects.js"></script>
+    <script type="text/javascript" src="static/js/window.js"></script>
     <style type="text/css">
       @import url("static/amsn2.css");
     </style>
-    <script type="text/javascript" src="static/js/backend.js"></script>
+    <script type="text/javascript" src="static/js/amsn2.js"></script>
   </head>
   <body>
-    <div class="splashScreen"></div>
-    <div class="login">
-      <form id="signin" action="fake_to_store_creds">
-      Username:<input id='u' name='u' type="text" /> <br/>
-      Password:<input id='p' name='p' type="password" /> <br/>
-      <input type="submit" value="SignIn" />
+    <div id="login" style="display:none">
+      <form id="signin" action="/signin">
+      Username:<input name="username" type="text" /> <br/>
+      Password:<input name="password" type="password" /> <br/>
+      <input type="submit" value="Sign In!" />
       </form>
     </div>
-    <div class="mainWindow">
-      <pre class="message">
-                &nbsp;
-      </pre>
-      <div class="contact_list">
-        <div class="title"></div>
-      </div>
-    </div>
+    <pre id="message">
+              &nbsp;
+    </pre>
 
     <script type="text/javascript">
-      $('#signin').submit(function(){
-        $.post('/signin',
-               {username: $('#u').val(),
-                password: $('#p').val()},
-               function() { aMSNStart();});
-        return false;
+      function recenterLogin(event) {
+        var login = $('login');
+        var top = (document.viewport.getHeight() - login.getHeight())/2;
+        var left = (document.viewport.getWidth() - login.getWidth())/2;
+
+        login.setStyle({top: top + 'px', left: left + 'px', display: 'block'});
+        login.show();
+      }
+      Event.observe(window, 'resize', recenterLogin);
+      recenterLogin(null);
+
+      Event.observe('signin', 'submit', function(event) {
+        $('signin').request({
+          onComplete: function(){ aMSNStart(); }
+        });
+        event.stop();
       });
     </script>
 

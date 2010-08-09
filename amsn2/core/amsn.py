@@ -39,7 +39,7 @@ papyon_logger = logging.getLogger("papyon")
 logger = logging.getLogger("amsn2")
 
 class aMSNCore(object):
-    def __init__(self, options, extra = None):
+    def __init__(self, options, extra_args = None):
         """
         Create a new aMSN Core. It takes an options class as argument
         which has a variable for each option the core is supposed to received.
@@ -52,7 +52,7 @@ class aMSNCore(object):
            options.debug_amsn2 = whether or not to enable amsn2 debug output
            options.auto_login = whether to autologin with the credentials given
         """
-        self.extra = extra
+        self.extra_args = extra_args
         self.p2s = {papyon.Presence.ONLINE:"online",
                     papyon.Presence.BUSY:"busy",
                     papyon.Presence.IDLE:"idle",
@@ -146,6 +146,10 @@ class aMSNCore(object):
         accounts = self._account_manager.get_available_accountviews()
         self._ui_manager.load_login(accounts)
         self._account.client.logout()
+        self._account = None
+
+        accounts = self._account_manager.get_available_accountviews()
+        self._ui_manager.load_login(accounts)
 
     def connection_state_changed(self, account, state):
         """
