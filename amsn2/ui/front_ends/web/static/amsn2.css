@@ -1,83 +1,461 @@
+/* login */
 
-/* Elements that are invisible at the begining */
-
-.login,.contact_list,.mainWindow,.chatWindow,.chatMessage{
-    display: none;
-}
-
-/* general stuff */
-
-/* main elements */
-
-.mainWindow{
-    padding: 5px;
-    overflow-y: auto;
-}
-
-.login{
-}
-
-/* contact_list elements */
-
-.contact_list{
-    width: 100%;
-    text-wrap: none;
-    white-space: nowrap;
-    overflow-x: hidden;
-}
-.contact{
-
-}
-.groupheader{
-    background-color: black;
-    color: white;
-    cursor: pointer;
+#login {
+   position: absolute;
+   width: 375px;
+   text-align: center;
+   font: 14px Verdana, Tahoma, Arial, sans-serif;
+   font-weight: bold;
+   margin: 0;
+   color: #fff;
 }
 
 /* chat widget/window elements  */
 
 .chatWindow{
-    position: absolute;
-    overflow: hidden;
-    background-color: white;
-    padding: 0px;
-    height: 100%;
-    width: 100%;
+  position: absolute;
+  overflow: hidden;
+  background-color: white;
+  padding: 0px;
+  height: 100%;
+  width: 100%;
 }
 
 .chatWidget{
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 100%;
 }
 
 .chatWidgetConversation{
-    overflow-y: auto;
-    overflow-x: visible;
-    border: solid 1px black;
-    height: 70%;
+  overflow-y: auto;
+  overflow-x: visible;
+  border: solid 1px black;
+  height: 70%;
 }
 
 .chatMessage{
-    white-space: pre-wrap;
-    text-wrap: none;
+  white-space: pre-wrap;
+  text-wrap: none;
 }
 
 .chatTextInput{
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .chatBottomDiv{
-    height: 30%;
+  height: 30%;
 }
 
 .chatResizeDivContainer{
-    float: bottom;
-    cursor: se-resize;
+  float: bottom;
+  cursor: se-resize;
 }
 
 .chatResizeDiv{
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
 }
+/* most of the following code was taken from ajaxim.net
+ *
+ *    AJAX Instant Messenger
+ *   Copyright (c) 2006-2008
+ *    http://www.ajaxim.com/
+ *   Do not remove this notice
+ */
+
+html,body{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+  background-color: #101114;
+  background-image: url(images/logo/logo2.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  width: 100%;
+}
+
+div {
+  margin: 0px;
+  padding: 0px;
+}
+
+a { color: #c6c8cc; }
+
+input, textarea {
+  margin: 2px 4px 2px 4px;
+  border: 1px solid #dddcd8;
+  font-size: 12px;
+}
+
+.inputText {
+  position: absolute;
+  left: 5px;
+  right: 10px;
+  margin-top: 5px;
+  height: 50px;
+  border: 1px solid #bfbcb8;
+  padding: 3px;
+  font-family: Tahoma, sans-serif;
+}
+
+ul.clGroups {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  cursor: default;
+}
+
+ul.clGroups li {
+  position: relative;
+  color: #ccc;
+  vertical-align: middle;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 12px;
+  padding: 5px 3px 1px 3px;
+  margin: 0;
+  background-image: transparent url(images/arrow.png) no-repeat 0 0;
+}
+ul.clContacts {
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul.clContacts li {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+
+/**** WINDOWS ****/
+.overlay_win {
+  background-color: #ddd;
+  filter:alpha(opacity=60);
+  -moz-opacity: 0.6;
+  opacity: 0.6;
+}
+
+.overlay___invisible__ {
+  background-color: #ddd;
+  filter:alpha(opacity=0);
+  -moz-opacity: 0;
+  opacity: 0;
+}
+
+.win_nw {
+  width: 9px;
+  height: 23px;
+  background: transparent url(images/window/top_left.png) no-repeat 0 0;
+}
+
+.win_n {
+  background: transparent url(images/window/top_mid.png) repeat-x 0 0;
+  height: 23px;
+}
+
+.win_ne {
+  width: 9px;
+  height: 23px;
+  background: transparent url(images/window/top_right.png) no-repeat 0 0;
+}
+
+.win_nw_inactive {
+  width: 9px;
+  height: 23px;
+  background: transparent url(images/window/top_left_inactive.png) no-repeat 0 0;
+}
+
+.win_n_inactive {
+  background: transparent url(images/window/top_mid_inactive.png) repeat-x 0 0;
+  height: 23px;
+}
+
+.win_ne_inactive {
+  width: 9px;
+  height: 23px;
+  background: transparent url(images/window/top_right_inactive.png) no-repeat 0 0;
+}
+
+.win_e {
+  width: 2px;
+  background: transparent url(images/window/center_right.png) repeat-y 0 0;
+}
+
+.win_w {
+  width: 2px;
+  background: transparent url(images/window/center_left.png) repeat-y 0 0;
+}
+
+.win_sw {
+  width: 9px;
+  height: 15px;
+  background: transparent url(images/window/bottom_left.png) no-repeat 0 0;
+}
+
+.win_s {
+  background: transparent url(images/window/bottom_mid.png) repeat-x 0 0;
+  height: 15px;
+}
+
+.win_se {
+  width: 9px;
+  height: 15px;
+  background: transparent url(images/window/bottom_right.png) no-repeat 0 0;
+}
+
+.win_sizer {
+  width: 9px;
+  height: 15px;
+  background: transparent url(images/window/sizer.png) no-repeat 0 0;
+  cursor:se-resize;
+}
+
+.win_close {
+  width: 17px;
+  height: 17px;
+  background: transparent url(images/window/close.png) no-repeat 0 0;
+  position:absolute;
+  top:3px;
+  right:8px;
+  cursor:pointer;
+  z-index:2000;
+}
+
+.win_minimize {
+  width: 17px;
+  height: 17px;
+  background: transparent url(images/window/minimize.png) no-repeat 0 0;
+  position:absolute;
+  top:3px;
+  right:49px;
+  cursor:pointer;
+  z-index:2000;
+}
+
+.win_detach {
+  width: 17px;
+  height: 17px;
+  background: transparent url(images/window/detach.png) no-repeat 0 0;
+  position:absolute;
+  top:3px;
+  right:70px;
+  cursor:pointer;
+  z-index:2000;
+}
+
+.win_maximize {
+  width: 17px;
+  height: 17px;
+  background: transparent url(images/window/maximize.png) no-repeat 0 0;
+  position:absolute;
+  top:3px;
+  right:28px;
+  cursor:pointer;
+  z-index:2000;
+}
+
+.win_close_inactive {
+  width: 17px;
+  height: 17px;
+  background: transparent url(images/window/close_inactive.png) no-repeat 0 0;
+  position:absolute;
+  top:3px;
+  right:8px;
+  cursor:pointer;
+  z-index:2000;
+}
+
+.win_minimize_inactive {
+  width: 17px;
+  height: 17px;
+  background: transparent url(images/window/minimize_inactive.png) no-repeat 0 0;
+  position:absolute;
+  top:3px;
+  right:49px;
+  cursor:pointer;
+  z-index:2000;
+}
+
+.win_detach_inactive {
+  width: 17px;
+  height: 17px;
+  background: transparent url(images/window/detach_inactive.png) no-repeat 0 0;
+  position:absolute;
+  top:3px;
+  right:70px;
+  cursor:pointer;
+  z-index:2000;
+}
+
+.win_maximize_inactive {
+  width: 17px;
+  height: 17px;
+  background: transparent url(images/window/maximize_inactive.png) no-repeat 0 0;
+  position:absolute;
+  top:3px;
+  right:28px;
+  cursor:pointer;
+  z-index:2000;
+}
+
+.win_title {
+  float:left;
+  height:14px;
+  font-size:12px;
+  text-align:left;
+  width:100%;
+  font-family: Tahoma, Arial, sans-serif;
+  font-weight: bold;
+  font-size: 11px;
+  color:#efefef;
+}
+
+.win_content {
+  overflow:hidden;
+  color: #fefefe;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 10px;
+  background-color:#1f2022;
+  padding: 0;
+}
+
+.top_draggable, .bottom_draggable {
+  cursor:default;
+}
+
+.status_bar {
+  padding: 0px;
+  margin: -5px 0px 0px 0px;
+  font-size:10px;
+  color: #ffffff;
+}
+.status_bar input{
+  font-size:12px;
+}
+/* DO NOT CHANGE THESE VALUES*/
+.win {
+  display: block;
+  position: absolute;
+}
+
+.win table.table_window  {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  margin: 0px;
+  padding:0px;
+}
+
+.win table.table_window td , .win table.table_window th { 
+  padding: 0;
+}
+
+.win .title_window {
+  -moz-user-select:none;
+}
+
+.stdButton {
+  display: block;
+  float: left;
+  width: 95px;
+  height: 23px;
+  background: transparent url(window/button_normal.png) no-repeat;
+  font-family: Tahoma, Verdana, Arial, sans-serif;
+  font-size: 12px;
+  text-decoration: none;
+  text-align: center;
+  padding-top: 5px;
+  border:none;
+  color: #ffffff;
+}
+
+input.stdButton {
+  padding-top: 0px;
+  padding-bottom: 5px;
+  height:30px;
+  margin:0px;
+}
+
+.btnHover {
+  background-image: url(window/button_hover.png);
+}
+
+.btnDown {
+  width: 93px;
+  height: 22px;
+  background-image: url(window/button_down.png);
+  padding-top: 6px;
+  padding-left: 2px;
+}
+
+.win_label, .win_input {
+  padding: 10px;
+  color: #000;
+  text-align: right;
+  float: left;
+  width: 150px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.win_error {
+  padding: 2px 0 0;
+  margin: 0;
+  font-size: 11px;
+  font-weight: bold;
+  text-align: right;
+  float: left;
+}
+
+.win_long_label {
+  padding: 10px;
+  color: #000;
+  text-align: center;
+  width: 100%;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.win_links {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+  padding: 10px;
+  text-align: center;
+  margin: 0px auto;
+}
+
+.win_modal_title {
+  font-size: 18px;
+  color: #000;
+  margin-bottom: 15px;
+  width: 100%;
+  text-align: center;
+}
+
+.win_input {
+  width: 150px;
+}
+
+.win_error {
+  width: 100%;
+  text-align: center;
+  color: #F00;
+}
+
+.win_input input {
+  width: 100%;
+  font-weight: normal;
+}
+/**** END WINDOWS ****/

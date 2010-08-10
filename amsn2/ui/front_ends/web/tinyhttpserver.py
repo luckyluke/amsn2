@@ -2,9 +2,9 @@ import os
 import socket
 import errno
 import logging
-import urlparse
 import re
 import gobject
+from urlparse import urlsplit
 from constants import READ_CHUNK_SIZE
 import traceback
 
@@ -65,12 +65,12 @@ class TinyHTTPServer(object):
         for line in headers[eol:].splitlines():
             if line:
                 name, value = line.split(":", 1)
-        #print "method=%s, uri=%s, version=%s" % (self._method, uri, self._version)
                 self._headers[name.lower()] = value.strip()
+        #print "method=%s, uri=%s, version=%s" % (self._method, uri, self._version)
         if not self._version.startswith("HTTP/"):
             self.close()
             return
-        self._uri = (scheme, netloc, path, query, fragment) = urlparse.urlsplit(uri)
+        self._uri = (scheme, netloc, path, query, fragment) = urlsplit(uri)
         if self._method == "GET":
             for (r, get_cb, _) in self._rules:
                 if r.match(path) and get_cb:
@@ -175,17 +175,21 @@ class TinyHTTPServer(object):
         self.close()
         return self._is_alive
 
-    def send_file(self, path):
+    def send_file(self, path, date=None, hdr={}):
+        #TODO: check open errors. handle Last-Modified -> 304
         f = open(path, "r")
         r = f.read()
         f.close()
-        self.write("HTTP/1.1 200 OK\r\nContent-Length: %d\r\n\r\n%s"
+        self.write("HTTP/1.1 200 OK\r\n")
+        for k,v in hdr.items():
+            self.write("%s: %s\r\n" % (k, v))
+        self.write("Content-Length: %d\r\n\r\n%s"
                    % (len(r), r))
         self.close()
 
     def send_javascript(self, code):
         if code:
-            self.write("HTTP/1.1 200 OK\r\nContent-Type: text/javascript; charset=UTF-8\r\nContent-Length: %d\r\n\r\n%s"
+            self.write("HTTP/1.1 200 OK\r\nContent-Type: text/javascript; charset=utf-8\r\nContent-Length: %d\r\n\r\n%s"
                        % (len(code), code))
         else:
             self.write("HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n")

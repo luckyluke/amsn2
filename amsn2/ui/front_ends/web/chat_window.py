@@ -12,6 +12,7 @@ class aMSNChatWindow(base.aMSNChatWindow):
         self._main = amsn_core._core._main
         self._main.chat_windows[self._uid] = self
         self._main.send("newChatWindow", self._uid)
+        self._chat_widgets = {}
 
     def __del__(self):
         self._main.chat_windows[self._uid] = None
@@ -19,6 +20,7 @@ class aMSNChatWindow(base.aMSNChatWindow):
     def add_chat_widget(self, chat_widget):
         """ add an aMSNChatWidget to the window """
         self._main.send("addChatWidget", self._uid, chat_widget._uid)
+        self._chat_widgets[chat_widget._uid] = chat_widget
 
     def show(self):
         self._main.send("showChatWindow", self._uid)
@@ -47,8 +49,8 @@ class aMSNChatWindow(base.aMSNChatWindow):
         pass
 
     def close(self):
-        print "aMSNChatWindow.close"
-        pass
+        for (uid, cw) in self._chat_widgets.items():
+            cw._conversation.leave()
 
     def flash(self):
         print "aMSNChatWindow.flash"
@@ -66,7 +68,7 @@ class aMSNChatWidget(base.aMSNChatWidget):
         self._uid = hashlib.md5(str(random.random())).hexdigest()
         self._main.chat_widgets[self._uid] = self
         self._main.send("newChatWidget", self._uid)
-        self._amsn_conversation = amsn_conversation
+        self._conversation = amsn_conversation
 
     def __del__(self):
         self._main.chat_widgets[self._uid] = None
@@ -75,7 +77,7 @@ class aMSNChatWidget(base.aMSNChatWidget):
         if uid == self._uid:
             stmess = StringView()
             stmess.append_text('\n'.join(msg))
-            self._amsn_conversation.send_message(stmess)
+            self._conversation.send_message(stmess)
         return True
 
 
