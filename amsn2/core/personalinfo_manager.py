@@ -18,13 +18,13 @@ class aMSNPersonalInfoManager:
         # set nickname at login
         # could be overriden by the one set in the saved account
         # TODO: add setting display picture
-        nick = str(amsn_account.view.nick)
+        nick = str(amsn_account.view.nick).encode("utf-8")
         if not nick or nick == amsn_account.view.email:
             nick = self._papyon_profile.display_name
         self._personalinfoview.nick = nick
 
         # TODO: The psm doesn't seem to get fetched from server. Papyon issue?
-        psm = str(amsn_account.view.psm)
+        psm = str(amsn_account.view.psm).encode("utf-8")
         self._personalinfoview.psm = psm
 
         # set login presence, from this moment the client appears to the others
