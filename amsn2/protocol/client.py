@@ -48,7 +48,7 @@ class Client(papyon.Client):
         self.login(email, password)
 
     def change_nick(self, nick):
-        self.profile.display_name = str(nick)
+        self.profile.display_name = unicode(nick)
 
     def change_message(self, message):
-        self.profile.personal_message = str(message)
+        self.profile.personal_message = unicode(message)
