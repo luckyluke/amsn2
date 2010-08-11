@@ -179,12 +179,15 @@ class StringView (object):
 
         return sv
 
-    def __str__(self):
-        out = ""
+    def __unicode__(self):
+        out = u""
         for x in self._elements:
             if x.get_type() == StringView.TEXT_ELEMENT:
                 out += x.get_value()
         return out
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')
 
     def __repr__(self):
         out = "{"

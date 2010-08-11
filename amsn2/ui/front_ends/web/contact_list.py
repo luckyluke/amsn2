@@ -48,7 +48,7 @@ class aMSNContactListWindow(base.aMSNContactListWindow):
         ourself, such as DP, nick, psm, the current media being played,...
         @view: the contactView of the ourself (contains DP, nick, psm,
         currentMedia,...)"""
-        self._main.send("myInfoUpdated", str(view.nick))
+        self._main.send("myInfoUpdated", unicode(view.nick))
 
     def get_contactlist_widget(self):
         return self._clwidget
@@ -112,5 +112,5 @@ class aMSNContactListWidget(base.aMSNContactListWidget):
         in the affects groups.
         """
         self.contacts[contactView.uid]=contactView
-        self._main.send("contactUpdated", contactView.uid, str(contactView.name))
+        self._main.send("contactUpdated", contactView.uid, unicode(contactView.name))
 

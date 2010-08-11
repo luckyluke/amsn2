@@ -98,8 +98,10 @@ class Backend(object):
             t = type(value).__name__
             if (t == 'tuple' or t == 'list'):
                 call += '['+ self._args2JS(*value)+']'
+            elif (t == 'unicode'):
+                call += "'" + value.encode('unicode_escape') + "',"
             elif (t == 'str'):
-                call += "'" + str(value).encode('string_escape') + "',"
+                call += "'" + value.encode('string_escape') + "',"
             elif (t == 'int'):
                 call += str(value) + ","
             else:

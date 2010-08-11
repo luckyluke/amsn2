@@ -172,6 +172,8 @@ class aMSNCore(object):
             account.login.on_connecting((state + 1)/ 7., status_str[state])
 
         elif state == papyon.event.ClientState.OPEN:
+            account.login.hide()
+            account.login = None
             self._ui_manager.load_contactlist()
             self._personalinfo_manager.set_account(account)
             self._contactlist_manager.on_CL_downloaded(account.client.address_book)

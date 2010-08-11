@@ -86,7 +86,7 @@ class aMSNChatWidget(base.aMSNChatWidget):
         """ Called for incoming and outgoing messages
             message: a MessageView of the message"""
         self._main.send("onMessageReceivedChatWidget",
-                        self._uid, str(messageview.to_stringview()))
+                        self._uid, unicode(messageview.to_stringview()))
 
     def nudge(self):
         self._main.send("nudgeChatWidget", self._uid)

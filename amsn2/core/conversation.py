@@ -95,7 +95,7 @@ class aMSNConversation:
         """ msg is a StringView """
         # for the moment, no smiley substitution... (TODO)
         self.on_message_received(msg, formatting=formatting)
-        message = papyon.ConversationMessage(str(msg), formatting)
+        message = papyon.ConversationMessage(unicode(msg), formatting)
         self._conv.send_text_message(message)
 
     def send_nudge(self):

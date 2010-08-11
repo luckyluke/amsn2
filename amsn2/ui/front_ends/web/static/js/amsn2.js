@@ -506,7 +506,7 @@ function loggedOut() {
   }
 
   if (mainWindow) {
-    mainWindow.remove();
+    mainWindow.destroy();
     Event.StopObserving(window, 'resize');
     mainWindow = null;
   }
