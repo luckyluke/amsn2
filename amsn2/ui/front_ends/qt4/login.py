@@ -64,6 +64,7 @@ class aMSNLoginWindow(StyledWidget, base.aMSNLoginWindow):
         QObject.connect(self.ui.checkRememberMe, SIGNAL("toggled(bool)"), self.__on_toggled_cb)
         QObject.connect(self.ui.checkRememberPass, SIGNAL("toggled(bool)"), self.__on_toggled_cb)
         QObject.connect(self.ui.checkSignInAuto, SIGNAL("toggled(bool)"), self.__on_toggled_cb)
+        QObject.connect(self.ui.comboAccount, SIGNAL("currentIndexChanged(QString)"), self.__on_user_comboxEntry_changed)
         self.setTestStyle()
 
         # status list
@@ -72,6 +73,9 @@ class aMSNLoginWindow(StyledWidget, base.aMSNLoginWindow):
             _, path = self._theme_manager.get_statusicon("buddy_%s" % name)
             if (name == self._amsn_core.p2s['FLN']): continue
             self.ui.comboStatus.addItem(QIcon(path), str.capitalize(name), key)
+
+    def __on_user_comboxEntry_changed(self, text):
+        self.__switch_to_account(text)
 
     def setTestStyle(self):
         styleData = QFile()
@@ -113,7 +117,7 @@ class aMSNLoginWindow(StyledWidget, base.aMSNLoginWindow):
         if accv is None:
             accv = AccountView(self._amsn_core, email)
 
-        self.ui.comboAccount.setItemText(0, accv.email)
+        self.ui.comboAccount.setEditText(accv.email)
 
         if accv.password:
             self.ui.linePassword.clear()
