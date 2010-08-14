@@ -13,6 +13,9 @@ class aMSNLang(object):
     lineRe  = re.compile('\s*([^\s]+)\s+(.+)', re.UNICODE)  # whitespace? + key + whitespace + value
     langRe  = re.compile('(.+)-.+', re.UNICODE)             # code or code-variant
 
+    def clear_keys(self):
+        self.lang_keys = {}
+
     def load_lang(self, lang_code, force_reload=False):
         if self.lang_code is lang_code and force_reload is False:
             # Don't reload the same lang unless forced.
@@ -28,7 +31,7 @@ class aMSNLang(object):
 
         if lang_code is self.base_lang:
             # Clear the keys if we're loading the base lang.
-            self.clearKeys()
+            self.clear_keys()
 
         if root is not self.base_lang:
             # If it's not the default lang, load the base first.

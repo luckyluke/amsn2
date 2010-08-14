@@ -66,7 +66,7 @@ class aMSNContactInputWindow(object):
         @type groupviews: list
         @param groupviews: a list of groupviews of existing groups
         """
-        raise notImplementedError
+        raise NotImplementedError
 
     def set_title(self, title):
         raise NotImplementedError
@@ -88,7 +88,7 @@ class aMSNGroupInputWindow(object):
         @type contactviews: list
         @param contactviews: a list of contactviews of existing contacts
         """
-        raise notImplementedError
+        raise NotImplementedError
 
     def set_title(self, title):
         raise NotImplementedError
@@ -111,7 +111,7 @@ class aMSNContactDeleteWindow(object):
         @param contactviews: a list of contactviews of all the contacts
         that can be removed from the AddressBook.
         """
-        raise notImplementedError
+        raise NotImplementedError
 
     def set_title(self, title):
         raise NotImplementedError
@@ -134,7 +134,7 @@ class aMSNGroupDeleteWindow(object):
         @param groupviews: a list of groupviews of all the groups
         that can be removed from the AddressBook.
         """
-        raise notImplementedError
+        raise NotImplementedError
 
     def set_title(self, title):
         raise NotImplementedError

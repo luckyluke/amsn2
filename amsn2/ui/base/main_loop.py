@@ -24,8 +24,9 @@ class aMSNMainLoop(object):
     def timer_add(self, delay, func):
         """
         This will add a timer into the main loop which will call a function
+        until it returns False
 
-        @type delay:
+        @type delay: integer in ms.
         @type func: function
         """
         raise NotImplementedError

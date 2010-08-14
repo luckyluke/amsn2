@@ -1,121 +1,290 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>ChatWindow</class>
- <widget class="QWidget" name="ChatWindow" >
-  <property name="geometry" >
+ <widget class="QWidget" name="ChatWindow">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>559</width>
-    <height>445</height>
+    <width>857</width>
+    <height>752</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3" >
+  <property name="styleSheet">
+   <string notr="true">QWidget#ChatWindow {
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb(155, 191, 193), stop:0.253333 rgb(236, 243, 246));
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
-    <widget class="QSplitter" name="splitter_2" >
-     <property name="orientation" >
+    <widget class="QSplitter" name="splitter_3">
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <widget class="QSplitter" name="splitter" >
-      <property name="orientation" >
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <widget class="QTextEdit" name="textEdit" >
-       <property name="undoRedoEnabled" >
-        <bool>false</bool>
-       </property>
-       <property name="textInteractionFlags" >
-        <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-       </property>
-      </widget>
-      <widget class="QWidget" name="layoutWidget" >
-       <layout class="QVBoxLayout" name="verticalLayout" >
-        <item>
-         <widget class="QLabel" name="label" >
-          <property name="text" >
-           <string>Something here...</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer" >
-          <property name="orientation" >
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0" >
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_2" >
-          <property name="text" >
-           <string>Contact image</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="layoutWidget" >
-      <layout class="QVBoxLayout" name="inputLayout" >
+     <widget class="QWidget" name="layoutWidget">
+      <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QToolBar" name="toolBar" >
-         <property name="minimumSize" >
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
           <size>
-           <width>0</width>
-           <height>32</height>
+           <width>1</width>
+           <height>20</height>
           </size>
          </property>
-         <property name="maximumSize" >
-          <size>
-           <width>16777215</width>
-           <height>32</height>
-          </size>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QSplitter" name="splitter">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
-         <property name="sizeIncrement" >
-          <size>
-           <width>0</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="baseSize" >
-          <size>
-           <width>0</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="acceptDrops" >
-          <bool>true</bool>
-         </property>
-         <property name="windowTitle" >
-          <string>Quick Actions</string>
-         </property>
-         <property name="movable" >
-          <bool>false</bool>
-         </property>
-         <addaction name="actionInsert_Emoticon" />
-         <addaction name="actionNudge" />
+         <widget class="QTextEdit" name="textEdit">
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <property name="undoRedoEnabled">
+           <bool>false</bool>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+          </property>
+         </widget>
+         <widget class="QWidget" name="layoutWidget">
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="maximumSize">
+              <size>
+               <width>96</width>
+               <height>96</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Contact image</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
         </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>1</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="layoutWidget">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QToolBar" name="toolBar">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="sizeIncrement">
+            <size>
+             <width>0</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>0</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="acceptDrops">
+            <bool>true</bool>
+           </property>
+           <property name="windowTitle">
+            <string>Quick Actions</string>
+           </property>
+           <property name="movable">
+            <bool>false</bool>
+           </property>
+           <addaction name="actionInsert_Emoticon"/>
+           <addaction name="actionNudge"/>
+           <addaction name="actionFont"/>
+           <addaction name="actionColor"/>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSplitter" name="splitter_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <widget class="QTextEdit" name="inputWidget">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
+            <property name="lineWrapMode">
+             <enum>QTextEdit::WidgetWidth</enum>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+           <widget class="QWidget" name="layoutWidget">
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <spacer name="verticalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="maximumSize">
+                <size>
+                 <width>96</width>
+                 <height>96</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Contact image</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
     </widget>
    </item>
   </layout>
-  <action name="actionInsert_Emoticon" >
-   <property name="text" >
+  <action name="actionInsert_Emoticon">
+   <property name="text">
     <string>Insert Emoticon</string>
    </property>
   </action>
-  <action name="actionNudge" >
-   <property name="text" >
+  <action name="actionNudge">
+   <property name="text">
     <string>Nudge</string>
+   </property>
+  </action>
+  <action name="actionFont">
+   <property name="text">
+    <string>Font</string>
+   </property>
+   <property name="toolTip">
+    <string>Choose your font</string>
+   </property>
+  </action>
+  <action name="actionColor">
+   <property name="text">
+    <string>Color</string>
+   </property>
+   <property name="toolTip">
+    <string>Choose the color you type with</string>
    </property>
   </action>
  </widget>

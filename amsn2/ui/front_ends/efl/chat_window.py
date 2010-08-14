@@ -1,12 +1,9 @@
-from constants import *
+from constants import CW_WIDTH, CW_HEIGHT
 import evas
-import ecore
 import elementary
-import skins
 import window
 from amsn2.ui import base
-from amsn2.core.views import ContactView, StringView
-from constants import *
+from amsn2.core.views import StringView
 
 class aMSNChatWindow(window.aMSNWindow, base.aMSNChatWindow):
     def __init__(self, conversation_manager):
@@ -78,7 +75,7 @@ class aMSNChatWidget(elementary.Box, base.aMSNChatWidget):
         self.ine.size_hint_weight_set(evas.EVAS_HINT_EXPAND,
                                       evas.EVAS_HINT_EXPAND)
         self.ine.size_hint_align_set(evas.EVAS_HINT_FILL, evas.EVAS_HINT_FILL)
-        self.ine.event_callback_add(evas.EVAS_CALLBACK_KEY_DOWN, self.__ine_key_down);
+        self.ine.event_callback_add(evas.EVAS_CALLBACK_KEY_DOWN, self.__ine_key_down)
         self.insc.content_set(self.ine)
         self.ine.show()
         self.insc.show()

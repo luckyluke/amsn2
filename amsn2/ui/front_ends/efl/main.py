@@ -1,11 +1,5 @@
-from constants import *
-import ecore
-import ecore.evas
-import ecore.x
-import skins
 import window
 from amsn2.ui import base
-from amsn2.core.views import MenuView, MenuItemView
 
 class aMSNMainWindow(window.aMSNWindow, base.aMSNMainWindow):
     def __init__(self, amsn_core):
@@ -28,4 +22,4 @@ class aMSNMainWindow(window.aMSNWindow, base.aMSNMainWindow):
         if event.keyname == "Escape":
             self._amsn_core.quit()
         else:
-            window.aMSNWindow._on_key_down(self,obj, event)
+            window.aMSNWindow._on_key_down(self, obj, event)

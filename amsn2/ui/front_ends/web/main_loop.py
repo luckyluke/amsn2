@@ -1,10 +1,10 @@
-
 from amsn2.ui import base
 import gobject
 
 class aMSNMainLoop(base.aMSNMainLoop):
-    def __init__(self, amsn_core):
-        self._amsn_core = amsn_core
+    def __init__(self, core):
+        self._core = core
+        self._mainloop = None
 
     def run(self):
         self._mainloop = gobject.MainLoop(is_running=True)

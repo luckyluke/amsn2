@@ -99,9 +99,12 @@ class defaultaccountbackend(basebackend.basebackend):
             break
         accountviews = []
         for account_dir in account_dirs:
-            accv = self.load_account(os.path.join(self.accounts_dir, account_dir))
-            if accv:
-                accountviews.append(accv)
+            try:
+                accv = self.load_account(os.path.join(self.accounts_dir, account_dir))
+                if accv:
+                    accountviews.append(accv)
+            except:
+                pass
         return accountviews
 
     def create_account_file_tree(self, email):
@@ -127,11 +130,11 @@ class defaultaccountbackend(basebackend.basebackend):
         emailElmt = SubElement(root_section, "email")
         emailElmt.text = amsn_account.view.email
         #nick
-        nick = str(amsn_account.view.nick)
+        nick = str(amsn_account.view.nick).encode("utf-8")
         nickElmt = SubElement(root_section, "nick")
         nickElmt.text = nick
         #psm
-        psm = str(amsn_account.view.psm)
+        psm = str(amsn_account.view.psm).encode("utf-8")
         psmElmt = SubElement(root_section, "psm")
         psmElmt.text = psm
         #presence

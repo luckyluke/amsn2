@@ -1,2 +1,3 @@
-#!/bin/bash
+#!/bin/sh
+
 edje_cc -id images -fd fonts main.edc ../default.edj

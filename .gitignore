@@ -11,3 +11,5 @@ Debug/
 ui_*
 .*.swp
 pymsn/
+amsn2-web-access.log
+amsn2-web-error.log

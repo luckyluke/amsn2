@@ -2,7 +2,9 @@ from views import *
 import os
 import tempfile
 import papyon
+import logging
 
+logger = logging.getLogger('amsn2.cl-manager')
 
 class aMSNContactListManager:
     def __init__(self, core):
@@ -31,6 +33,12 @@ class aMSNContactListManager:
         #2nd/ update the ContactView
         cv = ContactView(self._core, c)
         self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
+
+        ##3rd/ update the GroupView
+        #for gid in c.groups:
+        #    group = self.get_group(gid)
+        #    gv = GroupView(self._core, gid, group.name, group.contacts)
+        #    self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
 
         #TODO: if contacts are sorted by presence, remove contact
         # from the offline/online group depending on the change
@@ -68,7 +76,8 @@ class aMSNContactListManager:
             papyon_contact.msn_object):
             self._core._account.client.msn_object_store.request(papyon_contact.msn_object,
                                                                 (self.on_DP_downloaded,
-                                                                 papyon_contact.id))
+                                                                 papyon_contact.id),
+                                                                 peer = papyon_contact)
 
     def on_DP_downloaded(self, msn_object, uid):
         #1st/ update the aMSNContact object

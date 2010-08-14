@@ -8,12 +8,12 @@ import traceback
 # so the guimanager can access its classes
 def load():
     try:
-        import efl
-    except ImportError, e:
-        etype, value, tb = sys.exc_info()
-        traceback.print_exception(etype, value, tb.tb_next)
+        import amsn2.ui.front_ends.efl.efl
+    except ImportError:
+        etype, value, trace = sys.exc_info()
+        traceback.print_exception(etype, value, trace.tb_next)
         return None
-    return efl
+    return amsn2.ui.front_ends.efl.efl
 
 
 # Initialize the front end by checking for any

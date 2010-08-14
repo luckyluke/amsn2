@@ -1,12 +1,9 @@
-from constants import *
+from constants import THEME_FILE
 import evas
 import edje
-import ecore
-import ecore.x
 import elementary
 
 from amsn2.ui import base
-from amsn2.core.views import accountview
 
 #TODO: del?
 class aMSNLoginWindow(elementary.Layout, base.aMSNLoginWindow):
@@ -30,10 +27,10 @@ class aMSNLoginWindow(elementary.Layout, base.aMSNLoginWindow):
         sc = elementary.Scroller(self)
         sc.content_min_limit(0, 1)
         sc.policy_set(elementary.ELM_SCROLLER_POLICY_OFF,
-                      elementary.ELM_SCROLLER_POLICY_OFF);
+                      elementary.ELM_SCROLLER_POLICY_OFF)
         sc.size_hint_weight_set(1.0, 0.0)
         sc.size_hint_align_set(-1.0, -1.0)
-        self.content_set("login_screen.username", sc)
+        self.content_set("username", sc)
         self.username = elementary.Entry(self)
         self.username.single_line_set(1)
         self.username.size_hint_weight_set(1.0, 0.0)
@@ -45,10 +42,10 @@ class aMSNLoginWindow(elementary.Layout, base.aMSNLoginWindow):
         sc = elementary.Scroller(self)
         sc.content_min_limit(0, 1)
         sc.policy_set(elementary.ELM_SCROLLER_POLICY_OFF,
-                      elementary.ELM_SCROLLER_POLICY_OFF);
+                      elementary.ELM_SCROLLER_POLICY_OFF)
         sc.size_hint_weight_set(1.0, 0.0)
         sc.size_hint_align_set(-1.0, -1.0)
-        self.content_set("login_screen.password", sc)
+        self.content_set("password", sc)
         self.password = elementary.Entry(self)
         self.password.single_line_set(1)
         self.password.password_set(1)
@@ -91,7 +88,7 @@ class aMSNLoginWindow(elementary.Layout, base.aMSNLoginWindow):
         ic.show()
         self.presence.size_hint_weight_set(0.0, 0.0)
         self.presence.size_hint_align_set(0.5, 0.5)
-        self.content_set("login_screen.presence", self.presence)
+        self.content_set("presence", self.presence)
         self.presence.show()
 
         self.save = elementary.Check(self)
@@ -105,7 +102,7 @@ class aMSNLoginWindow(elementary.Layout, base.aMSNLoginWindow):
                 self.autologin.disabled_set(True)
                 self.autologin.state_set(False)
         self.save.callback_changed_add(cb)
-        self.content_set("login_screen.remember_me", self.save)
+        self.content_set("remember_me", self.save)
         self.save.show()
 
         self.save_password = elementary.Check(self)
@@ -118,24 +115,24 @@ class aMSNLoginWindow(elementary.Layout, base.aMSNLoginWindow):
                 self.autologin.disabled_set(True)
                 self.autologin.state_set(False)
         self.save_password.callback_changed_add(cb)
-        self.content_set("login_screen.remember_password",
+        self.content_set("remember_password",
                                 self.save_password)
         self.save_password.show()
 
         self.autologin = elementary.Check(self)
         self.autologin.label_set("Auto Login")
         self.autologin.disabled_set(True)
-        self.content_set("login_screen.auto_login", self.autologin)
+        self.content_set("auto_login", self.autologin)
         self.autologin.show()
 
-        if self._edje.part_exists("login_screen.signin"):
-           self.signin_b = elementary.Button(self)
-           self.signin_b.label_set("Sign in")
-           self.signin_b.callback_clicked_add(self.__signin_button_cb)
-           self.signin_b.show()
-           self.content_set("login_screen.signin", self.signin_b)
+        if self._edje.part_exists("signin"):
+            self.signin_b = elementary.Button(self)
+            self.signin_b.label_set("Sign in")
+            self.signin_b.callback_clicked_add(self.__signin_button_cb)
+            self.signin_b.show()
+            self.content_set("signin", self.signin_b)
         else:
-           self._edje.signal_callback_add("signin", "*", self.__signin_cb)
+            self._edje.signal_callback_add("signin", "*", self.__signin_cb)
 
         self._win.child = self
         self.show()
@@ -172,7 +169,7 @@ class aMSNLoginWindow(elementary.Layout, base.aMSNLoginWindow):
             self.autologin.state_set(acc.autologin)
 
 
-    def signin(self):
+    def signing_in(self):
         ### Autologin change: This method is no longer used to tell the core to start the login
 
         #email = elementary.Entry.markup_to_utf8(self.username.entry_get()).strip()

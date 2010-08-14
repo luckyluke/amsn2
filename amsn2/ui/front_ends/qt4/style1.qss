@@ -69,7 +69,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
          }
 
          QComboBox::down-arrow {
-             image: url(amsn2/gui/front_ends/qt4/msn-down.png);
+             image: url(amsn2/ui/front_ends/qt4/msn-down.png);
          }
 
          QComboBox::down-arrow:on { 
@@ -95,7 +95,7 @@ color: white;
 }
 
 #pixUser {
-background-image: url(amsn2/gui/front_ends/qt4/msn-userimage.png);
+background-image: url(amsn2/ui/front_ends/qt4/msn-userimage.png);
 min-width: 131px;
 max-width: 131px;
 min-height: 129px;

@@ -100,6 +100,9 @@ class aMSNLoginWindow(object):
         self.current_profile.password = self._password_t.value()
         self._amsn_core.signin_to_account(self, self.current_profile)
 
+    def signing_in(self):
+        pass
+
 
     def on_connecting(self, progress, message):
         self._username_t = None

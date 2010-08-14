@@ -1,9 +1,6 @@
 from stringview import *
 from imageview import *
 
-def rw_property(f):
-    return property(**f())
-
 class PersonalInfoView(object):
     def __init__(self, personalinfo_manager):
         self._personalinfo_manager = personalinfo_manager
@@ -21,43 +18,33 @@ class PersonalInfoView(object):
     def changeDP(self):
         self._personalinfo_manager._on_DP_change_request()
 
-    @rw_property
-    def nick():
-        def fget(self):
-            return self._nickname
-        def fset(self, nick):
-            self._personalinfo_manager._on_nick_changed(nick)
-        return locals()
+    def get_nick(self):
+        return self._nickname
+    def set_nick(self, nick):
+        self._personalinfo_manager._on_nick_changed(nick)
+    nick = property(get_nick, set_nick)
 
-    @rw_property
-    def psm():
-        def fget(self):
-            return self._psm
-        def fset(self, psm):
-            self._personalinfo_manager._on_PSM_changed(psm)
-        return locals()
+    def get_psm(self):
+        return self._psm
+    def set_psm(self, psm):
+        self._personalinfo_manager._on_PSM_changed(psm)
+    psm = property(get_psm, set_psm)
 
-    @rw_property
-    def dp():
-        def fget(self):
-            return self._image
-        def fset(self, dp_msnobj):
-            self._personalinfo_manager._on_DP_changed(dp_msnobj)
-        return locals()
+    def get_dp(self):
+        return self._image
+    def set_dp(self, dp_msnobj):
+        self._personalinfo_manager._on_DP_changed(dp_msnobj)
+    dp = property(get_dp, set_dp)
 
-    @rw_property
-    def current_media():
-        def fget(self):
-            return self._current_media
-        def fset(self, artist, song):
-            self._personalinfo_manager._on_CM_changed((artist, song))
-        return locals()
+    def get_current_media(self):
+        return self._current_media
+    def set_current_media(self, artist, song):
+        self._personalinfo_manager._on_CM_changed((artist, song))
+    current_media = property(get_current_media, set_current_media)
 
-    @rw_property
-    def presence():
-        def fget(self):
-            return self._presence
-        def fset(self, presence):
-            self._personalinfo_manager._on_presence_changed(presence)
-        return locals()
+    def get_presence(self):
+        return self._presence
+    def set_presence(self, presence):
+        self._personalinfo_manager._on_presence_changed(presence)
+    presence = property(get_presence, set_presence)
 

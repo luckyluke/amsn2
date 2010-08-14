@@ -6,6 +6,9 @@ class ContactListView:
     def __init__(self):
         self.group_ids = []
 
+    def __repr__(self):
+        return "<ContactListView {group_ids=%s}>" \
+                % (repr(self.group_ids),)
 
 
 class GroupView:
@@ -14,8 +17,17 @@ class GroupView:
         self.contact_ids = set(amsn_group.contacts)
         self.icon = ImageView() # TODO: expanded/collapsed icon
         self.name = StringView() # TODO: default color from skin/settings
+
         self.name.append_text(amsn_group.name) #TODO: parse for smileys
         active = len(amsn_group.contacts_online)
+
+        #self.name.append_text(name) #TODO: parse for smileys
+        #active = 0
+        #for cid in contact_ids:
+        #    contact = core._contactlist_manager.get_contact(cid)
+        #    if str(contact.status) != core.p2s['FLN']:
+        #        active = active + 1
+
         total = len(self.contact_ids)
         self.name.append_text("(" + str(active) + "/" + str(total) + ")")
 
@@ -28,7 +40,9 @@ class GroupView:
 
     #TODO: @roproperty: context_menu, tooltip
 
-
+    def __repr__(self):
+        return "<GroupView {uid='%s', name='%s', contact_ids=%s}>" \
+                % (self.uid, self.name, repr(self.contact_ids))
 
 """ a view of a contact on the contact list """
 class ContactView:
@@ -71,6 +85,9 @@ class ContactView:
         self.context_menu = None
 
     #TODO: @roproperty: context_menu, tooltip
+
+    def __repr__(self):
+        return "<ContactView {uid='%s', name='%s'}>" % (self.uid, self.name)
 
 class ContactPopupMenu(MenuView):
     def __init__(self, core, amsn_contact):

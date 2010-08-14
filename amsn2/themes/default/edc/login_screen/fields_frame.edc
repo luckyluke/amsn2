@@ -1,98 +1,220 @@
-CREATE_FRAME("fields_frame", "dp_frame", 126)
-
-#define CREATE_FIELD(NAME, OFFSET, LABEL)   \
-  part {                                    \
-    name: NAME"_label";                     \
-    type: TEXT;                             \
-    clip_to: "fields_frame";                \
-    scale: 1;                               \
-    description {                           \
-      state: "default" 0.0;                 \
-      min: 50 20;                           \
-      max: 500 20;                          \
-      rel1 {                                \
-        to: "fields_frame";                 \
-        relative: 0.2 0.0;                  \
-        offset: 0 OFFSET;                   \
-      }                                     \
-      rel2 {                                \
-        to: "fields_frame";                 \
-        relative: 0.8 0.0;                  \
-        offset: 0 (OFFSET+20);              \
-      }                                     \
-      color: 0 0 0 255;                     \
-      color2: 225 225 225 128;              \
-      visible: 1;                           \
-      text {                                \
-        align: 0.0 0.5;                     \
-        font: "VeraBd";                     \
-        size: 10;                           \
-        text: LABEL" :";                    \
-        min: 1 1;                           \
-        elipsis: 0.0;                       \
-      }                                     \
-    }                                       \
-  }                                         \
-  part {                                    \
-    name: NAME;                             \
-    type: SWALLOW;                          \
-    clip_to: "fields_frame";                \
-    scale : 1;                              \
-    description {                           \
-      state: "default" 0.0;                 \
-      min: 50 20;                           \
-      max: 500 20;                          \
-      fixed: 1 1;                           \
-      rel1 {                                \
-        to: NAME"_label";                   \
-        relative: 0.0 1.0;                  \
-        offset: 0 0;                        \
-      }                                     \
-      rel2 {                                \
-        to: NAME"_label";                   \
-        relative: 1.0 1.0;                  \
-        offset: 0 20;                       \
-      }                                     \
-    }                                       \
-  }
-
-CREATE_FIELD("login_screen.username", 3, "Username")
-CREATE_FIELD("login_screen.password", 43, "Password")
-CREATE_FIELD("login_screen.presence", 83, "Sign-in Presence")
-
-part {
-  name: "arrow";
-  type: IMAGE;
-  clip_to: "fields_frame";
-  mouse_events: 0;
-  description {
-    state: "default" 0.0;
-    rel1 {
-      to: "fields_frame";
-      relative: 0.2 0.0;
-      offset: -30 20;
-    }
-    rel2 {
-      to: "fields_frame";
-      relative: 0.2 0.0;
-      offset: 0 40;
-    }
-    image {
-      normal: "login_screen/arrow.png";
+group {
+  name: "amsn2/login.username_label";
+  parts {
+    part {
+      name: "label";
+      type: TEXT;
+      scale: 1;
+      description {
+        state: "default" 0.0;
+        color: 0 0 0 255;
+        color2: 225 225 225 128;
+        visible: 1;
+        text {
+          align: 0.0 0.5;
+          font: "VeraBd";
+          size: 10;
+          text: "Username:";
+          min: 1 1;
+          elipsis: 0.0;
+        }
+      }
     }
   }
-  description {
-    state: "left" 0.0;
-    inherit: "default" 0.0;
-    rel1 {
-      to: "fields_frame";
-      relative: 0.2 0.0;
-      offset: -50 20;
+}
+group {
+  name: "amsn2/login.username";
+  parts {
+    part {
+      name: "username";
+      type: EXTERNAL;
+      source: "elm/scrolled_entry";
+      scale: 1;
+      description {
+        state: "default" 0.0;
+        params {
+           string: "text" "";
+           bool: "editable" "1";
+           bool: "single line" "1";
+           bool: "password" "0";
+        }
+      }
     }
-    rel2 {
-      to: "fields_frame";
-      relative: 0.2 0.0;
-      offset: -20 40;
+  }
+}
+
+group {
+  name: "amsn2/login.password_label";
+  parts {
+    part {
+      name: "label";
+      type: TEXT;
+      scale: 1;
+      description {
+        state: "default" 0.0;
+        color: 0 0 0 255;
+        color2: 225 225 225 128;
+        visible: 1;
+        text {
+          align: 0.0 0.5;
+          font: "VeraBd";
+          size: 10;
+          text: "Password:";
+          min: 1 1;
+          elipsis: 0.0;
+        }
+      }
+    }
+  }
+}
+group {
+  name: "amsn2/login.password";
+  parts {
+    part {
+      name: "username";
+      type: EXTERNAL;
+      source: "elm/scrolled_entry";
+      scale: 1;
+      description {
+        state: "default" 0.0;
+        params {
+           string: "text" "";
+           bool: "editable" "1";
+           bool: "single line" "1";
+           bool: "password" "1";
+        }
+      }
+    }
+  }
+}
+group {
+  name: "amsn2/login.presence_label";
+  parts {
+    part {
+      name: "label";
+      type: TEXT;
+      scale: 1;
+      description {
+        state: "default" 0.0;
+        color: 0 0 0 255;
+        color2: 225 225 225 128;
+        visible: 1;
+        text {
+          align: 0.0 0.5;
+          font: "VeraBd";
+          size: 10;
+          text: "Sign-in Presence:";
+          min: 1 1;
+          elipsis: 0.0;
+        }
+      }
+    }
+  }
+}
+group {
+  name: "amsn2/login.presence";
+  parts {
+    part {
+      name: "presence";
+      type: EXTERNAL;
+      source: "elm/hoversel";
+      description {
+        state: "default" 0.0;
+      }
+    }
+  }
+}
+
+
+group {
+  name: "amsn2/login.fields_frame";
+  parts {
+    part {
+      name: "arrow";
+      type: IMAGE;
+      mouse_events: 0;
+      description {
+        state: "default" 0.0;
+        rel1 {
+          relative: 0.2 0.0;
+          offset: -30 20;
+        }
+        rel2 {
+          relative: 0.2 0.0;
+          offset: 0 40;
+        }
+        image {
+          normal: "login_screen/arrow.png";
+        }
+      }
+      description {
+        state: "left" 0.0;
+        inherit: "default" 0.0;
+        rel1 {
+          relative: 0.2 0.0;
+          offset: -50 20;
+        }
+        rel2 {
+          relative: 0.2 0.0;
+          offset: -20 40;
+        }
+      }
+    }
+    part {
+      name: "vbox";
+      type: BOX;
+      description {
+        state: "default" 0.0;
+        rel1 {
+          to_x: "arrow";
+          relative: 1.0 0.0;
+        }
+        box {
+          layout: "vertical";
+        }
+      }
+      box {
+        items {
+          /*
+          */
+          item {
+            type: GROUP;
+            source: "amsn2/login.username_label";
+            weight: 1 0;
+            align: -1 0.5;
+          }
+          item {
+            type: GROUP;
+            source: "amsn2/login.username";
+            weight: 1 0;
+            align: -1 0.5;
+          }
+          item {
+            type: GROUP;
+            source: "amsn2/login.password_label";
+            weight: 1 0;
+            align: -1 0.5;
+          }
+          item {
+            type: GROUP;
+            source: "amsn2/login.password";
+            weight: 1 0;
+            align: -1 0.5;
+          }
+          item {
+            type: GROUP;
+            source: "amsn2/login.presence_label";
+            weight: 1 0;
+            align: -1 0.5;
+          }
+          item {
+            type: GROUP;
+            source: "amsn2/login.presence";
+            weight: 1 0;
+            align: -1 0.5;
+          }
+        }
+      }
     }
   }
 }

@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from constants import *
+from constants import THEME_FILE
 import evas
-import edje
-import ecore
-import ecore.evas
 import elementary
 
 from image import *
 
-from amsn2.core.views import StringView
 from amsn2.ui import base
-import papyon
 
 class aMSNContactListWindow(elementary.Box, base.aMSNContactListWindow):
     def __init__(self, core, win):
@@ -67,7 +62,7 @@ class PersonalInfoWidget(elementary.Layout):
         self._dp = elementary.Button(self._parent)
         self._dp.label_set("pouet")
         self._dp.size_hint_weight_set(1.0, 1.0)
-        self.content_set("dp", self._dp);
+        self.content_set("dp", self._dp)
         self._dp.show()
 
         self._presence = elementary.Hoversel(self._parent)
@@ -90,13 +85,13 @@ class PersonalInfoWidget(elementary.Layout):
                 #TODO
             self._presence.item_add(name, path, elementary.ELM_ICON_FILE, cb,
                                    key)
-        self.content_set("presence", self._presence);
+        self.content_set("presence", self._presence)
         self._presence.show()
 
         sc = elementary.Scroller(self._parent)
         sc.content_min_limit(0, 1)
         sc.policy_set(elementary.ELM_SCROLLER_POLICY_OFF,
-                      elementary.ELM_SCROLLER_POLICY_OFF);
+                      elementary.ELM_SCROLLER_POLICY_OFF)
         sc.size_hint_weight_set(evas.EVAS_HINT_EXPAND, 0.0)
         sc.size_hint_align_set(evas.EVAS_HINT_FILL, 0.0)
         self.content_set("nick", sc)
@@ -111,10 +106,10 @@ class PersonalInfoWidget(elementary.Layout):
         sc = elementary.Scroller(self._parent)
         sc.content_min_limit(0, 1)
         sc.policy_set(elementary.ELM_SCROLLER_POLICY_OFF,
-                      elementary.ELM_SCROLLER_POLICY_OFF);
+                      elementary.ELM_SCROLLER_POLICY_OFF)
         sc.size_hint_weight_set(evas.EVAS_HINT_EXPAND, 0.0)
         sc.size_hint_align_set(evas.EVAS_HINT_FILL, evas.EVAS_HINT_FILL)
-        self.content_set("psm", sc);
+        self.content_set("psm", sc)
         self._psm = elementary.Entry(self._parent)
         self._psm.single_line_set(True)
         self._psm.size_hint_weight_set(evas.EVAS_HINT_EXPAND, 0.0)
@@ -145,13 +140,13 @@ class PersonalInfoWidget(elementary.Layout):
         self._dp.show()
         self._presence.show()
 
-        self._nick.entry_set("nick is: "+str(view.nick));
+        self._nick.entry_set("nick is: "+str(view.nick))
         self._nick.show()
 
-        self._psm.entry_set("psm is: "+str(view.psm));
+        self._psm.entry_set("psm is: "+str(view.psm))
         self._psm.show()
 
-        self._cm.entry_set("cm is: "+str(view.current_media));
+        self._cm.entry_set("cm is: "+str(view.current_media))
         self._cm.show()
 
         self.show()
@@ -228,7 +223,7 @@ class ContactHolder(elementary.Box):
             c.content_set("buddy_icon", icon)
 
         if contactview.on_click is not None:
-            def cb_(obj,event):
+            def cb_(obj, event):
                 contactview.on_click(obj.data['uid'])
             if c.data['on_click'] is not None:
                 c.on_mouse_down_del(c.data['on_click'])
@@ -297,7 +292,7 @@ class GroupItem(elementary.Layout):
         self.expanded = True
         self.uid = uid
         self.contact_holder = ContactHolder(self)
-        self.content_set("contacts", self.contact_holder);
+        self.content_set("contacts", self.contact_holder)
         self.contact_holder.show()
 
         self.edj = self.edje_get()

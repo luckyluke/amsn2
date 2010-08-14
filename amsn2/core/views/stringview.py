@@ -31,7 +31,7 @@ class StringView (object):
     UNDERLINE_ELEMENT = "underline"
     FONT_ELEMENT = "font"
 
-    # padding ? 
+    # padding ?
 
     class StringElement(object):
         def __init__(self, type, value):
@@ -132,14 +132,6 @@ class StringView (object):
     def reset_font(self):
         self.set_font(self._default_font)
 
-
-    def append_elements_from_HTML(self, string):
-        """ This method should parse an HTML string and convert it to a
-        StringView. It will be extremely comfortable, since most of the
-        times our frontends will work with HTML stuff. """
-        # TODO: Not so easy... maybe there is a python HTML parser we can use?
-        pass
-
     def to_HTML_string(self):
         """ This method returns a formatted html string with all
         the data in the stringview """
@@ -187,12 +179,15 @@ class StringView (object):
 
         return sv
 
-    def __str__(self):
-        out = ""
+    def __unicode__(self):
+        out = u""
         for x in self._elements:
             if x.get_type() == StringView.TEXT_ELEMENT:
                 out += x.get_value()
         return out
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')
 
     def __repr__(self):
         out = "{"

@@ -33,7 +33,7 @@ class aMSNConversation:
         """
 
         if (contacts_uid is None):
-            raise ValueError, InvalidArgument
+            raise InvalidArgument
 
         self._core = core
         self._conversation_manager = conv_manager
@@ -95,7 +95,7 @@ class aMSNConversation:
         """ msg is a StringView """
         # for the moment, no smiley substitution... (TODO)
         self.on_message_received(msg, formatting=formatting)
-        message = papyon.ConversationMessage(str(msg), formatting)
+        message = papyon.ConversationMessage(unicode(msg), formatting)
         self._conv.send_text_message(message)
 
     def send_nudge(self):
@@ -110,6 +110,6 @@ class aMSNConversation:
     def invite_contact(self, contact_uid):
         """ contact_uid is the Id of the contact to invite """
         c = self._core._contactlist_manager.get_contact(contact_uid)
-        self._conv.invite_user(contact.papyon_contact)
+        self._conv.invite_user(c.papyon_contact)
 
     #TODO: ...

@@ -6,38 +6,77 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>206</width>
-    <height>429</height>
+    <width>403</width>
+    <height>599</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="palette">
    <palette>
     <active>
      <colorrole role="Button">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>255</red>
-        <green>255</green>
-        <blue>255</blue>
-       </color>
+      <brush brushstyle="LinearGradientPattern">
+       <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+        <gradientstop position="0.000000000000000">
+         <color alpha="255">
+          <red>155</red>
+          <green>191</green>
+          <blue>193</blue>
+         </color>
+        </gradientstop>
+        <gradientstop position="0.253333000000000">
+         <color alpha="255">
+          <red>236</red>
+          <green>243</green>
+          <blue>246</blue>
+         </color>
+        </gradientstop>
+       </gradient>
       </brush>
      </colorrole>
      <colorrole role="Base">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>255</red>
-        <green>255</green>
-        <blue>255</blue>
-       </color>
+      <brush brushstyle="LinearGradientPattern">
+       <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+        <gradientstop position="0.000000000000000">
+         <color alpha="255">
+          <red>155</red>
+          <green>191</green>
+          <blue>193</blue>
+         </color>
+        </gradientstop>
+        <gradientstop position="0.253333000000000">
+         <color alpha="255">
+          <red>236</red>
+          <green>243</green>
+          <blue>246</blue>
+         </color>
+        </gradientstop>
+       </gradient>
       </brush>
      </colorrole>
      <colorrole role="Window">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>255</red>
-        <green>255</green>
-        <blue>255</blue>
-       </color>
+      <brush brushstyle="LinearGradientPattern">
+       <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+        <gradientstop position="0.000000000000000">
+         <color alpha="255">
+          <red>155</red>
+          <green>191</green>
+          <blue>193</blue>
+         </color>
+        </gradientstop>
+        <gradientstop position="0.253333000000000">
+         <color alpha="255">
+          <red>236</red>
+          <green>243</green>
+          <blue>246</blue>
+         </color>
+        </gradientstop>
+       </gradient>
       </brush>
      </colorrole>
      <colorrole role="Highlight">
@@ -52,30 +91,63 @@
     </active>
     <inactive>
      <colorrole role="Button">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>255</red>
-        <green>255</green>
-        <blue>255</blue>
-       </color>
+      <brush brushstyle="LinearGradientPattern">
+       <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+        <gradientstop position="0.000000000000000">
+         <color alpha="255">
+          <red>155</red>
+          <green>191</green>
+          <blue>193</blue>
+         </color>
+        </gradientstop>
+        <gradientstop position="0.253333000000000">
+         <color alpha="255">
+          <red>236</red>
+          <green>243</green>
+          <blue>246</blue>
+         </color>
+        </gradientstop>
+       </gradient>
       </brush>
      </colorrole>
      <colorrole role="Base">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>255</red>
-        <green>255</green>
-        <blue>255</blue>
-       </color>
+      <brush brushstyle="LinearGradientPattern">
+       <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+        <gradientstop position="0.000000000000000">
+         <color alpha="255">
+          <red>155</red>
+          <green>191</green>
+          <blue>193</blue>
+         </color>
+        </gradientstop>
+        <gradientstop position="0.253333000000000">
+         <color alpha="255">
+          <red>236</red>
+          <green>243</green>
+          <blue>246</blue>
+         </color>
+        </gradientstop>
+       </gradient>
       </brush>
      </colorrole>
      <colorrole role="Window">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>255</red>
-        <green>255</green>
-        <blue>255</blue>
-       </color>
+      <brush brushstyle="LinearGradientPattern">
+       <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+        <gradientstop position="0.000000000000000">
+         <color alpha="255">
+          <red>155</red>
+          <green>191</green>
+          <blue>193</blue>
+         </color>
+        </gradientstop>
+        <gradientstop position="0.253333000000000">
+         <color alpha="255">
+          <red>236</red>
+          <green>243</green>
+          <blue>246</blue>
+         </color>
+        </gradientstop>
+       </gradient>
       </brush>
      </colorrole>
      <colorrole role="Highlight">
@@ -90,30 +162,63 @@
     </inactive>
     <disabled>
      <colorrole role="Button">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>255</red>
-        <green>255</green>
-        <blue>255</blue>
-       </color>
+      <brush brushstyle="LinearGradientPattern">
+       <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+        <gradientstop position="0.000000000000000">
+         <color alpha="255">
+          <red>155</red>
+          <green>191</green>
+          <blue>193</blue>
+         </color>
+        </gradientstop>
+        <gradientstop position="0.253333000000000">
+         <color alpha="255">
+          <red>236</red>
+          <green>243</green>
+          <blue>246</blue>
+         </color>
+        </gradientstop>
+       </gradient>
       </brush>
      </colorrole>
      <colorrole role="Base">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>255</red>
-        <green>255</green>
-        <blue>255</blue>
-       </color>
+      <brush brushstyle="LinearGradientPattern">
+       <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+        <gradientstop position="0.000000000000000">
+         <color alpha="255">
+          <red>155</red>
+          <green>191</green>
+          <blue>193</blue>
+         </color>
+        </gradientstop>
+        <gradientstop position="0.253333000000000">
+         <color alpha="255">
+          <red>236</red>
+          <green>243</green>
+          <blue>246</blue>
+         </color>
+        </gradientstop>
+       </gradient>
       </brush>
      </colorrole>
      <colorrole role="Window">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>255</red>
-        <green>255</green>
-        <blue>255</blue>
-       </color>
+      <brush brushstyle="LinearGradientPattern">
+       <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+        <gradientstop position="0.000000000000000">
+         <color alpha="255">
+          <red>155</red>
+          <green>191</green>
+          <blue>193</blue>
+         </color>
+        </gradientstop>
+        <gradientstop position="0.253333000000000">
+         <color alpha="255">
+          <red>236</red>
+          <green>243</green>
+          <blue>246</blue>
+         </color>
+        </gradientstop>
+       </gradient>
       </brush>
      </colorrole>
      <colorrole role="Highlight">
@@ -132,9 +237,11 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">#ContactList { background-color: white; }</string>
+   <string notr="true">#ContactList {
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb(155, 191, 193), stop:0.253333 rgb(236, 243, 246));
+}</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0">
    <property name="spacing">
     <number>2</number>
    </property>
@@ -153,123 +260,293 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <spacer name="horizontalSpacer">
+      <spacer name="horizontalSpacer_6">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
+         <width>3</width>
          <height>20</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="pixUser">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+      <widget class="QToolButton" name="pixUser">
        <property name="minimumSize">
         <size>
-         <width>100</width>
-         <height>100</height>
+         <width>96</width>
+         <height>96</height>
         </size>
        </property>
-       <property name="styleSheet">
-        <string notr="true">#pixUser {
-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(175, 175, 175, 255));
-font-weight: bold;
-font-size: 20px;
-border: 3px solid gray;
-border-radius: 10px;
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(80, 92, 115, 255), stop:1 rgba(0, 0, 0, 255));
-}
-#pixUser:hover {
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(80, 92, 115, 255));
-}</string>
+       <property name="maximumSize">
+        <size>
+         <width>96</width>
+         <height>96</height>
+        </size>
        </property>
        <property name="text">
-        <string>aMSN</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <string/>
        </property>
       </widget>
      </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>5</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="topMargin">
+        <number>25</number>
+       </property>
+       <property name="bottomMargin">
+        <number>25</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QTextEdit" name="nickName">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>20</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QTextEdit {
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+QTextEdit:hover {
+  border: 1px solid gray;
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+QTextEdit:focus {
+  border: 1px solid gray;
+  border-radius: 5px;
+  background-color: transparent;
+}</string>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="lineWrapMode">
+            <enum>QTextEdit::NoWrap</enum>
+           </property>
+           <property name="html">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Sans Serif'; font-size:9pt;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>3</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QTextEdit" name="statusMessage">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>20</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QTextEdit {
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+QTextEdit:hover {
+  border: 1px solid gray;
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+QTextEdit:focus {
+  border: 1px solid gray;
+  border-radius: 5px;
+  background-color: transparent;
+}</string>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="lineWrapMode">
+            <enum>QTextEdit::NoWrap</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>3</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QComboBox" name="status">
+         <property name="styleSheet">
+          <string notr="true">QComboBox {
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background-color: transparent;
+  height: 20px;
+}
+
+QComboBox:hover {
+  border: 1px solid gray;
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+ QComboBox::drop-down {
+     subcontrol-origin: padding;
+     subcontrol-position: top right;
+     border-top-right-radius: 5px;
+     border-bottom-right-radius: 5px;
+ }
+
+QComboBox::down-arrow {
+  image: url(amsn2/ui/front_ends/qt4/combo-arrow-down.png);
+}
+</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
+         <width>17</width>
          <height>20</height>
         </size>
        </property>
       </spacer>
      </item>
+     <item>
+      <widget class="QLineEdit" name="searchLine"/>
+     </item>
     </layout>
    </item>
    <item>
-    <widget class="QLabel" name="nickName">
-     <property name="text">
-      <string>Nick here</string>
-     </property>
-     <property name="textInteractionFlags">
-      <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="statusMessage">
-     <property name="text">
-      <string>Status message here</string>
-     </property>
-     <property name="textInteractionFlags">
-      <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Welcome!&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This is just a test!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="searchLine"/>
-   </item>
-   <item>
-    <widget class="QTreeView" name="cList">
-     <property name="cursor" stdset="0">
-      <cursorShape>ArrowCursor</cursorShape>
-     </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string>QTreeView {
-    show-decoration-selected: 1;
-    background-color: white;
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <item>
+      <widget class="QTreeView" name="cList">
+       <property name="cursor" stdset="0">
+        <cursorShape>ArrowCursor</cursorShape>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QTreeView, QTreeView::focus {
+    /*show-decoration-selected: 1;*/
+    background: transparent;
+    background-color: transparent;
 	border: none;
 }
 
 QTreeView::item {
-	background-color: white;
+	background-color: transparent;
 	border-radius: 3px;
 }
 
@@ -289,69 +566,89 @@ QTreeView::item:selected:!active {
 }
 
 QTreeView::branch {
-    background: white;
+    background-color: transparent;
+   	background: transparent;
 }
 
+QTreeView::branch:has-siblings:adjoins-item, 
 QTreeView::branch:has-siblings:!adjoins-item {
-    background: white;
-    border-image: none;
-	image: none;
-}
-
-QTreeView::branch:has-siblings:adjoins-item {
-    background: white;
-    border-image: none;
-	image: none;
-}
-
-QTreeView::branch:!has-children:!has-siblings:adjoins-item {
-    background: white;
+    background-color: transparent;
+   	background: transparent;
     border-image: none;
 	image: none;
 }
 
 QTreeView::branch:has-children:!has-siblings:closed,
 QTreeView::branch:closed:has-children:has-siblings {
-    background: white;
+    background-color: transparent;
+   	background: transparent;
     border-image: none;
-    image: url(amsn2/gui/front_ends/qt4/arrow-right.png);
+    image: url(amsn2/ui/front_ends/qt4/arrow-right.png);
 }
 
 QTreeView::branch:open:has-children:!has-siblings,
 QTreeView::branch:open:has-children:has-siblings  {
-    background: white;
+    background-color: transparent;
+   	background: transparent;
     border-image: none;
-    image: url(amsn2/gui/front_ends/qt4/arrow-down.png);
+    image: url(amsn2/ui/front_ends/qt4/arrow-down.png);
 }</string>
-     </property>
-     <property name="horizontalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOff</enum>
-     </property>
-     <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
-     </property>
-     <property name="selectionBehavior">
-      <enum>QAbstractItemView::SelectRows</enum>
-     </property>
-     <property name="textElideMode">
-      <enum>Qt::ElideRight</enum>
-     </property>
-     <property name="rootIsDecorated">
-      <bool>true</bool>
-     </property>
-     <property name="sortingEnabled">
-      <bool>true</bool>
-     </property>
-     <property name="animated">
-      <bool>true</bool>
-     </property>
-     <property name="headerHidden">
-      <bool>true</bool>
-     </property>
-    </widget>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="textElideMode">
+        <enum>Qt::ElideRight</enum>
+       </property>
+       <property name="rootIsDecorated">
+        <bool>true</bool>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+       <property name="animated">
+        <bool>true</bool>
+       </property>
+       <property name="headerHidden">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>3</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>cList</tabstop>
+  <tabstop>searchLine</tabstop>
+  <tabstop>nickName</tabstop>
+  <tabstop>statusMessage</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

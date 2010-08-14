@@ -18,20 +18,14 @@ class aMSNPersonalInfoManager:
         # set nickname at login
         # could be overriden by the one set in the saved account
         # TODO: add setting display picture
-        strv = StringView()
-        nick = str(amsn_account.view.nick)
-        if nick and nick != amsn_account.view.email:
-            strv.append_text(nick)
-        else:
-            strv.append_text(self._papyon_profile.display_name)
-        self._personalinfoview.nick = strv
+        nick = str(amsn_account.view.nick).encode("utf-8")
+        if not nick or nick == amsn_account.view.email:
+            nick = self._papyon_profile.display_name
+        self._personalinfoview.nick = nick
 
         # TODO: The psm doesn't seem to get fetched from server. Papyon issue?
-        strv = StringView()
-        psm = str(amsn_account.view.psm)
-        if psm:
-            strv.append_text(psm)
-        self._personalinfoview.psm = strv
+        psm = str(amsn_account.view.psm).encode("utf-8")
+        self._personalinfoview.psm = psm
 
         # set login presence, from this moment the client appears to the others
         self._personalinfoview.presence = self._core.p2s[amsn_account.view.presence]
@@ -39,18 +33,18 @@ class aMSNPersonalInfoManager:
     """ Actions from ourselves """
     def _on_nick_changed(self, new_nick):
         # TODO: parsing
-        self._papyon_profile.display_name = str(new_nick)
+        self._papyon_profile.display_name = new_nick
 
     def _on_PSM_changed(self, new_psm):
         # TODO: parsing
-        self._papyon_profile.personal_message = str(new_psm)
+        self._papyon_profile.personal_message = new_psm
 
     def _on_presence_changed(self, new_presence):
         # TODO: manage custom presence
         for key in self._core.p2s:
             if self._core.p2s[key] == new_presence:
-                break
-        self._papyon_profile.presence = key
+                self._papyon_profile.presence = key
+                return
 
     def _on_DP_change_request(self):
         self._core._ui_manager.load_DP_chooser_window()

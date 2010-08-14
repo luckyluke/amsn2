@@ -28,3 +28,6 @@ class aMSNChatWidget(object):
     def nudge(self):
         raise NotImplementedError
 
+    def on_user_typing(self, contact):
+        raise NotImplementedError
+

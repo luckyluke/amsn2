@@ -1,5 +1,5 @@
 #pixUser {
-background-image: url(amsn2/gui/front_ends/qt4/msn-userimage2.png);
+background-image: url(amsn2/ui/front_ends/qt4/msn-userimage2.png);
 min-width: 131px;
 max-width: 131px;
 min-height: 129px;

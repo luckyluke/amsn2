@@ -1,29 +1,77 @@
-CREATE_FRAME("options_frame", "fields_frame", 76)
-
-#define CREATE_OPTION(NAME, OFFSET)                \
-  part {                                           \
-    name: NAME;                                    \
-    type: SWALLOW;                                 \
-    clip_to: "options_frame";                      \
-    description {                                  \
-      min: 50 20;                                  \
-      max: 500 20;                                 \
-      state: "default" 0.0;                        \
-      fixed: 1 1;                                  \
-      rel1 {                                       \
-        to: "options_frame";                       \
-        relative: 0.2 0.0;                         \
-        offset: 0 (OFFSET);                        \
-      }                                            \
-      rel2 {                                       \
-        to: "options_frame";                       \
-        relative: 0.8 0.0;                         \
-        offset: 0 (OFFSET+20);                     \
-      }                                            \
-    }                                              \
+group {
+  name: "amsn2/login.remember_me";
+  parts {
+    part {
+      name: "remember_me";
+      type: EXTERNAL;
+      source: "elm/check";
+      description {
+        state: "default" 0.0;
+      }
+    }
   }
+}
+group {
+  name: "amsn2/login.remember_password";
+  parts {
+    part {
+      name: "remember_password";
+      type: EXTERNAL;
+      source: "elm/check";
+      description {
+        state: "default" 0.0;
+      }
+    }
+  }
+}
+group {
+  name: "amsn2/login.auto_login";
+  parts {
+    part {
+      name: "auto_login";
+      type: EXTERNAL;
+      source: "elm/check";
+      description {
+        state: "default" 0.0;
+      }
+    }
+  }
+}
 
-CREATE_OPTION("login_screen.remember_me", 3)
-CREATE_OPTION("login_screen.remember_password", 23)
-CREATE_OPTION("login_screen.auto_login", 43)
-
+group {
+  name: "amsn2/login.options_frame";
+  parts {
+    part {
+      name: "vbox";
+      type: BOX;
+      description {
+        state: "default" 0.0;
+        box {
+          layout: "vertical";
+        }
+      }
+      box {
+        items {
+          item {
+            type: GROUP;
+            source: "amsn2/login.remember_me";
+            weight: 1 0;
+            align: -1 0.5;
+          }
+          item {
+            type: GROUP;
+            source: "amsn2/login.remember_password";
+            weight: 1 0;
+            align: -1 0.5;
+          }
+          item {
+            type: GROUP;
+            source: "amsn2/login.auto_login";
+            weight: 1 0;
+            align: -1 0.5;
+          }
+        }
+      }
+    }
+  }
+}

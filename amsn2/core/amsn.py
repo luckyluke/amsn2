@@ -18,6 +18,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+import sys
+import papyon
+import logging
+
 from amsn2 import protocol
 from amsn2.backend import aMSNBackendManager
 from views import *
@@ -29,16 +33,13 @@ from theme_manager import *
 from personalinfo_manager import *
 from event_manager import *
 from userinterface_manager import *
-import sys
-import papyon
-import logging
 
 # Top-level loggers
 papyon_logger = logging.getLogger("papyon")
 logger = logging.getLogger("amsn2")
 
 class aMSNCore(object):
-    def __init__(self, options):
+    def __init__(self, options, extra_args = None):
         """
         Create a new aMSN Core. It takes an options class as argument
         which has a variable for each option the core is supposed to received.
@@ -47,8 +48,11 @@ class aMSNCore(object):
            options.account = the account's username to use
            options.password = the account's password to use
            options.front_end = the front end's name to use
-           options.debug = whether or not to enable debug output
+           options.debug_protocol = whether or not to enable protocol debug output
+           options.debug_amsn2 = whether or not to enable amsn2 debug output
+           options.auto_login = whether to autologin with the credentials given
         """
+        self.extra_args = extra_args
         self.p2s = {papyon.Presence.ONLINE:"online",
                     papyon.Presence.BUSY:"busy",
                     papyon.Presence.IDLE:"idle",
@@ -103,7 +107,6 @@ class aMSNCore(object):
 
         self._ui_name = ui_name
         self._ui_manager.load_UI(ui_name)
-        self._loop = self._ui_manager.get_loop()
 
     def switch_to_UI(self, ui_name):
         """
@@ -135,7 +138,7 @@ class aMSNCore(object):
         print "Signing in to account %s" % (accountview.email)
         self._account = self._account_manager.signin_to_account(accountview)
         self._account.login = login_window
-        self._account.login.signin()
+        self._account.login.signing_in()
         self._account.client = protocol.Client(self, self._account)
         self._account.client.connect(accountview.email, accountview.password)
 
@@ -143,6 +146,10 @@ class aMSNCore(object):
         accounts = self._account_manager.get_available_accountviews()
         self._ui_manager.load_login(accounts)
         self._account.client.logout()
+        self._account = None
+
+        accounts = self._account_manager.get_available_accountviews()
+        self._ui_manager.load_login(accounts)
 
     def connection_state_changed(self, account, state):
         """
@@ -165,6 +172,8 @@ class aMSNCore(object):
             account.login.on_connecting((state + 1)/ 7., status_str[state])
 
         elif state == papyon.event.ClientState.OPEN:
+            account.login.hide()
+            account.login = None
             self._ui_manager.load_contactlist()
             self._personalinfo_manager.set_account(account)
             self._contactlist_manager.on_CL_downloaded(account.client.address_book)

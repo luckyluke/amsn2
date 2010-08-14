@@ -22,7 +22,7 @@ class aMSNLoginWindow(object):
         should be considered as default. """
         raise NotImplementedError
 
-    def signin(self):
+    def signing_in(self):
         """ This method will be called when the core needs the login window to start the signin process.
         This is intended only to change the look of the login window. """
         raise NotImplementedError

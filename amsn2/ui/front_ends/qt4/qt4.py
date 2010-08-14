@@ -7,3 +7,4 @@ from image import *
 from splash import *
 from skins import *
 from chat_window import *
+from choosers import *

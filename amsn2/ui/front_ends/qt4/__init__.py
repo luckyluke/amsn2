@@ -20,6 +20,7 @@
 
 from amsn2.core import aMSNUserInterfaceManager
 import sys
+import traceback
 
 # Here we load the actual front end.
 # We need to import the front end module and return it

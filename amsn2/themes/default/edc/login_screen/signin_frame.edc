@@ -1,22 +1,13 @@
-CREATE_FRAME("signin_frame", "options_frame", 40)
-
-part {
-  name: "login_screen.signin";
-  type: SWALLOW;
-  clip_to: "signin_frame";
-  description {
-    min: 20 20;
-    max: 100 30;
-    state: "default" 0.0;
-    rel1 {
-      to: "signin_frame";
-      relative: 0.0 0.0;
-      offset: 0 0;
-    }
-    rel2 {
-      to: "signin_frame";
-      relative: 1.0 1.0;
-      offset: 0 0;
+group {
+  name: "amsn2/login.signin_frame";
+  parts {
+    part {
+      name: "login_screen.signin";
+      type: EXTERNAL;
+      source: "elm/button";
+      description {
+        state: "default" 0.0;
+      }
     }
   }
 }

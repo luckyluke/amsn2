@@ -317,7 +317,7 @@ class aMSNLoginWindow(gtk.VBox, base.aMSNLoginWindow):
 
         return accv
 
-    def signin(self):
+    def signing_in(self):
         self.__show_boxes(True)
 
     def on_connecting(self, progress, message):

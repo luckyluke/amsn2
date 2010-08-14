@@ -57,7 +57,7 @@ background-color: white;
          }
 
          QComboBox::down-arrow {
-             image: url(amsn2/gui/front_ends/qt4/arrow-down.png);
+             image: url(amsn2/ui/front_ends/qt4/arrow-down.png);
          }
 
          QComboBox::down-arrow:on { 
@@ -71,7 +71,7 @@ font-weight: bold;
 }
 
 #pixUser {
-background-image: url(amsn2/gui/front_ends/qt4/msn-userimage2.png);
+background-image: url(amsn2/ui/front_ends/qt4/msn-userimage2.png);
 min-width: 131px;
 max-width: 131px;
 min-height: 129px;
