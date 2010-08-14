@@ -230,8 +230,8 @@ class aMSNContactListWidget(StyledWidget, base.aMSNContactListWidget):
         # New groups
         for gid in view.group_ids:
             if (gid == 0): gid = '0'
+            self.groups.append(gid)
             if gid not in guids:
-                self.groups.append(gid)
                 self._model.appendRow([QStandardItem(gid), QStandardItem(gid), QStandardItem("group"), QStandardItem()])
 
         # Remove unused groups
@@ -239,7 +239,11 @@ class aMSNContactListWidget(StyledWidget, base.aMSNContactListWidget):
             if gid not in self.groups:
                 gitem = self.__search_by_id(gid)
                 self._model.removeRow((self._model.indexFromItem(gitem)).row())
-                self.groups.remove(gid)
+                try:
+                    del self.contacts[gid]
+                except KeyError:
+                    pass
+                #self.groups.remove(gid)
 
     def contact_updated(self, contact):
         
