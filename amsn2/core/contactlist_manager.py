@@ -274,7 +274,7 @@ class aMSNContactListManager:
 
     def on_contact_removed(self, contact):
         logger.info('Contact %s removed' %contact.account)
-        groups = self.get_groups(coniact.id)
+        groups = self.get_groups(contact.id)
         groups = filter(lambda g: contact.id in g.contacts, groups)
         del self._contacts[contact.id]
         self._remove_contact_from_groups(contact.id, groups)
@@ -327,9 +327,8 @@ class aMSNContactListManager:
     # used when a contact is deleted, moved or change status to offline
     def _remove_contact_from_groups(self, cid, groups):
         for g in groups:
-            print g.contacts
             g.contacts.remove(cid)
-            g.fill()
+            g.contacts_online.discard(cid)
 
         self.update_groups()
 
