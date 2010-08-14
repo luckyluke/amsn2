@@ -145,8 +145,9 @@ class aMSNCore(object):
     def sign_out_of_account(self):
         accounts = self._account_manager.get_available_accountviews()
         self._ui_manager.load_login(accounts)
-        self._account.client.logout()
-        self._account = None
+        if self._account is not None:
+            self._account.client.logout()
+            self._account = None
 
         accounts = self._account_manager.get_available_accountviews()
         self._ui_manager.load_login(accounts)
