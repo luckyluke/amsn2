@@ -208,7 +208,7 @@ class aMSNLoginWindow(gtk.VBox, base.aMSNLoginWindow):
 
     def __login_clicked(self, *args):
         if self.login:
-            self._amsn_core.signOutOfAccount()
+            self._amsn_core.sign_out_of_account()
         else:
             self.accountview = self.__get_account()
             self._amsn_core.signin_to_account(self, self.accountview)
