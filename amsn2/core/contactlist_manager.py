@@ -250,7 +250,7 @@ class aMSNContactListManager:
     def remove_contact_from_groups(self, cid, gids):
         def failed(error_code):
             account = self.get_contact(cid).account
-            groups = [self.get_group(gid) for gid in gids]
+            groups = [self.get_group(gid).name for gid in gids]
             logger.warning('Failed to add %s to the groups %s'
                                             %(account, ' '.join(groups)))
             self._core._ui_manager.show_error('Failed to remove %s to the groups'
