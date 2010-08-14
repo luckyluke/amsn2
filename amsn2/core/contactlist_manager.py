@@ -274,8 +274,10 @@ class aMSNContactListManager:
 
     def on_contact_removed(self, contact):
         logger.info('Contact %s removed' %contact.account)
-        self._remove_contact_from_groups(contact.id)
+        groups = self.get_groups(coniact.id)
+        groups = filter(lambda g: contact.id in g.contacts, groups)
         del self._contacts[contact.id]
+        self._remove_contact_from_groups(contact.id, groups)
         self._core._ui_manager.show_notification("Contact %s removed!" % contact.account)
 
     def on_contact_blocked(self, papyon_contact):
@@ -313,28 +315,25 @@ class aMSNContactListManager:
         ###gv = GroupView(self._core, amsn_group)
         ###self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
         #self.update_groups()
-        self._remove_contact_from_groups(papyon_contact.id, [papyon_group.id])
+        groups = [self.get_group(papyon_group.id)]
+        self._remove_contact_from_groups(papyon_contact.id, groups)
+        c = self.get_contact(cid)
+        for gid in gids: c.groups.remove(gid)
+        cv = ContactView(self._core, c)
+        self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
 
     ''' additional methods '''
 
     # used when a contact is deleted, moved or change status to offline
-    def _remove_contact_from_groups(self, cid, gids=None):
-        if gids:
-            groups = [self.get_group(gid) for gid in gids]
-        else:
-            groups = self.get_groups(cid)
+    def _remove_contact_from_groups(self, cid, groups):
         for g in groups:
+            print g.contacts
             g.contacts.remove(cid)
             g.fill()
 
         self.update_groups()
 
         # if a contact has to be removed from all the groups, has been deleted
-        if gids:
-            c = self.get_contact(cid)
-            for gid in gids: c.groups.remove(gid)
-            cv = ContactView(self._core, c)
-            self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
 
     def _add_contact_to_groups(self, cid, gids):
         for gid in gids:
