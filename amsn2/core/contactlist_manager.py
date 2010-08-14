@@ -108,7 +108,7 @@ class aMSNContactListManager:
             logger.info('Adding WLM contact %s' %email)
             if email:
                 def failed(error_code):
-                    self._core._ui_manager.showError('Failed to remove the contact %s'
+                    self._core._ui_manager.show_error('Failed to add the contact %s'
                                                       %email)
                     logger.error('Failed to remove contact %s error code %s' %(email, error_code))
 
