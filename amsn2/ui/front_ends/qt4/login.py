@@ -107,7 +107,7 @@ class aMSNLoginWindow(StyledWidget, base.aMSNLoginWindow):
             self.__switch_to_account(self._account_views[0].email)
 
             if self._account_views[0].autologin:
-                self.signin()
+                self.signing_in()
 
 
     def __switch_to_account(self, email):
