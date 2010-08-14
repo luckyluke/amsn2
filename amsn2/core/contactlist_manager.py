@@ -325,12 +325,14 @@ class aMSNContactListManager:
             groups = self.get_groups(cid)
         for g in groups:
             g.contacts.remove(cid)
+            g.fill()
 
         self.update_groups()
 
         # if a contact has to be removed from all the groups, has been deleted
         if gids:
             c = self.get_contact(cid)
+            for gid in gids: c.groups.remove(gid)
             cv = ContactView(self._core, c)
             self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
 
