@@ -27,6 +27,7 @@ from styledwidget import StyledWidget
 
 from image import *
 from amsn2.core.views import StringView, ContactView, GroupView, ImageView, PersonalInfoView
+import common
 
 class aMSNContactListWindow(base.aMSNContactListWindow):
     def __init__(self, amsn_core, parent):
@@ -309,11 +310,28 @@ class aMSNContactListWidget(StyledWidget, base.aMSNContactListWidget):
         type = qvart.toString()
         view = qvarv.toPyObject()
 
-        #is the doble-clicked item a contact?
+        #is the double-clicked item a contact?
         if type == "contact":
             view.on_click(view.uid)
         else:
-            print "Doble click on group!"
+            print "Double click on group!"
+
+    def contextMenuEvent(self, event):
+        l = self.ui.cList.selectedIndexes()
+        index = l[0]
+        model = index.model()
+        qvart = model.data(model.index(index.row(), 2, index.parent()))
+        qvarv = model.data(model.index(index.row(), 3, index.parent()))
+
+        type = qvart.toString()
+        view = qvarv.toPyObject()
+
+        #is the double-clicked item a contact?
+        if type == "contact":
+            menuview = view.on_right_click_popup_menu
+            menu = QMenu("Contact Popup", self)
+            common.create_menu_items_from_view(menu, menuview.items)
+            menu.popup(event.globalPos())
 
     def set_contact_context_menu(self, cb):
         #TODO:

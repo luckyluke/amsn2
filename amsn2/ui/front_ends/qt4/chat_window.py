@@ -43,7 +43,7 @@ class aMSNChatWindow(QTabWidget, base.aMSNChatWindow):
         self.setDocumentMode(True)
         self.setTabsClosable(True)
         self.setMovable(True)
-
+        self.resize(500, 400)
         self._core = amsn_core
 
     def add_chat_widget(self, chat_widget):
@@ -97,7 +97,7 @@ class aMSNChatWidget(QWidget, base.aMSNChatWidget):
                    return False
            else:
                return False
-           
+
        return False
 
 
@@ -188,7 +188,7 @@ class aMSNChatWidget(QWidget, base.aMSNChatWidget):
         # this one will also notify us of our msg.
         # so no need to do:
         #self.ui.textEdit.append("<b>/me says:</b><br>"+unicode(msg)+"")
-        
+
     def __sendNudge(self):
         self._amsn_conversation.sendNudge()
         self.ui.textEdit.append("<b>/me sent a nudge</b>")

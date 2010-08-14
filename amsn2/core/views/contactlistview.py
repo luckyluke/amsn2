@@ -53,7 +53,9 @@ class ContactView:
         """
 
         self.uid = amsn_contact.uid
+
         self.account = amsn_contact.account
+        #self.contact = amsn_contact # Usefull at least if we want to reload the ContactPopupMenu
 
         self.icon = amsn_contact.icon
         #TODO: apply emblem on dp
