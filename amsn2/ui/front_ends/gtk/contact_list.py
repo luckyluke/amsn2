@@ -343,7 +343,15 @@ class aMSNContactListWidget(base.aMSNContactListWidget, gtk.TreeView):
                 iter = self._model.get_iter(path)
                 view = self._model.get_value(iter, 1)
 
+                parent = self._model.iter_parent(iter)
+                if parent:
+                    parentview = self._model.get_value(parent, 1)
+                else:
+                    parentview = None
+
                 if isinstance(view, ContactView) or isinstance(view, GroupView):
+                    # TODO: pass the parentview to the menu in some way,
+                    # the menu could be custom
                     self.grab_focus()
                     self.set_cursor(path, tree_column, 0)
                     menu = gtk.Menu()
