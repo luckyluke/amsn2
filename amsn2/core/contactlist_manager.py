@@ -351,6 +351,8 @@ class aMSNContactListManager:
     def on_CL_downloaded(self, address_book):
         self._papyon_addressbook = address_book
         self._clv = ContactListView()
+        self._contacts = {}
+        self._groups = {}
 
         self.update_groups()
         self.update_contacts()
