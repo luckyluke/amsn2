@@ -181,9 +181,9 @@ class aMSNCore(object):
 
         elif state == papyon.event.ClientState.CLOSED:
             accounts = self._account_manager.get_available_accountviews()
-            self._ui_manager.load_login(accounts)
             self._account.sign_out()
             self._account = None
+            self._ui_manager.load_login(accounts)
 
     def idler_add(self, func):
         """
