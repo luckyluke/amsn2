@@ -310,15 +310,14 @@ class aMSNContactListManager:
     def on_group_contact_deleted(self, papyon_group, papyon_contact):
         logger.info('Contact %s deleted from group %s'
                                   %(papyon_contact.account, papyon_group.name))
-        #amsn_group = self.get_group(papyon_group.id)
-        #amsn_group.contacts.remove(papyon_contact.id)
-        ###gv = GroupView(self._core, amsn_group)
-        ###self._em.emit(self._em.events.GROUPVIEW_UPDATED, gv)
-        #self.update_groups()
+
+        # remove contact from the group
         groups = [self.get_group(papyon_group.id)]
         self._remove_contact_from_groups(papyon_contact.id, groups)
-        c = self.get_contact(cid)
-        for gid in gids: c.groups.remove(gid)
+
+        # remove group from the contact's groups
+        c = self.get_contact(papyon_contact.id)
+        c.groups.remove(papyon_group.id)
         cv = ContactView(self._core, c)
         self._em.emit(self._em.events.CONTACTVIEW_UPDATED, cv)
 
