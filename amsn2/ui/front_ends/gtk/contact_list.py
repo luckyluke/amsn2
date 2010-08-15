@@ -418,7 +418,7 @@ class aMSNContactListWidget(base.aMSNContactListWidget, gtk.TreeView):
     def group_updated(self, groupview):
         if (groupview.uid == 0): groupview.uid = '0'
         if groupview.uid not in self.groups:
-            logger.error('Group iter %s not found!' %(contactview.uid))
+            logger.error('Group iter %s not found!' %(groupview.uid))
             return
 
         giter = self.__search_by_id(groupview.uid)
